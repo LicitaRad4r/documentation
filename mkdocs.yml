@@ -28,6 +28,7 @@ nav:
   - Início: index.md
   - Produto:
       - Visão e Escopo: produto/visao-escopo.md
+  - Estratégia de Testes: LicitaRadar — Estratégia de Testes.md
 
 markdown_extensions:
   - admonition
