@@ -1,0 +1,46 @@
+site_name: LicitaRadar — Documentação
+site_url: https://licitarad4r.github.io/documentation/
+repo_url: https://github.com/LicitaRad4r/documentation
+docs_dir: docs
+
+theme:
+  name: material
+  language: pt-BR
+  font:
+    text: Montserrat
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle: { icon: material/weather-night, name: Modo escuro }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle: { icon: material/weather-sunny, name: Modo claro }
+  features:
+    - navigation.tabs
+    - navigation.top
+    - content.code.copy
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+nav:
+  - Início: index.md
+  - Produto:
+      - Visão e Escopo: produto/visao-escopo.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
