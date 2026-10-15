@@ -1,7 +1,3 @@
----
-title: 'Filtros e Configuração de Perfil'
----
-
 # Filtros e Configuração de Perfil
 
 !!! abstract "Resumo"

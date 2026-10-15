@@ -27,7 +27,7 @@ A oportunidade de mercado explorada pelo LicitaRadar é transformar essa rotina 
 
 A figura a seguir apresenta o diagrama de Ishikawa, com as causas organizadas pelos 6Ms e o problema.
 
-![Diagrama de Ishikawa - LicitaRadar](../../assets/ishikawa.jpg)
+![Diagrama de Ishikawa - LicitaRadar](ishikawa.jpg)
 
 <p style="text-align: center;"><em>Figura 1 – Diagrama de Ishikawa do problema (6Ms).</em></p>
 
