@@ -31,7 +31,7 @@ nav:
     - Personas: Produto/Negocio/personas.md
     - Filtros: Produto/Negocio/filtros.md
     - Score de Aderência: Produto/Negocio/score.md
-  - Estratégia de Testes: 'Testes/LicitaRadar — Estratégia de Testes.md'
+  - Estratégia de Testes: Testes/estrategia_de_testes.md
 
 markdown_extensions:
   - admonition
