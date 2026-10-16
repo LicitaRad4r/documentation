@@ -1,8 +1,8 @@
 # Filtros e Configuração de Perfil
 
-!!! abstract "Resumo"
+## Resumo
 
-    Este documento detalha a mecânica de filtros do LicitaRadar. Os filtros do perfil da empresa são a base do **Score de Aderência**: eles definem quais editais do PNCP ficam de fora e como os demais são ranqueados. O resultado é um feed que entrega ao Analista de Licitações apenas as oportunidades relevantes, lucrativas e com prazo viável para a PME. O cálculo detalhado está em [Cálculo do Score de Aderência](score.md).
+Este documento detalha a mecânica de filtros do LicitaRadar. Os filtros do perfil da empresa são a base do **Score de Aderência**: eles definem quais editais do PNCP ficam de fora e como os demais são ranqueados. O resultado é um feed que entrega ao Analista de Licitações apenas as oportunidades relevantes, lucrativas e com prazo viável para a PME. O cálculo detalhado está em [Cálculo do Score de Aderência](score.md).
 
 ---
 
@@ -15,9 +15,9 @@ No LicitaRadar, a abordagem elimina o trabalho braçal e eleva o papel do analis
 - **Filtros de Perfil (fixos):** a empresa configura o seu **Perfil de Fornecedor** uma única vez. O Score de cada edital é calculado a partir desse perfil, de modo que o feed diário já nasça limpo e focado no negócio. Quem mantém o perfil é, em geral, o Analista, com validação do Decisor (sócio ou diretor comercial).
 - **Filtros de Refinamento (dinâmicos):** o Analista usa a plataforma diariamente para fazer microajustes conforme a estratégia da semana (por exemplo, procurar um termo específico em um dia ou aumentar a faixa de valor em outro), dedicando o tempo poupado à análise técnica do Termo de Referência e à elaboração de propostas vencedoras.
 
-!!! note "A ingestão não depende do perfil"
+## A ingestão não depende do perfil
 
-    A coleta de editais no PNCP é **global e idempotente**: todos os editais são normalizados e guardados uma única vez, para todas as empresas. O perfil só entra no momento de calcular o Score de cada empresa. Assim, quando o perfil muda, os editais já coletados podem ser reavaliados sem nova coleta.
+A coleta de editais no PNCP é **global e idempotente**: todos os editais são normalizados e guardados uma única vez, para todas as empresas. O perfil só entra no momento de calcular o Score de cada empresa. Assim, quando o perfil muda, os editais já coletados podem ser reavaliados sem nova coleta.
 
 ---
 

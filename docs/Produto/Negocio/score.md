@@ -1,8 +1,8 @@
 # Cálculo do Score de Aderência
 
-!!! abstract "Resumo"
+## Resumo
 
-    O Score de Aderência é o motor de inteligência do LicitaRadar. Ele usa os filtros do Perfil de Fornecedor para eliminar os editais fora do perfil e ranquear os demais com uma nota de 0 a 100, poupando o tempo gasto em triagem manual e destacando as oportunidades mais lucrativas. Os filtros estão descritos em [Filtros e Configuração de Perfil](filtros.md).
+O Score de Aderência é o motor de inteligência do LicitaRadar. Ele usa os filtros do Perfil de Fornecedor para eliminar os editais fora do perfil e ranquear os demais com uma nota de 0 a 100, poupando o tempo gasto em triagem manual e destacando as oportunidades mais lucrativas. Os filtros estão descritos em [Filtros e Configuração de Perfil](filtros.md).
 
 ---
 
@@ -31,7 +31,7 @@ Antes de pontuar, o edital precisa passar por critérios excludentes. Se falhar 
 | **Modalidade** | A empresa configurou modalidades e a do edital não está entre as aceitas |
 | **Valor** | A empresa configurou faixa de valor e o valor do edital está **mais de 10%** fora dela |
 
-!!! note "Descartado não é o mesmo que zero"
+### Descartado não é o mesmo que zero
 
     Um edital descartado não tem nota. Já um edital que passa pelo funil mas pontua pouco pode ter nota baixa, ou até 0, e continua no final do feed.
 
