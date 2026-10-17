@@ -81,3 +81,17 @@ flowchart TD
     DEC -- "NÃO" --> DB_PROD
     DEC -- "SIM" --> DB_DEV
     DB_DEV -- "Visualização Local" --> DB_GUI
+```   
+### Como ler o diagrama
+
+| Cor | Camada | Responsabilidade |
+| :--- | :--- | :--- |
+| 🔵 **Azul** | Frontend | Interface de utilizador (React), chamadas HTTP, tipagem |
+| 🟢 **Verde** | Backend | Controladores (Fastify), regras de negócio, validação (Zod) |
+| 🟣 **Roxo** | Produção | Hospedagem em Nuvem (Google Cloud Run e Firebase Hosting) |
+| 🟡 **Amarelo** | Dev local | Ambiente de desenvolvimento (Docker Compose e Base de Dados local) |
+
+### Fluxo de uma Requisição (Exemplo Prático)
+
+Para ilustrar a interação entre estas camadas, eis o caminho exato que a informação percorre quando o utilizador realiza uma ação no sistema:
+.

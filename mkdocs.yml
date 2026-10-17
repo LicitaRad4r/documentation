@@ -26,14 +26,17 @@ extra_css:
 
 nav:
   - Início: index.md
+  - Arquitetura: Arquitetura.md
   - Produto:
-    - Visão e Escopo: Produto/Negocio/visao_de_produto.md
+    - Visão de Produto: Produto/Negocio/visao_de_produto.md
     - Personas: Produto/Negocio/personas.md
     - Filtros: Produto/Negocio/filtros.md
     - Score de Aderência: Produto/Negocio/score.md
     - Requisitos Funcionais: Produto/Requisitos/requisitosfuncionais.md
     - Requisitos Não Funcionais: Produto/Requisitos/naofuncionais.md
-  - Estratégia de Testes: Testes/estrategia_de_testes.md
+    - Histórias de Usuário: Produto/Requisitos/historias.md
+  - Testes:
+    - Estratégia de Testes: Testes/estrategia_de_testes.md
   
 markdown_extensions:
   - admonition
