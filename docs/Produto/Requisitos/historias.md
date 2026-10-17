@@ -46,8 +46,9 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 > **Como** Analista, **eu quero** filtrar os editais por localização, valor e palavra-chave, **para que** encontre rapidamente as oportunidades que a minha PME tem capacidade operacional de atender.
 
 **Critérios de Aceitação:**
-- [x] Devem existir campos de filtro para UF, Município, Modalidade e intervalo de Valores.
+- [x] Devem existir campos de filtro para Palavra-chave, UF, Município, Modalidade, Datas e Valor Estimado.
 - [x] O feed deve atualizar os resultados de forma dinâmica ao aplicar os filtros.
+- [x] O sistema deve devolver os resultados da pesquisa em menos de 2 segundos.
 
 ### US06 - Calcular Score de Aderência
 > **Como** Analista, **eu quero** ver uma pontuação de aderência em cada edital, **para que** saiba de imediato quais as licitações mais compatíveis com o nosso histórico e capacidade.
@@ -85,8 +86,9 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 > **Como** Decisor, **eu quero** receber um alerta quando uma certidão estiver prestes a expirar, **para que** tenha tempo de renovar o documento e evite a inabilitação num edital.
 
 **Critérios de Aceitação:**
-- [x] O sistema deve exibir uma etiqueta visual "A expirar" nos documentos a 20 dias (ou menos) do vencimento.
-- [x] O sistema deve exibir uma etiqueta visual "Expirado" (a vermelho) para documentos fora da validade.
+- [x] A verificação de datas deve correr automaticamente todos os dias às 00h00.
+- [x] O sistema deve exibir uma etiqueta visual vermelha (🔴) para documentos a 15 dias ou menos do vencimento.
+- [x] O sistema deve exibir uma etiqueta visual amarela (🟡) para documentos entre 16 e 30 dias do vencimento.
 
 ---
 

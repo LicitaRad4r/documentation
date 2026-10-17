@@ -91,7 +91,3 @@ flowchart TD
 | 🟣 **Roxo** | Produção | Hospedagem em Nuvem (Google Cloud Run e Firebase Hosting) |
 | 🟡 **Amarelo** | Dev local | Ambiente de desenvolvimento (Docker Compose e Base de Dados local) |
 
-### Fluxo de uma Requisição (Exemplo Prático)
-
-Para ilustrar a interação entre estas camadas, eis o caminho exato que a informação percorre quando o utilizador realiza uma ação no sistema:
-.

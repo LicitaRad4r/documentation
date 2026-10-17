@@ -20,4 +20,4 @@ Enquanto os Requisitos Funcionais descrevem *o que* o sistema faz, os Requisitos
 *   **RNF09 - Automação de Entregas (CI/CD):** O sistema deve possuir *pipelines* de Integração e Entrega Contínuas orquestrados via GitHub Actions, automatizando os *deploys* para o Cloud Run e Firebase.
 *   **RNF10 - Cobertura de Testes Unitários:** A lógica de negócio e os componentes isolados devem ser cobertos por testes automatizados executados com o Vitest.
 *   **RNF11 - Testes Ponta-a-Ponta (E2E):** Os fluxos principais dos utilizadores na interface devem ser validados através de testes automatizados utilizando o Playwright.
-*   **RNF12 - Simulação Local:** A equipa de desenvolvimento deve ser capaz de correr o ambiente sem custos na nuvem, utilizando o Firebase Emulator Suite para simular serviços de base de dados durante a construção.
+*   **RNF12 - Simulação Local:** A equipa deve ser capaz de correr o ambiente sem custos na nuvem, utilizando Docker Compose para a base de dados (PostgreSQL) e o Firebase Emulator para as funções de hosting/nuvem.
