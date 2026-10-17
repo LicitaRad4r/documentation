@@ -121,9 +121,9 @@ Com base na nota, a interface classifica as oportunidades no feed. Cada faixa te
 - **Descartados:** não são guardados por empresa. Como a base de editais é global, quando o perfil muda eles podem ser reavaliados.
 - **Editais encerrados** saem do feed.
 
-!!! warning "Custo do recálculo diário"
+### "Custo do recálculo diário"
 
-    O recálculo diário multiplica o número de empresas pelo de editais ativos. Em um banco que cobra por leitura e escrita, esse volume precisa ser estimado e acompanhado contra o teto de US$ 50 (RNF21 a RNF24). Uma alternativa, se o custo pesar, é guardar só os pontos dos critérios que não dependem da data e calcular os pontos de prazo na hora de exibir.
+O recálculo diário multiplica o número de empresas pelo de editais ativos. Em um banco que cobra por leitura e escrita, esse volume precisa ser estimado e acompanhado contra o teto de US$ 50 (RNF21 a RNF24). Uma alternativa, se o custo pesar, é guardar só os pontos dos critérios que não dependem da data e calcular os pontos de prazo na hora de exibir.
 
 ---
 
