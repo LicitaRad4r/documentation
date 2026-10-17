@@ -62,6 +62,22 @@ O LicitaRadar atende a dois perfis complementares dentro das PMEs:
 
 ---
 
+## Conformidade com a LGPD
+
+Para garantir a total adequação à Lei Geral de Proteção de Dados (LGPD) no contexto do nosso SaaS B2B, o LicitaRadar adota a seguinte política de minimização e retenção:
+
+* **Quais dados guardamos:** Apenas os dados estritamente necessários para a operação das contas corporativas: Nome, Cargo e E-mail corporativo dos perfis Decisor e Analista.
+* **Porquê guardamos:** Os dados são utilizados exclusivamente para o processo de autenticação, gestão de acessos baseada em hierarquia (Administrador vs. Convidado) e envio de alertas operacionais do sistema.
+* **Durante quanto tempo:** Os dados pessoais são mantidos apenas durante o período em que a subscrição da organização (PME) estiver ativa. Em caso de cancelamento, os dados da empresa e dos seus respetivos utilizadores são eliminados de forma segura num prazo de 30 dias.
+
+---
+
+##  Defensibilidade (Vantagem Competitiva)
+
+Para garantir a proteção do nosso modelo de negócio contra concorrentes que tentem copiar as nossas funcionalidades amanhã, o LicitaRadar baseia a sua defensibilidade na métrica de **Custo de Mudança (*Switching Cost*) impulsionado pelo Histórico de Uso**.
+
+À medida que a PME interage com a plataforma (aprovando editais ou descartando recomendações), o sistema acumula o histórico de decisões e o repositório de certidões validadas. Um concorrente que copie a interface da nossa plataforma não terá acesso a este histórico comportamental e documental. Consequentemente, entregará resultados menos calibrados nos primeiros meses, exigindo que a PME "pague" o custo de tempo de recomeçar a ensinar as suas preferências e a carregar todos os seus documentos legais do zero noutra ferramenta.
+
 ## Solução proposta
 
 ### Objetivo do produto
