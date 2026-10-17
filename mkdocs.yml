@@ -31,8 +31,10 @@ nav:
     - Personas: Produto/Negocio/personas.md
     - Filtros: Produto/Negocio/filtros.md
     - Score de Aderência: Produto/Negocio/score.md
+    - Requisitos Funcionais: Produto/Requisitos/requisitosfuncionais.md
+    - Requisitos Não Funcionais: Produto/Requisitos/naofuncionais.md
   - Estratégia de Testes: Testes/estrategia_de_testes.md
-
+  
 markdown_extensions:
   - admonition
   - attr_list
