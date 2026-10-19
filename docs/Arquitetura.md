@@ -90,4 +90,3 @@ flowchart TD
 | 🟢 **Verde** | Backend | Controladores (Fastify), regras de negócio, validação (Zod) |
 | 🟣 **Roxo** | Produção | Hospedagem em Nuvem (Google Cloud Run e Firebase Hosting) |
 | 🟡 **Amarelo** | Dev local | Ambiente de desenvolvimento (Docker Compose e Base de Dados local) |
-

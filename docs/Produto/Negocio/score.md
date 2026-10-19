@@ -1,4 +1,4 @@
-# Cálculo do Score de Aderência (v0)
+# Cálculo do Score de Aderência
 
 ## Resumo
 O Score de Aderência é o núcleo de inteligência do LicitaRadar (**ADR-0008**). Ele utiliza os filtros do Perfil de Fornecedor para eliminar editais fora do escopo e ranquear as oportunidades elegíveis com uma nota de 0 a 100. O objetivo é poupar o tempo de triagem manual da Analista e destacar as oportunidades mais lucrativas para o Decisor.
