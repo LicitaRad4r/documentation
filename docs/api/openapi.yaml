@@ -1,0 +1,1456 @@
+openapi: 3.0.3
+info:
+  title: LicitaRadar API
+  version: 0.1.0
+  description: |
+    Contrato da API REST do MVP do LicitaRadar (v0.1). Descreve os endpoints das jornadas
+    do MVP, com o que cada um recebe e devolve. Ainda não está implementado: é a fonte
+    da verdade para frontend e backend e será gerado a partir dos schemas Zod.
+
+    Jornadas cobertas: configurar perfil, feed ranqueado, acompanhar editais, controlar
+    certidões e receber alertas, além de acesso, convites e fluxo de decisão.
+
+    Perfis de acesso: `DECISOR` (dono da conta) e `ANALISTA` (convidado). O campo
+    `x-roles` de cada operação indica quem pode chamá-la. Toda consulta é restrita à
+    organização do usuário autenticado.
+
+    Pendências: o mecanismo de autenticação (token e sessão) ainda não foi decidido; o
+    esquema `bearerAuth` abaixo é provisório.
+servers:
+  - url: http://localhost:3000
+    description: Ambiente local (Docker Compose e emuladores)
+tags:
+  - name: Sistema
+    description: Saúde e prontidão do serviço
+  - name: Acesso
+    description: Login, convites e usuário atual
+  - name: Perfil
+    description: Perfil de Fornecedor (filtros fixos que alimentam o Score de Aderência)
+  - name: Feed
+    description: Editais ranqueados por aderência, filtros de refinamento e marcações
+  - name: Acompanhamento
+    description: Etapas de preparação de cada edital de interesse
+  - name: Certidões
+    description: Repositório de certidões e controle de validade
+  - name: Alertas
+    description: Alertas de oportunidade, prazo e vencimento de certidão
+  - name: Decisão
+    description: Editais recomendados pela Analista e decisão do Decisor
+security:
+  - bearerAuth: []
+paths:
+  /healthz:
+    get:
+      tags: [Sistema]
+      summary: Verifica se o serviço está de pé
+      security: []
+      responses:
+        '200':
+          description: Serviço ativo
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    example: ok
+  /readyz:
+    get:
+      tags: [Sistema]
+      summary: Verifica se o serviço está pronto para receber tráfego (banco acessível)
+      security: []
+      responses:
+        '200':
+          description: Pronto
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    example: ready
+        '503':
+          description: Dependência indisponível
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+  /auth/login:
+    post:
+      tags: [Acesso]
+      summary: Entra com e-mail corporativo e senha
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login realizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessaoResponse'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+  /auth/logout:
+    post:
+      tags: [Acesso]
+      summary: Encerra a sessão atual
+      responses:
+        '204':
+          description: Sessão encerrada
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+  /auth/forgot-password:
+    post:
+      tags: [Acesso]
+      summary: Solicita a recuperação de senha por e-mail
+      description: Sempre responde 202, exista ou não o e-mail, para não revelar contas.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '202':
+          description: Pedido recebido
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+  /auth/reset-password:
+    post:
+      tags: [Acesso]
+      summary: Define uma nova senha a partir do link recebido por e-mail
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, novaSenha]
+              properties:
+                token:
+                  type: string
+                novaSenha:
+                  type: string
+                  format: password
+                  minLength: 8
+      responses:
+        '204':
+          description: Senha alterada
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '404':
+          description: Link inválido ou expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+  /convites:
+    post:
+      tags: [Acesso]
+      summary: Convida uma Analista para a organização
+      description: Envia um e-mail com link único de registro. O convidado entra com o perfil ANALISTA.
+      x-roles: [DECISOR]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '201':
+          description: Convite enviado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Convite'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+        '409':
+          description: Já existe usuário ou convite pendente para este e-mail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+  /convites/{token}/aceitar:
+    post:
+      tags: [Acesso]
+      summary: Conclui o cadastro a partir do link de convite
+      security: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome, senha]
+              properties:
+                nome:
+                  type: string
+                senha:
+                  type: string
+                  format: password
+                  minLength: 8
+      responses:
+        '201':
+          description: Cadastro concluído
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessaoResponse'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '404':
+          description: Convite inválido ou expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+  /me:
+    get:
+      tags: [Acesso]
+      summary: Devolve o usuário autenticado e sua organização
+      x-roles: [DECISOR, ANALISTA]
+      responses:
+        '200':
+          description: Usuário atual
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+  /perfil:
+    get:
+      tags: [Perfil]
+      summary: Lê o Perfil de Fornecedor da organização
+      x-roles: [DECISOR, ANALISTA]
+      responses:
+        '200':
+          description: Perfil atual (vazio se ainda não configurado)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Perfil'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+    put:
+      tags: [Perfil]
+      summary: Salva o Perfil de Fornecedor
+      description: |
+        Ao salvar, o score de todos os editais ativos é recalculado para a organização.
+        Regras: faixa mínima não pode ser maior que a máxima; UFs devem existir; UF
+        em branco significa busca nacional.
+      x-roles: [DECISOR]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Perfil'
+      responses:
+        '200':
+          description: Perfil salvo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Perfil'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+  /feed:
+    get:
+      tags: [Feed]
+      summary: Lista os editais elegíveis, ranqueados por nota de aderência
+      description: |
+        Devolve apenas editais que passaram pelo funil do perfil. A ordem é por nota
+        (maior primeiro), desempatando por prazo limite mais próximo, publicação mais
+        recente e identificador. Os filtros abaixo são de refinamento: restringem os
+        editais já elegíveis, sem recalcular o score e sem alterar o perfil. A filtragem
+        e a paginação são feitas no servidor.
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/Pagina'
+        - $ref: '#/components/parameters/TamanhoPagina'
+        - name: q
+          in: query
+          description: Palavra-chave temporária (correspondência no objeto do edital)
+          schema:
+            type: string
+        - name: uf
+          in: query
+          description: UFs do órgão (repita o parâmetro para várias)
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Uf'
+          style: form
+          explode: true
+        - name: municipio
+          in: query
+          schema:
+            type: string
+        - name: modalidade
+          in: query
+          description: Modalidades (repita o parâmetro para várias)
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: faixa
+          in: query
+          description: Faixa de aderência
+          schema:
+            $ref: '#/components/schemas/FaixaAderencia'
+        - name: valorMin
+          in: query
+          schema:
+            type: number
+            minimum: 0
+        - name: valorMax
+          in: query
+          schema:
+            type: number
+            minimum: 0
+        - name: publicadoDe
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: publicadoAte
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: prazoDe
+          in: query
+          description: Data limite de proposta a partir de
+          schema:
+            type: string
+            format: date
+        - name: prazoAte
+          in: query
+          description: Data limite de proposta até
+          schema:
+            type: string
+            format: date
+        - name: marcacao
+          in: query
+          description: Filtra pela marcação da organização
+          schema:
+            type: string
+            enum: [relevante, irrelevante, sem_marcacao]
+      responses:
+        '200':
+          description: Página do feed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedResponse'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+  /editais/{editalId}:
+    get:
+      tags: [Feed]
+      summary: Detalha um edital, com a nota de aderência da organização
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/EditalId'
+      responses:
+        '200':
+          description: Edital
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditalDetalhe'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+  /editais/{editalId}/marcacao:
+    put:
+      tags: [Feed]
+      summary: Marca o edital como relevante ou irrelevante
+      description: A marcação vale só para a organização e não altera a nota de outras empresas.
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/EditalId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [marcacao]
+              properties:
+                marcacao:
+                  type: string
+                  enum: [relevante, irrelevante]
+      responses:
+        '200':
+          description: Marcação salva
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [editalId, marcacao]
+                properties:
+                  editalId:
+                    type: string
+                  marcacao:
+                    type: string
+                    enum: [relevante, irrelevante]
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+    delete:
+      tags: [Feed]
+      summary: Remove a marcação do edital
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/EditalId'
+      responses:
+        '204':
+          description: Marcação removida
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+  /acompanhamentos:
+    get:
+      tags: [Acompanhamento]
+      summary: Lista os editais acompanhados pela organização
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/Pagina'
+        - $ref: '#/components/parameters/TamanhoPagina'
+        - name: situacao
+          in: query
+          schema:
+            type: string
+            enum: [em_andamento, concluido, encerrado]
+      responses:
+        '200':
+          description: Página de acompanhamentos
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [itens, paginacao]
+                properties:
+                  itens:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Acompanhamento'
+                  paginacao:
+                    $ref: '#/components/schemas/Paginacao'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+    post:
+      tags: [Acompanhamento]
+      summary: Passa a acompanhar um edital
+      description: Cria o acompanhamento com a lista inicial de etapas de preparação.
+      x-roles: [DECISOR, ANALISTA]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [editalId]
+              properties:
+                editalId:
+                  type: string
+      responses:
+        '201':
+          description: Acompanhamento criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Acompanhamento'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+        '409':
+          description: O edital já está sendo acompanhado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+  /acompanhamentos/{acompanhamentoId}:
+    get:
+      tags: [Acompanhamento]
+      summary: Detalha um acompanhamento e suas etapas
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/AcompanhamentoId'
+      responses:
+        '200':
+          description: Acompanhamento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Acompanhamento'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+    delete:
+      tags: [Acompanhamento]
+      summary: Deixa de acompanhar o edital
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/AcompanhamentoId'
+      responses:
+        '204':
+          description: Acompanhamento removido
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+  /acompanhamentos/{acompanhamentoId}/etapas:
+    post:
+      tags: [Acompanhamento]
+      summary: Adiciona uma etapa de preparação
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/AcompanhamentoId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [titulo]
+              properties:
+                titulo:
+                  type: string
+                  maxLength: 120
+                  example: Separar documentos de habilitação
+                prazo:
+                  type: string
+                  format: date
+      responses:
+        '201':
+          description: Etapa criada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Etapa'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+  /acompanhamentos/{acompanhamentoId}/etapas/{etapaId}:
+    patch:
+      tags: [Acompanhamento]
+      summary: Atualiza ou conclui uma etapa
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/AcompanhamentoId'
+        - name: etapaId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              minProperties: 1
+              properties:
+                titulo:
+                  type: string
+                  maxLength: 120
+                prazo:
+                  type: string
+                  format: date
+                  nullable: true
+                concluida:
+                  type: boolean
+      responses:
+        '200':
+          description: Etapa atualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Etapa'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+    delete:
+      tags: [Acompanhamento]
+      summary: Remove uma etapa
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/AcompanhamentoId'
+        - name: etapaId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Etapa removida
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+  /certidoes:
+    get:
+      tags: [Certidões]
+      summary: Lista as certidões da organização com o status de validade
+      description: Ordenadas pela data de validade, das mais próximas de vencer para as mais distantes.
+      x-roles: [DECISOR]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/StatusCertidao'
+      responses:
+        '200':
+          description: Certidões
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [itens]
+                properties:
+                  itens:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Certidao'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+    post:
+      tags: [Certidões]
+      summary: Cadastra uma certidão com arquivo e data de validade
+      description: |
+        Arquivo em PDF, JPG ou PNG, de até 5 MB. A data de validade é obrigatória e não
+        pode estar no passado no cadastro inicial.
+      x-roles: [DECISOR]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [nome, dataValidade, arquivo]
+              properties:
+                nome:
+                  type: string
+                  example: Certidão Negativa de Débitos Federais
+                dataValidade:
+                  type: string
+                  format: date
+                arquivo:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Certidão cadastrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certidao'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+        '413':
+          description: Arquivo maior que 5 MB
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+  /certidoes/{certidaoId}:
+    get:
+      tags: [Certidões]
+      summary: Detalha uma certidão
+      x-roles: [DECISOR]
+      parameters:
+        - $ref: '#/components/parameters/CertidaoId'
+      responses:
+        '200':
+          description: Certidão
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certidao'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+    put:
+      tags: [Certidões]
+      summary: Revalida a certidão com novo arquivo e nova validade
+      description: Substitui o arquivo e a data de validade. A nova data não pode estar no passado.
+      x-roles: [DECISOR]
+      parameters:
+        - $ref: '#/components/parameters/CertidaoId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [dataValidade, arquivo]
+              properties:
+                dataValidade:
+                  type: string
+                  format: date
+                arquivo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Certidão atualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certidao'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+        '413':
+          description: Arquivo maior que 5 MB
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+    delete:
+      tags: [Certidões]
+      summary: Remove a certidão
+      x-roles: [DECISOR]
+      parameters:
+        - $ref: '#/components/parameters/CertidaoId'
+      responses:
+        '204':
+          description: Certidão removida
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+  /certidoes/{certidaoId}/arquivo:
+    get:
+      tags: [Certidões]
+      summary: Baixa o arquivo da certidão
+      x-roles: [DECISOR]
+      parameters:
+        - $ref: '#/components/parameters/CertidaoId'
+      responses:
+        '200':
+          description: Arquivo original
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+  /alertas:
+    get:
+      tags: [Alertas]
+      summary: Lista os alertas da organização
+      description: |
+        Tipos: `oportunidade` (edital com nota a partir de 80), `prazo` (prazo de edital
+        acompanhado em até 48 h) e `certidao` (vencimento próximo ou vencida). Alertas
+        de certidão só aparecem para o Decisor.
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/Pagina'
+        - $ref: '#/components/parameters/TamanhoPagina'
+        - name: tipo
+          in: query
+          schema:
+            $ref: '#/components/schemas/TipoAlerta'
+        - name: lido
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Página de alertas
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [itens, naoLidos, paginacao]
+                properties:
+                  itens:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Alerta'
+                  naoLidos:
+                    type: integer
+                    minimum: 0
+                  paginacao:
+                    $ref: '#/components/schemas/Paginacao'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+  /alertas/{alertaId}:
+    patch:
+      tags: [Alertas]
+      summary: Marca um alerta como lido ou não lido
+      x-roles: [DECISOR, ANALISTA]
+      parameters:
+        - name: alertaId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [lido]
+              properties:
+                lido:
+                  type: boolean
+      responses:
+        '200':
+          description: Alerta atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alerta'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+  /editais/{editalId}/recomendacao:
+    put:
+      tags: [Decisão]
+      summary: Recomenda o edital ao Decisor
+      description: Envia o edital para o painel de decisão. Repetir a chamada não tem efeito.
+      x-roles: [ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/EditalId'
+      responses:
+        '200':
+          description: Edital recomendado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recomendacao'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+    delete:
+      tags: [Decisão]
+      summary: Retira a recomendação do edital
+      x-roles: [ANALISTA]
+      parameters:
+        - $ref: '#/components/parameters/EditalId'
+      responses:
+        '204':
+          description: Recomendação retirada
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+  /recomendacoes:
+    get:
+      tags: [Decisão]
+      summary: Lista os editais recomendados, no painel de decisão
+      x-roles: [DECISOR]
+      parameters:
+        - $ref: '#/components/parameters/Pagina'
+        - $ref: '#/components/parameters/TamanhoPagina'
+        - name: estado
+          in: query
+          description: Por padrão, apenas os pendentes de decisão
+          schema:
+            $ref: '#/components/schemas/EstadoDecisao'
+      responses:
+        '200':
+          description: Página de recomendações
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [itens, paginacao]
+                properties:
+                  itens:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recomendacao'
+                  paginacao:
+                    $ref: '#/components/schemas/Paginacao'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+  /editais/{editalId}/decisao:
+    put:
+      tags: [Decisão]
+      summary: Aprova o edital para disputa ou o descarta
+      description: |
+        `aprovado_para_disputa` move o edital para a lista de oportunidades em andamento;
+        `descartado` o remove da fila principal. O edital precisa estar recomendado.
+      x-roles: [DECISOR]
+      parameters:
+        - $ref: '#/components/parameters/EditalId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estado]
+              properties:
+                estado:
+                  type: string
+                  enum: [aprovado_para_disputa, descartado]
+      responses:
+        '200':
+          description: Decisão registrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recomendacao'
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/NaoAutenticado'
+        '403':
+          $ref: '#/components/responses/SemPermissao'
+        '404':
+          $ref: '#/components/responses/NaoEncontrado'
+        '409':
+          description: O edital não está recomendado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Provisório. O mecanismo de autenticação ainda será decidido.
+  parameters:
+    Pagina:
+      name: pagina
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    TamanhoPagina:
+      name: tamanhoPagina
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    EditalId:
+      name: editalId
+      in: path
+      required: true
+      description: Número de controle do PNCP
+      schema:
+        type: string
+    AcompanhamentoId:
+      name: acompanhamentoId
+      in: path
+      required: true
+      schema:
+        type: string
+    CertidaoId:
+      name: certidaoId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    EntradaInvalida:
+      description: Entrada inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    NaoAutenticado:
+      description: Sem autenticação ou sessão expirada
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    SemPermissao:
+      description: Perfil sem permissão para esta operação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+    NaoEncontrado:
+      description: Recurso inexistente ou de outra organização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+  schemas:
+    Erro:
+      type: object
+      required: [codigo, mensagem]
+      properties:
+        codigo:
+          type: string
+          example: ENTRADA_INVALIDA
+        mensagem:
+          type: string
+          example: A faixa de valor mínima não pode ser maior que a máxima.
+        detalhes:
+          type: array
+          description: Erros por campo, quando houver
+          items:
+            type: object
+            required: [campo, mensagem]
+            properties:
+              campo:
+                type: string
+              mensagem:
+                type: string
+    Paginacao:
+      type: object
+      required: [pagina, tamanhoPagina, total]
+      properties:
+        pagina:
+          type: integer
+        tamanhoPagina:
+          type: integer
+        total:
+          type: integer
+    Uf:
+      type: string
+      description: Sigla de unidade da federação, em maiúsculas
+      pattern: '^[A-Z]{2}$'
+      example: DF
+    Papel:
+      type: string
+      enum: [DECISOR, ANALISTA]
+    LoginRequest:
+      type: object
+      required: [email, senha]
+      properties:
+        email:
+          type: string
+          format: email
+        senha:
+          type: string
+          format: password
+    SessaoResponse:
+      type: object
+      required: [usuario]
+      properties:
+        usuario:
+          $ref: '#/components/schemas/Usuario'
+        expiraEm:
+          type: string
+          format: date-time
+          description: Fim da sessão por inatividade
+    Usuario:
+      type: object
+      required: [id, nome, email, papel, organizacao]
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        email:
+          type: string
+          format: email
+        papel:
+          $ref: '#/components/schemas/Papel'
+        organizacao:
+          type: object
+          required: [id, nome]
+          properties:
+            id:
+              type: string
+            nome:
+              type: string
+    Convite:
+      type: object
+      required: [id, email, expiraEm]
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        expiraEm:
+          type: string
+          format: date-time
+    Perfil:
+      type: object
+      required: [termos]
+      properties:
+        termos:
+          type: array
+          minItems: 1
+          description: Termos-chave do objeto do edital
+          items:
+            type: string
+          example: [notebook, impressora]
+        ufs:
+          type: array
+          description: Vazio significa abrangência nacional
+          items:
+            $ref: '#/components/schemas/Uf'
+        faixaValor:
+          type: object
+          nullable: true
+          properties:
+            minimo:
+              type: number
+              minimum: 0
+            maximo:
+              type: number
+              minimum: 0
+        modalidades:
+          type: array
+          description: Modalidades aceitas; vazio significa qualquer uma
+          items:
+            type: string
+          example: [Pregão Eletrônico]
+        modalidadesPrioritarias:
+          type: array
+          description: Subconjunto das modalidades aceitas que vale pontuação máxima
+          items:
+            type: string
+        categoriaPncp:
+          type: string
+          nullable: true
+          description: Categoria da compra no PNCP; vazio não filtra
+        prazoMinimoDiasUteis:
+          type: integer
+          minimum: 0
+          default: 3
+    FaixaAderencia:
+      type: string
+      description: alta (80 a 100), media (50 a 79), baixa (0 a 49)
+      enum: [alta, media, baixa]
+    DetalheCriterio:
+      type: object
+      required: [pontos, maximo]
+      properties:
+        pontos:
+          type: integer
+        maximo:
+          type: integer
+    Score:
+      type: object
+      required: [nota, faixa, detalhamento, calculadoEm]
+      properties:
+        nota:
+          type: integer
+          minimum: 0
+          maximum: 100
+        faixa:
+          $ref: '#/components/schemas/FaixaAderencia'
+        detalhamento:
+          type: object
+          description: Critérios não configurados no perfil vêm nulos
+          properties:
+            termos:
+              $ref: '#/components/schemas/DetalheCriterio'
+            uf:
+              allOf:
+                - $ref: '#/components/schemas/DetalheCriterio'
+              nullable: true
+            valor:
+              allOf:
+                - $ref: '#/components/schemas/DetalheCriterio'
+              nullable: true
+            prazo:
+              $ref: '#/components/schemas/DetalheCriterio'
+            modalidade:
+              allOf:
+                - $ref: '#/components/schemas/DetalheCriterio'
+              nullable: true
+        calculadoEm:
+          type: string
+          format: date
+          description: Data de referência do cálculo
+    Edital:
+      type: object
+      required: [id, objeto, orgao, uf, modalidade, dataLimiteProposta]
+      properties:
+        id:
+          type: string
+          description: Número de controle do PNCP
+        objeto:
+          type: string
+        orgao:
+          type: string
+        uf:
+          $ref: '#/components/schemas/Uf'
+        municipio:
+          type: string
+          nullable: true
+        modalidade:
+          type: string
+        categoria:
+          type: string
+          nullable: true
+        valorEstimado:
+          type: number
+          nullable: true
+        dataPublicacao:
+          type: string
+          format: date-time
+        dataLimiteProposta:
+          type: string
+          format: date-time
+        linkPncp:
+          type: string
+          format: uri
+    FeedItem:
+      allOf:
+        - $ref: '#/components/schemas/Edital'
+        - type: object
+          required: [score, tags]
+          properties:
+            score:
+              $ref: '#/components/schemas/Score'
+            diasUteisRestantes:
+              type: integer
+            tags:
+              type: array
+              description: Indicadores visuais dos critérios atendidos e da urgência
+              items:
+                type: string
+              example: [DF, R$ 100k, Encerra em 2 dias]
+            marcacao:
+              type: string
+              nullable: true
+              enum: [relevante, irrelevante]
+            recomendado:
+              type: boolean
+            acompanhado:
+              type: boolean
+    FeedResponse:
+      type: object
+      required: [itens, paginacao]
+      properties:
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeedItem'
+        paginacao:
+          $ref: '#/components/schemas/Paginacao'
+    EditalDetalhe:
+      allOf:
+        - $ref: '#/components/schemas/FeedItem'
+        - type: object
+          properties:
+            descricao:
+              type: string
+              nullable: true
+    Etapa:
+      type: object
+      required: [id, titulo, concluida]
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        prazo:
+          type: string
+          format: date
+          nullable: true
+        concluida:
+          type: boolean
+    Acompanhamento:
+      type: object
+      required: [id, edital, etapas, situacao]
+      properties:
+        id:
+          type: string
+        edital:
+          $ref: '#/components/schemas/Edital'
+        situacao:
+          type: string
+          enum: [em_andamento, concluido, encerrado]
+        etapas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Etapa'
+    StatusCertidao:
+      type: string
+      description: |
+        valida: mais de 30 dias para vencer; a_vencer: até 30 dias (nível vermelho em 15
+        dias ou menos); vence_hoje; vencida; pendente: sem data de validade.
+      enum: [valida, a_vencer, vence_hoje, vencida, pendente]
+    Certidao:
+      type: object
+      required: [id, nome, status]
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        dataValidade:
+          type: string
+          format: date
+          nullable: true
+        status:
+          $ref: '#/components/schemas/StatusCertidao'
+        diasParaVencer:
+          type: integer
+          nullable: true
+        nivelAlerta:
+          type: string
+          nullable: true
+          enum: [vermelho, amarelo]
+        nomeArquivo:
+          type: string
+        tipoArquivo:
+          type: string
+          enum: [application/pdf, image/jpeg, image/png]
+        atualizadaEm:
+          type: string
+          format: date-time
+    TipoAlerta:
+      type: string
+      enum: [oportunidade, prazo, certidao]
+    Alerta:
+      type: object
+      required: [id, tipo, mensagem, lido, criadoEm]
+      properties:
+        id:
+          type: string
+        tipo:
+          $ref: '#/components/schemas/TipoAlerta'
+        mensagem:
+          type: string
+        editalId:
+          type: string
+          nullable: true
+        certidaoId:
+          type: string
+          nullable: true
+        lido:
+          type: boolean
+        criadoEm:
+          type: string
+          format: date-time
+    EstadoDecisao:
+      type: string
+      enum: [pendente, aprovado_para_disputa, descartado]
+    Recomendacao:
+      type: object
+      required: [edital, estado, recomendadoEm]
+      properties:
+        edital:
+          $ref: '#/components/schemas/FeedItem'
+        estado:
+          $ref: '#/components/schemas/EstadoDecisao'
+        recomendadoPor:
+          type: string
+          description: Nome da Analista
+        recomendadoEm:
+          type: string
+          format: date-time
+        decididoEm:
+          type: string
+          format: date-time
+          nullable: true

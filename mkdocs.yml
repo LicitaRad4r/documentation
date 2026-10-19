@@ -26,21 +26,23 @@ extra_css:
 
 nav:
   - Início: index.md
-  - Arquitetura: Arquitetura.md
+  - Definition of Done: definition-of-done.md
+  - Decisões Técnicas (ADRs): adrs/decisoes_tecnicas.md
+  - Arquitetura: architecture/Arquitetura.md
   - Produto:
     - Negócio:
-      - Visão de Produto: Produto/Negocio/visao_de_produto.md
-      - Personas: Produto/Negocio/personas.md
-      - Filtros: Produto/Negocio/filtros.md
-      - Score de Aderência: Produto/Negocio/score.md
+      - Visão de Produto: requirements/produto/Negocio/visao_de_produto.md
+      - Personas: requirements/produto/Negocio/personas.md
+      - Filtros: requirements/produto/Negocio/filtros.md
+      - Score de Aderência: requirements/produto/Negocio/score.md
     - Requisitos:
-      - Matriz MoSCoW: Produto/Requisitos/MosCOW.md
-      - Requisitos Funcionais: Produto/Requisitos/requisitosfuncionais.md
-      - Requisitos Não Funcionais: Produto/Requisitos/naofuncionais.md
-      - Histórias de Usuário: Produto/Requisitos/historias.md
+      - Matriz MoSCoW: requirements/produto/Requisitos/MosCOW.md
+      - Requisitos Funcionais: requirements/produto/Requisitos/requisitosfuncionais.md
+      - Requisitos Não Funcionais: requirements/produto/Requisitos/naofuncionais.md
+      - Histórias de Usuário: requirements/produto/Requisitos/historias.md
   - Testes:
-    - Estratégia de Testes: Testes/estrategia_de_testes.md
-    
+    - Estratégia de Testes: testes/estrategia_de_testes.md
+
 markdown_extensions:
   - admonition
   - attr_list
