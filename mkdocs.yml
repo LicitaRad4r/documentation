@@ -41,7 +41,7 @@ nav:
       - Requisitos Não Funcionais: requirements/produto/Requisitos/naofuncionais.md
       - Histórias de Usuário: requirements/produto/Requisitos/historias.md
   - Testes:
-    - Estratégia de Testes: testes/estrategia_de_testes.md
+    - Estratégia de Testes: Testes/estrategia_de_testes.md
 
 markdown_extensions:
   - admonition
