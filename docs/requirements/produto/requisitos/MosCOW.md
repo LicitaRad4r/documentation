@@ -1,33 +1,70 @@
-# Matriz MoSCoW e Backlog do MVP - LicitaRadar
+# Matriz MoSCoW (Priorização do MVP)
 
-A nossa priorização segue a metodologia Lean, focando exclusivamente na entrega de valor para as Pequenas e Médias Empresas (PMEs) através da triagem de editais e gestão de risco.
+A Matriz MoSCoW do LicitaRadar foi construída e definida **estritamente com base nos Requisitos Funcionais e nas Histórias de Utilizador** do projeto. 
 
-## 🟩 M - Must Have (Obrigatório para o MVP)
-*Funcionalidades vitais sem as quais o LicitaRadar não resolve o problema principal.*
-
-1. **Ingestão de Dados do PNCP:** O sistema deve consumir a API do Portal Nacional de Contratações Públicas diariamente.
-2. **Score de Aderência (v0):** O sistema deve calcular uma pontuação matemática para cada edital com base no perfil da PME.
-3. **Filtros Ágeis de Triagem:** A analista deve conseguir filtrar editais por data, valor e palavra-chave.
-4. **Painel de Alertas de Certidões:** O sistema deve alertar sobre certidões da empresa que estejam a menos de 30 dias de caducar.
-
-## 🟨 S - Should Have (Importante, mas pode esperar)
-*Funcionalidades de alto valor, mas que podem ser contornadas manualmente na primeira versão.*
-
-1. **Filtro de Palavras Negativas:** Capacidade de excluir termos específicos do feed de editais para limpar a visão da analista.
-2. **Notificações por E-mail:** Envio de alertas de vencimento de certidões diretamente para o e-mail do decisor (se não for possível, o alerta fica apenas no ecrã inicial).
-3. **Exportação de Oportunidades:** Exportar a lista de editais selecionados para CSV/Excel.
-
-## 🟦 C - Could Have (Desejável)
-*Funcionalidades interessantes se houver tempo extra (baixo esforço, impacto moderado).*
-
-1. **Integração com Calendário:** Adicionar a data de entrega da proposta diretamente ao Google Calendar do utilizador.
-2. **Dashboard Gráfico de ROI:** Gráficos visuais mostrando o valor total dos editais aprovados para participação.
-
-## 🟥 W - Won't Have (Não teremos neste ciclo)
-*Funcionalidades conscientemente deixadas de fora do MVP para manter o foco na triagem.*
-
-1. **Submissão Automática de Propostas:** O sistema não enviará a proposta nem os documentos para o PNCP. A plataforma foca-se apenas na descoberta e triagem.
-2. **Gestão Financeira Pós-Contrato:** O sistema não fará a gestão de faturação caso a PME vença a licitação.
-3. **Deploy na Nuvem (Semana 2):** A arquitetura inicial rodará apenas localmente via Docker, não havendo deploy no Firebase/Cloud Run nesta fase de validação.
+Esta rastreabilidade garante que o Produto Mínimo Viável (MVP) foque apenas no que entrega valor real para as nossas personas (Decisor e Analista) no ciclo B2B atual, priorizando o núcleo funcional (descoberta de editais e gestão de risco) e descartando automações que fujam ao escopo validado.
 
 ---
+
+## 🟢 Must Have (Deve Ter)
+*Obrigatório para o sistema funcionar e entregar o valor central (MVP).*
+
+* **(US01 a US06)** Gestão de acessos, autenticação, fluxo de convites e isolamento de segurança entre perfis (RF01, RF02, RF03).
+* **(US07)** Ingestão automática e periódica de editais do PNCP (RF04).
+* **(US08, US09 e US11)** Configuração do perfil da empresa, cálculo determinístico do Score de Aderência e exibição do Feed ordenado (RF04, RF06).
+* **(US12)** Acesso aos detalhes e anexos originais dos editais.
+* **(US14, US15 e US16)** Upload de certidões com data de validade obrigatória e emissão de alertas visuais de vencimento (RF08, RF09, RF10).
+
+## 🟡 Should Have (Deveria Ter)
+*Importante para a experiência do utilizador e para o fluxo de valor completo.*
+
+* **(US10)** Filtros dinâmicos no Feed (UF, modalidade, data, valor) aplicados sobre os resultados ranqueados (RF05).
+* **(US13, US17, US18 e US19)** Fluxo de Decisão: Recomendação de editais promissores pela Analista e aprovação/descarte no Dashboard exclusivo do Decisor (RF07, RF11, RF12).
+
+## 🔵 Could Have (Poderia Ter)
+*Desejável, mas não bloqueia a validação do produto. Pode ser feito se houver tempo extra nas Sprints finais.*
+
+* Envio de alertas de novas licitações de alta aderência e vencimento de certidões por notificação *push* ou e-mail (além do alerta visual interno).
+* Exportação da lista de editais filtrados para CSV/Excel.
+
+## 🔴 Won't Have (Não Terá Neste Ciclo)
+*Totalmente fora do escopo do ciclo atual (Checkpoints 1 a 4). Pode entrar no futuro.*
+
+* Automação e robôs para envio de lances em pregões (fora do escopo).
+* Envio direto de propostas através da plataforma (fora do escopo).
+* Leitura em massa de PDFs de editais com Inteligência Artificial / OCR (fora do escopo).
+* Integração com outros portais de compras além do PNCP (fora do escopo).
+
+### Mapa Visual de Priorização
+
+```mermaid
+flowchart TD
+    %% Definição de cores (com texto a preto para compatibilidade com Dark Mode)
+    classDef must fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#000000;
+    classDef should fill:#fef08a,stroke:#ca8a04,stroke-width:2px,color:#000000;
+    classDef could fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#000000;
+    classDef wont fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#000000;
+
+    %% MUST HAVE
+    M["🟢 MUST HAVE (Obrigatório)"]:::must
+    M --- M1["Acessos & Segurança\n(US01 a US06)"]:::must
+    M --- M2["Score & Feed PNCP\n(US07 a US09, US11)"]:::must
+    M --- M3["Alertas de Certidões\n(US14 a US16)"]:::must
+
+    %% SHOULD HAVE
+    S["🟡 SHOULD HAVE (Importante)"]:::should
+    S --- S1["Filtros no Feed\n(US10)"]:::should
+    S --- S2["Dashboard de Decisão\n(US13, US17 a US19)"]:::should
+
+    %% COULD HAVE
+    C["🔵 COULD HAVE (Desejável)"]:::could
+    C --- C1["Alertas por E-mail/Push"]:::could
+    C --- C2["Exportar para CSV"]:::could
+
+    %% WON'T HAVE
+    W["🔴 WON'T HAVE (Fora do Ciclo)"]:::wont
+    W --- W1["Robôs de Lances"]:::wont
+    W --- W2["Leitura PDF com IA"]:::wont
+
+    %% Força o alinhamento estritamente vertical das categorias
+    M ~~~ S ~~~ C ~~~ W
