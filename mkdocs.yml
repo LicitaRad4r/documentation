@@ -33,6 +33,7 @@ nav:
   - Decisões Técnicas (ADRs): adrs/decisoes_tecnicas.md
   - Arquitetura: architecture/Arquitetura.md
   - Produto:
+    - Jornadas de Utilizador: requirements/produto/jornadas.md
     - Visão do Produto:
       - Visão Geral: requirements/produto/negocio/visao/visao_geral.md
       - Escopo e Impacto: requirements/produto/negocio/visao/impacto.md
@@ -48,7 +49,7 @@ nav:
       - Histórias de Usuário: requirements/produto/requisitos/historias.md
   - Testes:
     - Estratégia de Testes: Testes/estrategia_de_testes.md
-
+    
 markdown_extensions:
   - admonition
   - attr_list
