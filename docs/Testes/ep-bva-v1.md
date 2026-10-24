@@ -12,19 +12,20 @@
 | CT-FEED-008 | API Falha | Mensagem de erro com "tentar novamente" | Retorno HTTP Status 200 OK | Retorno HTTP Status 4xx, 5xx (Ex: 500) | Fronteira entre os limites de retentativas automáticas (Ex: 0, 3, 4) |
 | CT-FEED-009 | Paginação | Página limitada ao pageSize, sem repetição | page >= 1; pageSize de 1 a 100 | page <= 0; pageSize <= 0 ou > 100; não inteiros | pageSize = 0, 1, 2, 99, 100, 101; page = 0, 1 |
 
-## Jornada 2: Busca Direcionada e Filtros Dinâmicos (CT-FILT-001 a 009)
+## Jornada 2: Busca Direcionada e Filtros Dinâmicos (`CT-FILT-001` a `009`)
+**Rastreabilidade:** US05, RF05, ADR-0003 e página Filtros
 
 | CT | Campo / Domínio | Regra (Fonte) | Classes Válidas (EP) | Classes Inválidas (EP) | Valores-Limite (BVA) |
 | :---: | :--- | :--- | :--- | :--- | :--- |
-| CT-FILT-001 | Filtro valor mínimo/valor máximo | Filtro não pode buscar fora da faixa de valor estipulada | Ausente; ValorMin; ValorMax | Texto; número negativo ; valorMin > valorMax | -1, 0, 0.01, 49999, 50000, 50001|
-| CT-FILT-002 | Filtro Impossível | Filtros não condizentes com perfil; ex: valorMin: 1 bilhão | valorMin: 50000; valorMax: 1000000 | 1000000000; 10000000000 | -1000000000; 1000000000 |
-| CT-FILT-003 | Limpar filtros | Restauração do feed original | Botão Limpar filtro com filtros ativos | Manter os filtros aplicados após o reset | Transição de estados N filtros aplicados -> 0 filtros aplicados|
-| CT-FILT-004 | Filtros não recuperam editais descartados pelo perfil | Filtro restritivo sobre editais aderentes | Edital D (fora da faixa de perfil) reaparecer com o filtro | Pesquisar pelos parâmetros de busca incluindo o escopo do edital D |
-| CT-FILT-005 | Filtros não recalculam | Subconjunto filtrado, preservando notas e a ordem relativa | Modificação de pontuação ou reordenação ao refinar por texto/UF/valor | Diferença score antes e depois do filtro = 0 |
-| CT-FILT-006 | Palavra chave | Normalizador idêntico ao score (sem maiúsculas/acentos/plural simples | NOTEBOOK; notebook; Notébook; notebooks | Strings vazias ou mal formatadas; números  | Termos com acento vs sem acento gerando matchs idênticos |
-| CT-FILT-007 | Parâmetro inválido | Verificação de tipos corretos e consistentes | uf/modalidade (DF/TI) | Tipos incorretos; datas inválidas ; strings fora do padrão;  parâmetros fora da lista | retorno HTTP 400; ecra mantendo lista anterior|
-| CT-FILT-008 | Erro durante a pesquisa | Mensagem de erro com "tentar novamente" |Erro de rede ou indisponibilidade temporária durante refinamento com mensagem de erro amigável | Perda dos filtros aplicados ao falhar a requisição| Estado do input de busca e filtros preservados após o erro HTTP|
-| CT-FILT-009 | Desempenho |Meta de latência p95≤800 ms com o seed| Execução rápida e bem sucedida | Latência p95>800 ms | Teste com limiar estrito: 700, 900 |
+| **CT-FILT-001** | `valorMin` / `valorMax` | Filtro dinâmico no ecrã $\ge 0$; `min <= max`; edital sem valor não satisfaz filtro ativo | Ausente; apenas `valorMin` (ex: `50000`); apenas `valorMax`; ambos válidos | Texto (`"abc"`), número negativo (`-1`), `valorMin > valorMax`, edital sem valor com filtro ativo | `-0.01`, `0`, `0.01`; `49999.99`, `50000.00`, `50000.01`; `min = max` |
+| **CT-FILT-002** | Filtro impossível | Filtro excessivo sem correspondência (ex: `valorMin` de 1 bilhão) | Parâmetro extremo válido sintaticamente mas vazio de resultados | Quebra da aplicação por estouro numérico | `valorMin = 1.000.000.000` $\to$ Mensagem *"Sem resultados para estes filtros"* e botão *"Limpar filtros"* |
+| **CT-FILT-003** | Clicar em "Limpar filtros" | Botão remove todos os filtros e volta ao feed completo na ordem original | Ação de clique sobre o botão de estado vazio de filtros | Permanência de parâmetros na URL ou na listagem restrita | Transição: $N$ filtros aplicados $\to$ $0$ filtros (feed original completo) |
+| **CT-FILT-004** | Filtro não recupera descartado | O edital do caso D (fora da faixa) não aparece, mesmo com parâmetros que o incluiriam | Filtros restritivos aplicados sobre o conjunto permitido pelo perfil | Edital descartado pelo perfil reaparecer devido ao filtro dinâmico | Parâmetros de busca englobando o escopo do edital D $\to$ permanência do descarte |
+| **CT-FILT-005** | Filtros não recalculam | O Score de cada edital é igual com e sem filtros | Subconjunto filtrado preservando exatamente a pontuação original | Recálculo dinâmico ou alteração de notas na listagem refinada | Diferença de Score antes e depois do filtro = `0` |
+| **CT-FILT-006** | Palavra-chave | Normalizador idêntico ao do score (sem maiúsculas/acentos, plural simples) | `"NOTEBOOK"`, `"notebook"`, `"Notébook"`, `"notebooks"` | Strings vazias ou formatação incorreta | Termos com acento vs sem acento gerando idênticos resultados (`"NOTEBOOK"` e `"Notébook"`) |
+| **CT-FILT-007** | Parâmetro inválido | Parâmetros opcionais validados com Zod; valor inválido devolve 400 com mensagem; **o ecrã mantém a lista anterior** | Tipos corretos e consistentes com o contrato | Tipos incorretos (`-1`, strings em campos numéricos, datas corrompidas) | Envio de parâmetro inválido $\to$ HTTP `400` e preservação da lista anterior no ecrã |
+| **CT-FILT-008** | Erro durante a pesquisa | Mensagem de erro amigável com *"Tentar novamente"*, mantendo os filtros aplicados | Erro de rede ou indisponibilidade temporária durante o refinamento | Perda dos filtros aplicados ao ocorrer falha na requisição | Estado dos inputs de filtro preservados intactos após a falha HTTP |
+| **CT-FILT-009** | Desempenho | Meta de latência $p95 \le 800\text{ ms}$ com o seed (medida já no CP2) | Amostras de latência de leitura sob carga com o seed oficial | Latência $p95 > 800\text{ ms}$ | Limiar estrito: `799 ms` vs `801 ms` (calculado sobre 200 amostras) |
 
 ## Jornada 3: Monitorização de Risco Documental e Revalidação (`CT-CERT-001` a `010`)
 **Rastreabilidade:** US08, US09, US10, US03 e RF08 a RF10
