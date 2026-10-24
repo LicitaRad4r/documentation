@@ -18,7 +18,7 @@
 | :---: | :--- | :--- | :--- | :--- | :--- |
 | CT-FILT-001 | Filtro valor mínimo/valor máximo | Filtro não pode buscar fora da faixa de valor estipulada | Ausente; ValorMin; ValorMax | Texto; número negativo ; valorMin > valorMax | -1, 0, 0.01, 49999, 50000, 50001|
 | CT-FILT-002 | Filtro Impossível | Filtros não condizentes com perfil; ex: valorMin: 1 bilhão | valorMin: 50000; valorMax: 1000000 | 1000000000; 10000000000 | -1000000000; 1000000000 |
-| CT-FILT-003 | Limpar filtros | Restauração do feed original | Botão Limpar filtro com filtros ativos | Manter os filtros aplicados após o reset | Transição de estados N filtros aplicados -> 0 filtros aplicados |
+| CT-FILT-003 | Limpar filtros | Restauração do feed original | Botão Limpar filtro com filtros ativos | Manter os filtros aplicados após o reset | Transição de estados N filtros aplicados -> 0 filtros aplicados|
 | CT-FILT-004 | Filtros não recuperam editais descartados pelo perfil | Filtro restritivo sobre editais aderentes | Edital D (fora da faixa de perfil) reaparecer com o filtro | Pesquisar pelos parâmetros de busca incluindo o escopo do edital D |
 | CT-FILT-005 | Filtros não recalculam | Subconjunto filtrado, preservando notas e a ordem relativa | Modificação de pontuação ou reordenação ao refinar por texto/UF/valor | Diferença score antes e depois do filtro = 0 |
 | CT-FILT-006 | Palavra chave | Normalizador idêntico ao score (sem maiúsculas/acentos/plural simples | NOTEBOOK; notebook; Notébook; notebooks | Strings vazias ou mal formatadas; números  | Termos com acento vs sem acento gerando matchs idênticos |
