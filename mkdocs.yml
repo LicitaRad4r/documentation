@@ -26,20 +26,26 @@ extra_css:
 
 nav:
   - Início: index.md
-  - Definition of Done: definition-of-done.md
+  - Gestão e Metodologia:
+    - Cronograma e Sprints: gestao_metodologia/Cronograma.md
+    - Definition of Done: gestao_metodologia/definition-of-done.md
+    - Equipe e Comunicação: gestao_metodologia/equipedesenvolvedora.md
   - Decisões Técnicas (ADRs): adrs/decisoes_tecnicas.md
   - Arquitetura: architecture/Arquitetura.md
   - Produto:
-    - Negócio:
-      - Visão de Produto: requirements/produto/Negocio/visao_de_produto.md
-      - Personas: requirements/produto/Negocio/personas.md
-      - Filtros: requirements/produto/Negocio/filtros.md
-      - Score de Aderência: requirements/produto/Negocio/score.md
+    - Visão do Produto:
+      - Visão Geral: requirements/produto/negocio/visao/visao_geral.md
+      - Escopo e Impacto: requirements/produto/negocio/visao/impacto.md
+      - Viabilidade: requirements/produto/negocio/visao/viabilidade.md
+      - Personas: requirements/produto/negocio/visao/personas.md
+    - Regras de Negócio:
+      - Score de Aderência: requirements/produto/negocio/Regradenegocio/score.md
+      - Filtros: requirements/produto/negocio/Regradenegocio/filtros.md
     - Requisitos:
-      - Matriz MoSCoW: requirements/produto/Requisitos/MosCOW.md
-      - Requisitos Funcionais: requirements/produto/Requisitos/requisitosfuncionais.md
-      - Requisitos Não Funcionais: requirements/produto/Requisitos/naofuncionais.md
-      - Histórias de Usuário: requirements/produto/Requisitos/historias.md
+      - Matriz MoSCoW: requirements/produto/requisitos/MosCOW.md
+      - Requisitos Funcionais: requirements/produto/requisitos/requisitosfuncionais.md
+      - Requisitos Não Funcionais: requirements/produto/requisitos/naofuncionais.md
+      - Histórias de Usuário: requirements/produto/requisitos/historias.md
   - Testes:
     - Estratégia de Testes: Testes/estrategia_de_testes.md
 
