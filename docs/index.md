@@ -49,10 +49,7 @@ Este projeto está a ser desenvolvido como parte do **AI Lab (Makers Ciclo 1)** 
 
 Utilize o menu lateral esquerdo para explorar as diferentes secções do nosso projeto:
 
-- **[Produto](requirements/produto/Negocio/visao_de_produto.md):** Descubra a visão geral, as nossas Personas (o Decisor e a Analista) e as funcionalidades principais.
-- **[Requisitos](requirements/produto/Requisitos/requisitosfuncionais.md):** Consulte os Requisitos Funcionais, Não Funcionais e as Histórias de Utilizador do MVP.
+- **[Produto](requirements/produto/negocio/visao/visao_geral.md):** Descubra a visão geral, as nossas Personas (o Decisor e a Analista) e as funcionalidades principais.
+- **[Requisitos](requirements/produto/requisitos/requisitosfuncionais.md):** Consulte os Requisitos Funcionais, Não Funcionais e as Histórias de Utilizador do MVP.
 - **[Arquitetura](architecture/Arquitetura.md):** Compreenda como o sistema está desenhado tecnicamente, incluindo diagramas do fluxo de dados e da base de dados.
 - **[Testes](Testes/estrategia_de_testes.md):** Veja a nossa estratégia de Qualidade de Software (QA).
-
----
-*Documentação atualizada de forma contínua durante o ciclo de desenvolvimento.*
