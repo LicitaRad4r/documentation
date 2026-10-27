@@ -1,185 +1,158 @@
 # Product Backlog — Histórias de Utilizador (MVP)
 
-Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de Utilizador (User Stories) focadas na entrega de valor para as nossas personas principais: o **Decisor (Bruno)** e a **Analista (Mariana)**.
+Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de Utilizador granulares. Seguindo a abordagem ScrumXP, os épicos foram desdobrados em histórias menores e testáveis (formato BDD) para facilitar o planeamento das *Sprints* e a automação de testes.
 
 ---
 
 ## Épico 1: Gestão de Acessos e Hierarquia
 
-### US01 - Autenticação no Sistema
-> **Como** Decisor ou Analista, **eu quero** fazer login na plataforma utilizando o meu e-mail corporativo e palavra-passe, **para que** consiga aceder à minha área de trabalho segura.
+### US01 - Registo da Empresa (Onboarding)
+> **Como** Decisor, **eu quero** registar a minha empresa na plataforma, **para que** possa criar a minha conta de Administrador e iniciar o uso do sistema.
 
+**Rastreabilidade:** RF01
 **Critérios de Aceitação:**
-- [x] O sistema deve validar se o e-mail tem um formato correto.
-- [x] O sistema deve exibir erro descritivo para credenciais inválidas.
-- [x] Deve existir um fluxo funcional de "Esqueci-me da palavra-passe".
-- [x] A sessão deve expirar automaticamente por inatividade (segurança).
+- [x] **Dado que** preencho o CNPJ, Nome, E-mail corporativo e Senha, **quando** submeto o formulário, **então** o sistema cria o meu perfil com a *role* "Administrador" e cria o `tenant_id` da empresa.
 
-### US02 - Gestão de Convites para a Equipa
-> **Como** Decisor, **eu quero** enviar um convite de acesso para o e-mail da minha Analista, **para que** ela possa entrar na plataforma associada à conta da nossa organização.
+### US02 - Login no Sistema
+> **Como** Utilizador, **eu quero** fazer login com e-mail e palavra-passe, **para que** consiga aceder à minha área de trabalho segura.
 
+**Rastreabilidade:** RF01
 **Critérios de Aceitação:**
-- [x] O Administrador deve conseguir inserir um e-mail num campo de convite.
-- [x] O sistema deve disparar um e-mail com um link único de registo.
-- [x] O utilizador convidado entra automaticamente com o perfil "Analista" associado à empresa matriz.
+- [x] **Dado que** insiro credenciais incorretas, **quando** clico em Entrar, **então** o sistema exibe "E-mail ou palavra-passe incorretos".
+- [x] **Dado que** faço login com sucesso, **quando** a sessão expira (4h de inatividade), **então** sou redirecionado para o ecrã de login.
 
-### US03 - Restrição de Acessos Sensíveis
-> **Como** Decisor, **eu quero** que a área de certidões e dados financeiros seja bloqueada para os perfis de Analista, **para que** eu garanta o sigilo das informações estratégicas da empresa.
+### US03 - Recuperação de Palavra-passe
+> **Como** Utilizador, **eu quero** solicitar a recuperação da minha palavra-passe, **para que** possa voltar a aceder à conta caso a esqueça.
 
+**Rastreabilidade:** RF01
 **Critérios de Aceitação:**
-- [x] A aba de "Documentação Legal" não deve renderizar no menu lateral para o perfil "Analista".
-- [x] Se um "Analista" tentar aceder ao URL direto das certidões, deve ser redirecionado para uma página de "Acesso Negado (403)".
+- [x] **Dado que** insiro o meu e-mail na recuperação, **quando** submeto, **então** recebo um link com validade de 1 hora para redefinir a palavra-passe.
+
+### US04 - Envio de Convites para a Equipa
+> **Como** Decisor, **eu quero** enviar um convite de acesso para o e-mail da minha Analista, **para que** ela integre o ambiente da empresa.
+
+**Rastreabilidade:** RF02
+**Critérios de Aceitação:**
+- [x] **Dado que** insiro o e-mail da minha funcionária, **quando** envio o convite, **então** o sistema gera um link único atrelado ao `tenant_id` da minha empresa.
+
+### US05 - Aceitação do Convite
+> **Como** Analista, **eu quero** aceitar o convite recebido por e-mail, **para que** crie a minha palavra-passe e aceda à plataforma.
+
+**Rastreabilidade:** RF02
+**Critérios de Aceitação:**
+- [x] **Dado que** clico no link de convite, **quando** defino a minha palavra-passe, **então** o meu utilizador é criado com a *role* "Analista" na mesma empresa de quem me convidou.
+
+### US06 - Restrição de Acessos Sensíveis (Backend e Frontend)
+> **Como** Sistema, **eu quero** bloquear a área de certidões e dados financeiros para o perfil de Analista, **para que** o sigilo estratégico da empresa seja garantido.
+
+**Rastreabilidade:** RF03, RNF06, ADR-0005
+**Critérios de Aceitação:**
+- [x] **Dado que** uma Analista faz login, **quando** o menu é carregado, **então** a opção "Documentação Legal" fica oculta.
+- [x] **Dado que** uma Analista força o acesso via URL (`/certidoes`), **quando** a página tenta carregar, **então** ocorre um redirecionamento automático exibindo Erro 403.
 
 ---
 
 ## Épico 2: Motor de Busca e Triagem (Integração PNCP)
 
-### US04 - Visualizar Feed de Oportunidades
+### US07 - Ingestão Automática do PNCP
+> **Como** Sistema, **eu quero** consumir a API do PNCP diariamente, **para que** a base de editais do LicitaRadar esteja sempre atualizada sem intervenção manual.
 
-> **Como** Analista, **eu quero** visualizar uma lista de editais abertos do PNCP, ordenada pela aderência ao perfil da minha empresa, **para que** não tenha de procurar manualmente em dezenas de diários oficiais.
-
-**Rastreabilidade:** RF04, RF06, ADR-0007, ADR-0008
-
+**Rastreabilidade:** RF04 (Backend)
 **Critérios de Aceitação:**
+- [x] **Dado que** é 02h00 da manhã, **quando** o *job* é ativado, **então** o sistema recolhe novos editais do PNCP e grava-os no banco de dados.
 
-- [ ] O feed só é acessível a utilizador autenticado e mostra apenas dados da organização do utilizador.
-- [ ] Enquanto a lista é carregada, o ecrã exibe um estado de carregamento.
-- [ ] O feed lista os editais já ingeridos e armazenados. Abrir o feed não faz chamadas ao PNCP.
-- [ ] A lista vem ordenada do maior para o menor Score de Aderência (US06). Em caso de empate, vale o prazo limite mais próximo, depois a publicação mais recente e, por último, o ID do edital.
-- [ ] Editais descartados pelo perfil da empresa (funil eliminatório) não aparecem no feed.
-- [ ] Cada item (card) mostra: Título, Órgão, Modalidade, Prazo, Valor Estimado, Score (0–100) e faixa (Alta, Média ou Baixa).
-- [ ] A lista é paginada (ou usa scroll infinito), sem carregar todos os editais de uma só vez.
-- [ ] Se não existirem editais ingeridos, o ecrã mostra um estado vazio a informar isso.
-- [ ] Se existirem editais, mas todos forem descartados pelo perfil, o ecrã mostra um estado vazio diferente, a orientar a rever os termos-chave e a faixa de valor do perfil.
-- [ ] Se o carregamento falhar, o ecrã mostra uma mensagem de erro amigável com a opção "Tentar novamente". O erro nunca aparece como estado vazio.
+### US08 - Configuração do Perfil da Empresa
+> **Como** Decisor ou Analista, **eu quero** definir as palavras-chave, estados (UF) e faixa de valor, **para que** o sistema saiba que tipo de editais interessam à empresa.
 
-### US05 - Filtrar Editais
-> **Como** Analista, **eu quero** filtrar os editais por localização, valor e palavra-chave, **para que** encontre rapidamente as oportunidades que a minha PME tem capacidade operacional de atender.
-
-**Rastreabilidade:** RF05, ADR-0003, página Filtros
-
+**Rastreabilidade:** RF06 (Pré-requisito para o Score)
 **Critérios de Aceitação:**
+- [x] **Dado que** estou no meu perfil, **quando** adiciono os termos (ex: "computador", "notebook"), **então** o motor de busca passa a usar estes dados para calcular o Score.
 
-- [ ] Existem campos de filtro para Palavra-chave, UF, Município, Modalidade, Datas e Valor Estimado.
-- [ ] Os filtros só restringem o feed: não recalculam o Score, mantêm a ordenação por Score e não devolvem editais já descartados pelo perfil.
-- [ ] O feed atualiza os resultados de forma dinâmica ao aplicar os filtros, com paginação e processamento no servidor.
-- [ ] Enquanto os resultados são carregados, o ecrã exibe um estado de carregamento.
-- [ ] A pesquisa respeita a meta de desempenho do projeto (p95 de leitura ≤ 800 ms).
-- [ ] Se nenhum edital corresponder aos filtros aplicados, o ecrã mostra um estado vazio que informa que não há resultados para aquela combinação e oferece a ação "Limpar filtros".
-- [ ] Este estado vazio é diferente dos estados vazios da US04 (sem editais ingeridos e todos descartados pelo perfil).
-- [ ] Se a pesquisa falhar, o ecrã mostra uma mensagem de erro amigável com a opção "Tentar novamente", e os filtros aplicados mantêm-se.
+### US09 - Visualizar Feed Ranqueado
+> **Como** Analista, **eu quero** visualizar uma lista de editais ordenada pela aderência, **para que** os mais compatíveis apareçam no topo.
 
-### US06 - Calcular Score de Aderência
-
-> **Como** Analista, **eu quero** ver uma pontuação de aderência em cada edital, **para que** saiba de imediato quais as licitações mais compatíveis com o perfil da nossa empresa.
-
-**Rastreabilidade:** RF06, ADR-0008, páginas Score de Aderência e Filtros
-
+**Rastreabilidade:** RF04, RF06
 **Critérios de Aceitação:**
+- [x] **Dado que** abro o Feed, **quando** a lista carrega, **então** os editais vêm ordenados do maior Score para o menor.
+- [x] **Dado que** faço *scroll* no fim da página, **quando** atinjo o limite, **então** a paginação automática traz os próximos 20 editais.
 
-*Exibição*
+### US10 - Aplicar Filtros Dinâmicos
+> **Como** Analista, **eu quero** filtrar os resultados por localização e data, **para que** encontre editais específicos sem perder a ordenação de Score.
 
-- [ ] Cada edital exibe um badge com o Score (nota inteira de 0 a 100) e a faixa correspondente: Alta (80 a 100), Média (50 a 79) ou Baixa (0 a 49). O texto da faixa aparece no badge, não apenas a cor.
-
-*Funil eliminatório*
-
-- [ ] O edital é descartado (sem Score e fora do feed) se falhar em qualquer um destes critérios do perfil:
-
-    - nenhum termo-chave aparece no objeto do edital;
-    - a empresa definiu uma categoria PNCP e o edital tem outra (se o edital não tem categoria, a restrição é ignorada);
-    - restam menos dias úteis do que o prazo mínimo do perfil (padrão: 3), ou o prazo já expirou;
-    - a empresa definiu modalidades e a do edital não está entre as aceites;
-    - o valor está mais de 10% fora da faixa configurada.
-
-*Pontuação (máximo de 100 pontos)*
-
-- [ ] Termos-chave (peso 40): 40 pontos para termo exato ou expressão completa; 20 pontos para correspondência parcial.
-- [ ] Localidade (peso 25): 25 pontos se a UF do órgão está no perfil; 0 caso contrário. O edital fora das UFs do perfil não é descartado.
-- [ ] Valor estimado (peso 15): 15 pontos dentro da faixa; 5 pontos até 10% fora; 0 pontos se o valor não foi informado (o edital não é descartado).
-- [ ] Prazo (peso 10): 10 pontos com 8 dias úteis ou mais; 5 pontos com 4 a 7; 0 pontos com menos de 4.
-- [ ] Modalidade (peso 10): 10 pontos se é a prioritária; 5 pontos se é outra modalidade aceite.
-
-*Reescala*
-
-- [ ] UF, valor e modalidade são opcionais. Os que a empresa não configurou saem do cálculo, e a nota é reescalada: Score = arredondar(100 × pontos obtidos ÷ soma dos pesos dos critérios configurados).
-
-*Correspondência dos termos-chave*
-
-- [ ] A comparação ignora maiúsculas, minúsculas e acentos, e aceita plural simples.
-- [ ] Termos curtos só correspondem como palavra inteira (a sigla "TI" não corresponde a "atividade").
-
-*Comportamento do cálculo*
-
-- [ ] O cálculo é determinístico: o mesmo perfil e o mesmo edital geram sempre o mesmo Score.
-- [ ] O Score é calculado por empresa. Perfis diferentes geram notas diferentes para o mesmo edital, e uma empresa nunca vê o Score de outra.
-- [ ] O Score é recalculado quando entram novos editais, quando o perfil é editado e numa tarefa diária à meia-noite (a pontuação de prazo muda com o passar dos dias).
-- [ ] Os filtros rápidos da interface não recalculam o Score; apenas restringem o que é exibido.
-
-### US07 - Sinalizar Edital Recomendado
-> **Como** Analista, **eu quero** marcar um edital promissor como "Recomendado", **para que** ele seja enviado diretamente para o painel de aprovação do Decisor.
-
+**Rastreabilidade:** RF05
 **Critérios de Aceitação:**
-- [x] Deve existir um botão de ação (ex: ícone de estrela ou "Recomendar") em cada edital.
-- [x] Ao clicar, o estado do edital no banco de dados deve ser alterado e refletido visualmente para a Analista.
+- [x] **Dado que** seleciono a UF "SP", **quando** aplico o filtro, **então** o Feed exibe apenas editais de São Paulo, mantendo as notas de aderência.
+
+### US11 - Cálculo Determinístico do Score
+> **Como** Sistema, **eu quero** calcular o Score de Aderência (0 a 100), **para que** o edital possa ser classificado como Alta, Média ou Baixa compatibilidade.
+
+**Rastreabilidade:** RF06, ADR-0008
+**Critérios de Aceitação:**
+- [x] **Dado que** um edital não tem NENHUMA palavra-chave do perfil, **quando** é avaliado, **então** é sumariamente descartado e oculto do Feed.
+- [x] **Dado que** a pontuação é calculada, **quando** atinge 85 pontos, **então** recebe o *badge* "Alta Aderência".
+
+### US12 - Acesso a Detalhes e Anexos
+> **Como** Analista, **eu quero** abrir o detalhe do edital, **para que** possa ler a descrição completa e descarregar o PDF do edital.
+
+**Rastreabilidade:** RF04
+**Critérios de Aceitação:**
+- [x] **Dado que** clico num edital do feed, **quando** o modal/página abre, **então** vejo o link direto para descarregar o documento original do portal governamental.
+
+### US13 - Recomendar Edital
+> **Como** Analista, **eu quero** marcar um edital promissor como "Recomendado", **para que** ele seja enviado para a análise do Decisor.
+
+**Rastreabilidade:** RF07
+**Critérios de Aceitação:**
+- [x] **Dado que** clico na "Estrela" de um edital, **quando** a ação é registada, **então** esse edital aparece no Dashboard do Decisor.
 
 ---
 
 ## Épico 3: Gestão Documental e Conformidade
 
-### US08 - Repositório de Certidões
-> **Como** Decisor, **eu quero** fazer o upload das certidões legais da empresa, **para que** tenha os documentos centralizados e seguros para qualquer disputa.
+### US14 - Upload de Novas Certidões
+> **Como** Decisor, **eu quero** fazer o upload de certidões informando a data de validade, **para que** a documentação fique guardada na nuvem.
 
+**Rastreabilidade:** RF08, RF09
 **Critérios de Aceitação:**
-- [x] O sistema deve aceitar upload de ficheiros em formato PDF, JPG e PNG (máx. 5MB).
-- [x] O ficheiro deve ser guardado de forma segura, com o link associado à base de dados da empresa.
+- [x] **Dado que** anexo um PDF de 4MB e informo a data de validade futura, **quando** submeto, **então** o documento fica visível na lista de certidões.
+- [x] **Dado que** tento gravar sem preencher a "Data de validade", **quando** clico em Guardar, **então** a ação é bloqueada com erro.
 
-### US09 - Registo de Validade dos Documentos
-> **Como** Decisor, **eu quero** inserir a data de validade no momento do upload de uma certidão, **para que** o sistema saiba quando o documento vai expirar.
+### US15 - Atualização de Certidão (Renovação)
+> **Como** Decisor, **eu quero** substituir uma certidão prestes a vencer por uma nova, **para que** o alerta desapareça.
 
+**Rastreabilidade:** RF08, RF10
 **Critérios de Aceitação:**
-- [x] O formulário de upload deve ter um campo obrigatório de "Data de Validade".
-- [x] Não deve ser possível inserir uma data que já se encontre no passado no momento do registo inicial.
+- [x] **Dado que** submeto uma certidão renovada, **quando** o *upload* conclui, **então** o ficheiro anterior é inativado e a nova data de validade assume o controlo dos alertas.
 
-### US10 - Alerta de Vencimento de Certidões
-> **Como** Decisor, **eu quero** receber um alerta quando uma certidão estiver prestes a expirar, **para que** tenha tempo de renovar o documento e evite a inabilitação num edital.
+### US16 - Alertas Visuais de Vencimento
+> **Como** Decisor, **eu quero** receber um alerta destacado para certidões próximas do vencimento, **para que** evite inabilitações em processos.
 
-**Rastreabilidade:** RF08, RF09, RF10, US03, US08, US09
-
+**Rastreabilidade:** RF10
 **Critérios de Aceitação:**
-
-*Deteção e exibição*
-
-- [ ] A verificação de datas corre automaticamente todos os dias às 00h00.
-- [ ] O painel de alertas mostra as certidões vencidas ou a 30 dias ou menos do vencimento, das mais urgentes para as menos urgentes.
-- [ ] Cada alerta mostra o nome da certidão, a data de validade e os dias restantes.
-- [ ] O sistema exibe uma etiqueta visual vermelha (🔴) para documentos a 15 dias ou menos do vencimento, e amarela (🟡) para documentos entre 16 e 30 dias. Certidões já vencidas exibem a etiqueta "Vencida". A etiqueta traz texto, não apenas cor.
-- [ ] Se nenhuma certidão estiver em alerta, o painel mostra uma mensagem a informar que todas as certidões estão em dia.
-- [ ] O painel de alertas só é visível para o Decisor (US03).
-
-*Ação: renovar a certidão*
-
-- [ ] Cada alerta tem a ação "Renovar certidão".
-- [ ] A ação abre um formulário para enviar o novo ficheiro (PDF, JPG ou PNG, máx. 5MB) e informar a nova data de validade, que é obrigatória.
-- [ ] A nova data de validade tem de ser futura e posterior à data da certidão atual. Caso contrário, o formulário mostra um erro descritivo e não grava.
-- [ ] Ao gravar, o novo ficheiro passa a ser a versão vigente da certidão e a etiqueta é recalculada de imediato, sem esperar pela verificação das 00h00.
-- [ ] Se a nova data ainda estiver a 30 dias ou menos, o alerta continua com a etiqueta correspondente. Caso contrário, o alerta desaparece do painel.
-- [ ] Se o envio falhar, o ecrã mostra uma mensagem de erro amigável com a opção "Tentar novamente", e a certidão anterior mantém-se inalterada.
+- [x] **Dado que** faltam 12 dias para o vencimento de uma certidão, **quando** entro no painel, **então** vejo a etiqueta vermelha 🔴 "Urgente / A Vencer".
+- [x] **Dado que** uma certidão venceu ontem, **quando** verifico o painel, **então** vejo a indicação de que está "Expirada".
 
 ---
 
 ## Épico 4: Fluxo de Decisão
 
-### US11 - Dashboard de Decisão
-> **Como** Decisor, **eu quero** aceder a um painel consolidado com as oportunidades selecionadas pela minha equipa, **para que** possa focar apenas nos editais com real potencial de ganho.
+### US17 - Dashboard de Decisão
+> **Como** Decisor, **eu quero** aceder a um painel consolidado apenas com os editais recomendados, **para que** não perca tempo a analisar ruído.
 
+**Rastreabilidade:** RF11
 **Critérios de Aceitação:**
-- [x] O Dashboard principal do Administrador deve carregar apenas editais marcados como "Recomendados" pela Analista.
-- [x] A interface deve permitir a leitura do resumo e acesso rápido aos anexos do edital.
+- [x] **Dado que** entro na plataforma, **quando** vejo a Home, **então** só visualizo os editais marcados com a "Estrela" pela Analista (US13).
 
-### US12 - Aprovação e Descarte de Oportunidades
-> **Como** Decisor, **eu quero** aprovar ou descartar um edital recomendado, **para que** a equipa saiba exatamente quais os processos que vão avançar para a fase de lances.
+### US18 - Aprovar Edital para Disputa
+> **Como** Decisor, **eu quero** aprovar um edital recomendado, **para que** ele avance para a fase de preparação de proposta.
 
+**Rastreabilidade:** RF12
 **Critérios de Aceitação:**
-- [x] Devem existir dois botões em cada edital do Dashboard: "Aprovar para Disputa" e "Descartar".
-- [x] Ao clicar em "Descartar", o edital é removido da fila principal.
-- [x] Ao clicar em "Aprovar", o estado muda para "Em Disputa" e o edital passa para o repositório de oportunidades ganhas/em andamento.
+- [x] **Dado que** aprovo uma recomendação, **quando** confirmo, **então** o edital move-se para a aba "Em Disputa".
+
+### US19 - Descartar Oportunidade
+> **Como** Decisor, **eu quero** descartar um edital recomendado, **para que** a equipa saiba que não vamos concorrer.
+
+**Rastreabilidade:** RF12
+**Critérios de Aceitação:**
+- [x] **Dado que** clico em "Descartar", **quando** a ação é gravada, **então** o edital sai da minha fila visual e a Analista é sinalizada da recusa.
