@@ -13,8 +13,8 @@ O LicitaRadar é uma plataforma SaaS B2B que ajuda Pequenas e Médias Empresas (
 
     ---
 
-    Empresas fornecedoras (PMEs) que já atuam ou desejam ingressar no mercado de compras públicas. *(Mais detalhes em [Personas](../personas.md/)).*
-
+    Empresas fornecedoras (PMEs) que já atuam ou desejam ingressar no mercado de compras públicas. *(Mais detalhes em [Personas](personas.md)).*
+    
 -   **Cujo problema é**
 
     ---
