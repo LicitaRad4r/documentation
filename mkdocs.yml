@@ -43,12 +43,14 @@ nav:
       - Score de Aderência: requirements/produto/negocio/Regradenegocio/score.md
       - Filtros: requirements/produto/negocio/Regradenegocio/filtros.md
     - Requisitos:
-      - Matriz MoSCoW: requirements/produto/requisitos/MosCOW.md
+      - Matriz MoSCoW: requirements/produto/requisitos/MoSCoW.md
       - Requisitos Funcionais: requirements/produto/requisitos/requisitosfuncionais.md
       - Requisitos Não Funcionais: requirements/produto/requisitos/naofuncionais.md
       - Histórias de Usuário: requirements/produto/requisitos/historias.md
   - Testes:
-    - Estratégia de Testes: Testes/estrategia_de_testes.md
+  - Estratégia de Testes: Testes/estrategia_de_testes.md
+  - Critérios Prioritários: Testes/criterios-prioritarios.md
+  - EP BVA v1: Testes/ep-bva-v1.md
     
 markdown_extensions:
   - admonition
