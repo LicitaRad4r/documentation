@@ -48,9 +48,9 @@ nav:
       - Requisitos Não Funcionais: requirements/produto/requisitos/naofuncionais.md
       - Histórias de Usuário: requirements/produto/requisitos/historias.md
   - Testes:
-  - Estratégia de Testes: Testes/estrategia_de_testes.md
-  - Critérios Prioritários: Testes/criterios-prioritarios.md
-  - EP BVA v1: Testes/ep-bva-v1.md
+    - Estratégia de Testes: Testes/estrategia_de_testes.md
+    - Critérios Prioritários: Testes/criterios-prioritarios.md
+    - EP BVA v1: Testes/ep-bva-v1.md
     
 markdown_extensions:
   - admonition
