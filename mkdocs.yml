@@ -51,6 +51,8 @@ nav:
     - Estratégia de Testes: Testes/estrategia_de_testes.md
     - Critérios Prioritários: Testes/criterios-prioritarios.md
     - EP BVA v1: Testes/ep-bva-v1.md
+    - Relatório dos Testes: Testes/relatorio-testes.md
+    - Matriz de Rastreabilidade: Testes/matriz-rastreabilidade
     
 markdown_extensions:
   - admonition
