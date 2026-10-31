@@ -32,6 +32,9 @@ nav:
     - Equipe e Comunicação: gestao_metodologia/equipedesenvolvedora.md
   - Decisões Técnicas (ADRs): adrs/decisoes_tecnicas.md
   - Arquitetura: architecture/Arquitetura.md
+  - FinOps (custo zero):
+    - Visão geral: finops/README.md
+    - Evidências: finops/evidencias/README.md
   - Produto:
     - Jornadas de Utilizador: requirements/produto/jornadas.md
     - Visão do Produto:

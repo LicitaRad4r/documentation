@@ -2,7 +2,7 @@
 
 **Tech Lead:** Júlia Neiva Lima  
 **Projeto:** LicitaRadar  
-**Versão:** 0.1 (17/10/2026)  
+**Versão:** 0.2 (31/10/2026)  
 
 ---
 
@@ -22,10 +22,12 @@ Cada ADR registra uma decisão técnica do LicitaRadar em três partes: contexto
 | **0009** | Estratégia de testes em camadas (Vitest e Playwright) |
 | **0010** | CI/CD com GitHub Actions |
 | **0011** | Docs-as-Code com MkDocs Material |
+| **0012** | Plano custo zero (sem voucher GCP) — **substitui partes de 0001 e 0004** |
 
 ---
 
 ## ADR-0001: Plataforma de nuvem: Google Cloud e Firebase
+- **Status:** Parcialmente substituído pelo **ADR-0012** (plano custo zero). Continua válido para Auth, Firestore e Hosting no Firebase; deixam de valer Blaze, alertas de orçamento GCP, Cloud Run, Cloud SQL e Secret Manager enquanto não houver voucher.
 - **Contexto:** O LicitaRadar precisa ir ao ar em um ciclo de aproximadamente 2 meses, com teto de custo de US$ 50 por equipe (estimativa de US$ 10 a US$ 20). Frontend, API, banco e segredos precisam de hospedagem com pouca operação manual, e o time precisa rodar tudo localmente sem custo (RNF12).
 - **Decisão:** Adotar o Google Cloud e o Firebase como plataforma única: Firebase Hosting (frontend), Cloud Run (API), Cloud SQL (PostgreSQL), Firestore e Secret Manager (segredos). Configurar alertas de orçamento em 50% (US$ 25), 80% (US$ 40) e 100% (US$ 50) e acompanhar o gasto semanalmente. A meta é gasto acumulado de até US$ 12 no Checkpoint 3.
 - **Consequências:**
@@ -62,6 +64,7 @@ Cada ADR registra uma decisão técnica do LicitaRadar em três partes: contexto
 ---
 
 ## ADR-0004: Google Cloud Run (serverless) para a API
+- **Status:** Substituído pelo **ADR-0012** enquanto vigorar o plano custo zero. A API vai para o Render (plano gratuito). Se o voucher GCP chegar, este ADR pode ser reativado.
 - **Contexto:** O tráfego do Licita Radar é irregular: a ingestão do PNCP e o recálculo diário do score geram picos, e no resto do tempo o sistema fica ocioso. O custo de nuvem precisa ficar abaixo de US$ 50 e o RNF01 exige escalabilidade automática.
 - **Decisão:** Executar a API Fastify em contêiner no Google Cloud Run, com escala automática e escala a zero quando ocioso. A observabilidade usa logs em JSON e as rotas `/healthz` e `/readyz`.
 - **Consequências:**
@@ -74,6 +77,7 @@ Cada ADR registra uma decisão técnica do LicitaRadar em três partes: contexto
 ---
 
 ## ADR-0005: Persistência com PostgreSQL e Firestore (Firebase Emulator Suite)
+- **Status:** Em revisão sob o **ADR-0012**. Em produção no plano Spark, o caminho sem cartão é o **Firestore**; Cloud SQL (PostgreSQL) exige faturamento e fica fora do custo zero. Localmente o Emulator Suite de Firestore permanece obrigatório. O uso de PostgreSQL no Compose, se mantido, é só desenvolvimento e precisa de ADR próprio alinhado ao 0012.
 - **Contexto:** O modelo tem dados relacionais (Organizações, Usuários, Editais e Certidões) e dados de leitura intensa por empresa (scores do feed e alertas). É preciso consistência, isolamento entre organizações (RNF06), ingestão idempotente de editais, identificados pelo número de controle do PNCP, e um ambiente local sem custo na nuvem (RNF12).
 - **Decisão:** Usar dois bancos, cada um onde faz mais sentido. O PostgreSQL (Cloud SQL em produção e contêiner Docker via docker-compose no ambiente local) guarda os dados relacionais: organizações, usuários, editais e certidões. O Firestore guarda os dados por empresa de leitura intensa, como scores do feed e alertas, protegidos por Security Rules `deny-all`. Localmente e no CI, o Firebase Emulator Suite simula o Firestore. DBeaver ou pgAdmin servem para inspecionar o PostgreSQL.
 - **Consequências:**
@@ -98,6 +102,7 @@ Cada ADR registra uma decisão técnica do LicitaRadar em três partes: contexto
 ---
 
 ## ADR-0007: Ingestão do PNCP idempotente e resiliente
+- **Status:** Complementado pelo **ADR-0012**: o agendamento diário sai do Cloud Scheduler e passa a ser um workflow do GitHub Actions com `schedule`, chamando rota protegida da API. Respeitar o teto de escritas do Firestore Spark (20 mil/dia): filtrar, upsert e teto por execução.
 - **Contexto:** A fonte de dados do Licita Radar é a API do PNCP, que recebe um grande volume de editais por dia e, como serviço governamental, pode ficar instável, lenta ou devolver respostas mal formadas. Falhas aqui fazem o feed ficar poluído ou incompleto, riscos tratados como altos na Estratégia de Testes (R4 e R5).
 - **Decisão:** Coletar os editais uma vez por dia, de forma automática e idempotente. O número de controle do PNCP é a chave única de cada edital, e a gravação é um `upsert`. Falhas (timeout, erro 500, JSON mal formado) geram nova tentativa com reprocessamento, e as falhas de cada coleta são registradas. Uma coleta interrompida retoma do ponto certo, sem duplicar. Cada payload é validado com Zod e normalizado: valor como `1.234,56` vira `1234.56`, datas viram ISO em UTC, a UF vai para maiúsculas e campos ausentes viram nulo. A base de editais é global e guardada uma única vez, para todas as empresas.
 - **Consequências:**
@@ -134,6 +139,7 @@ Cada ADR registra uma decisão técnica do LicitaRadar em três partes: contexto
 ---
 
 ## ADR-0010: CI/CD com GitHub Actions
+- **Status:** Complementado pelo **ADR-0012**. Em cada PR continua o CI (lint, build, testes, **gitleaks**). Deploy do frontend segue no Firebase Hosting; deploy da API no plano custo zero é o Render (merge na `main` após CI). O schedule de ingestão PNCP também vive no Actions.
 - **Contexto:** O ciclo é curto e a equipe adota ScrumXP, que exige integração contínua, revisão de código e testes automatizados. O código está no GitHub e o deploy vai para o Firebase Hosting e o Cloud Run.
 - **Decisão:** Usar o GitHub Actions para CI/CD (RNF09). Em cada pull request, em ordem e parando na primeira falha: lint e tipos, testes unitários com cobertura, integração, contrato da API, E2E e Precisão do score. Nenhum código entra na main sem revisão de pelo menos uma pessoa diferente do autor. O deploy em produção é manual (com aprovação), depois que o smoke test de staging passar. O CI também faz varredura de segredos.
 - **Consequências:**
@@ -154,3 +160,33 @@ Cada ADR registra uma decisão técnica do LicitaRadar em três partes: contexto
   * *Neutras ou a observar:* Registrar as alterações no histórico de versões de cada documento.
 - **Impacto operacional:** O site é gerado e publicado automaticamente pelo CI.
 - **Referências:** Relacionados: ADR-0010
+
+---
+
+## ADR-0012: Plano custo zero (sem voucher GCP)
+- **Status:** Proposto — aguardando aprovação do professor e do Tech Lead (prazo Checkpoint 2: 01/11/2026).
+- **Contexto:** O Caderno B2B assume plano Blaze (Cloud Run, Cloud Scheduler, Workload Identity, Secret Manager e alertas de orçamento). A equipe LicitaRadar não tem voucher GCP. Cadastrar cartão de estudante está fora de questão. O documento "Plano Custo Zero — sem o voucher do GCP" (14/10/2026) define substitutos gratuitos sem cartão. Até a Semana 4 tudo continua no Docker Compose e emuladores; a diferença aparece na Semana 5.
+- **Decisão:** Adotar o plano custo zero para o LicitaRadar:
+
+  | Peça do Caderno | Substituição |
+  | :--- | :--- |
+  | Firebase Auth + Firestore + Hosting | Firebase **Spark** (sem Blaze / sem faturamento) |
+  | Cloud Run (API) | **Render** (web service gratuito) |
+  | Cloud Scheduler (ingestão PNCP) | **GitHub Actions** com `schedule` (cron) |
+  | Secret Manager | Secrets do GitHub + variáveis de ambiente do Render |
+  | Workload Identity | Chave da conta de serviço Admin em secret (exceção; detalhar na Semana 5) |
+  | Alertas de orçamento 50/80/100% | Prints em `docs/finops/` (prova de “sem forma de pagamento”) |
+  | Cloud Monitoring | Logs do Render + UptimeRobot (Semana 5) |
+
+  **Não se aplica ao LicitaRadar:** Supabase Storage (só Habilita e EntregaProva).
+
+  **Regras de ouro:** (1) nunca cadastrar cartão; (2) nunca Upgrade/Blaze; (3) testes pesados e seed grande só no emulador; (4) um projeto Firebase por equipe; (5) chave de serviço com papel mínimo só em secrets; gitleaks no CI; (6) evidências em FinOps; (7) serviço novo = ADR + ok do Tech Lead.
+
+  **Ingestão PNCP:** filtrar por UF/modalidade/janela dos perfis; upsert sem regravar igual; teto de editais por execução (alinhar ao ADR-0007).
+- **Consequências:**
+  * *Positivas:* Gasto na nuvem = US$ 0; sem risco de cobrança em cartão de estudante.
+  * *Negativas ou trade-offs aceitos:* Cold start do Render (~1 min); cotas diárias do Spark (ex.: 20 mil escritas Firestore); exceções ao Caderno precisam de aprovação do professor.
+  * *Neutras ou a observar:* Se o voucher chegar, Auth/Firestore/Hosting permanecem; basta migrar a API para Cloud Run e reativar o ADR-0004.
+- **Impacto operacional:** DevOps mantém Compose + emuladores até a Semana 4; registra evidências em FinOps; ativa o workflow de ingestão e o Render na Semana 5. Tech Lead aprova este ADR com o professor até 01/11.
+- **Referências:** Relacionados: ADR-0001, ADR-0004, ADR-0005, ADR-0007, ADR-0010. Fonte: Plano Custo Zero — sem o voucher do GCP (14/10/2026). FinOps: `docs/finops/`.
+

@@ -90,3 +90,8 @@ flowchart TD
 | 🟢 **Verde** | Backend | Controladores (Fastify), regras de negócio, validação (Zod) |
 | 🟣 **Roxo** | Produção | Hospedagem em Nuvem (Google Cloud Run e Firebase Hosting) |
 | 🟡 **Amarelo** | Dev local | Ambiente de desenvolvimento (Docker Compose e Base de Dados local) |
+
+## Nota — plano custo zero (ADR-0012)
+
+Enquanto vigorar o plano custo zero (sem voucher GCP), a API de produção vai para o **Render** (não Cloud Run), a ingestão PNCP é agendada no **GitHub Actions**, e o Firebase permanece no plano **Spark** (sem cartão). As evidências de “sem forma de pagamento” ficam em [FinOps](../finops/README.md). Detalhes e exceções ao Caderno: [ADR-0012](../adrs/decisoes_tecnicas.md#adr-0012-plano-custo-zero-sem-voucher-gcp).
+
