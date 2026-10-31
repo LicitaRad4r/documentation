@@ -12,7 +12,7 @@ Os arquivos ficam em [`evidencias/`](evidencias/README.md).
 
 | # | Serviço | O que o print deve mostrar | Arquivo sugerido |
 | - | ------- | -------------------------- | ---------------- |
-| 1 | Firebase | Projeto no plano **Spark**; **sem** conta de faturamento / Blaze | `evidencias/01-firebase-spark.png` |
+| 1 | Firebase | Projeto no plano **Spark**; **sem** conta de faturamento / Blaze | [`evidencias/01-firebase-spark.png`](evidencias/01-firebase-spark.png) ✅ |
 | 2 | Render | Workspace no plano **Free**; sem cartão | `evidencias/02-render-free.png` *(Semana 5)* |
 | 3 | GitHub Actions | Uso dentro da cota gratuita | `evidencias/03-github-actions.png` *(quando o job existir)* |
 | 4 | UptimeRobot | Plano gratuito, sem cartão | `evidencias/04-uptime-robot.png` *(Semana 5)* |
@@ -40,6 +40,6 @@ Até a Semana 4, o item **1 (Firebase Spark)** é o prioritário.
 | Item | Status |
 | ---- | ------ |
 | ADR-0012 plano custo zero | Proposto (aguardando professor / Tech Lead) |
-| Firebase Spark + print | Pendente — criar projeto e anexar evidência |
+| Firebase Spark + print | Feito — ver [`evidencias/01-firebase-spark.png`](evidencias/01-firebase-spark.png) |
 | Render / UptimeRobot | Semana 5 |
 | Job PNCP no Actions | Esqueleto no repositório de código; ativar na Semana 5 |
