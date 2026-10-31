@@ -19,15 +19,6 @@ Os arquivos ficam em [`evidencias/`](evidencias/README.md).
 | 3 | GitHub Actions | Uso dentro da cota gratuita | `evidencias/03-github-actions.png` *(quando o job existir)* |
 | 4 | UptimeRobot | Plano gratuito, sem cartão | `evidencias/04-uptime-robot.png` *(Semana 5)* |
 
-Até a Semana 4, o item **1 (Firebase Spark)** é o prioritário.
-
-## Como tirar o print do Firebase (item 1)
-
-1. Acesse o [Firebase Console](https://console.firebase.google.com/) no projeto da equipe.
-2. Confirme que o plano é **Spark** (não Blaze).
-3. Em Project settings / Usage and billing (ou equivalente), mostre que **não há** billing account vinculada.
-4. Salve o print em `evidencias/01-firebase-spark.png` (ou `.jpg`) e atualize a tabela de status abaixo.
-
 ## Regras de ouro
 
 1. Nunca cadastrar cartão em GCP, Firebase, Render, Supabase ou GitHub.
