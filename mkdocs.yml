@@ -1,4 +1,4 @@
-site_name: LicitaRadar — Documentação
+site_name: LicitaRadar — Documentation
 site_url: https://licitarad4r.github.io/documentation/
 repo_url: https://github.com/LicitaRad4r/documentation
 docs_dir: docs
@@ -28,6 +28,8 @@ nav:
   - Início: index.md
   - Decisões Técnicas (ADRs): adrs/decisoes_tecnicas.md
   - Arquitetura: architecture/Arquitetura.md
+  - Segurança:
+    - Logs de Segurança: security/logs-seguranca.md
   - Produto:
     - Negócio:
       - Visão de Produto: requirements/produto/Negocio/visao_de_produto.md
@@ -42,7 +44,7 @@ nav:
       - Definition of Ready: requirements/produto/Requisitos/definition-of-ready.md
       - Definition of Done: requirements/produto/Requisitos/definition-of-done.md
   - Testes:
-    - Estratégia de Testes: testes/estrategia_de_testes.md
+    - Estratégia de Testes: Testes/estrategia_de_testes.md
 
 markdown_extensions:
   - admonition
