@@ -22,11 +22,10 @@ theme:
     - content.code.copy
 
 extra_css:
-  - assets/stylesheets/extra.class
+  - assets/stylesheets/extra.css
 
 nav:
   - Início: index.md
-  - Definition of Done: definition-of-done.md
   - Decisões Técnicas (ADRs): adrs/decisoes_tecnicas.md
   - Arquitetura: architecture/Arquitetura.md
   - Produto:
@@ -40,6 +39,8 @@ nav:
       - Requisitos Funcionais: requirements/produto/Requisitos/requisitosfuncionais.md
       - Requisitos Não Funcionais: requirements/produto/Requisitos/naofuncionais.md
       - Histórias de Usuário: requirements/produto/Requisitos/historias.md
+      - Definition of Ready: requirements/produto/Requisitos/definition-of-ready.md
+      - Definition of Done: requirements/produto/Requisitos/definition-of-done.md
   - Testes:
     - Estratégia de Testes: testes/estrategia_de_testes.md
 
