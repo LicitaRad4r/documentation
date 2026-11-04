@@ -1,0 +1,6 @@
+# Revisores padrão do repositório de documentação.
+# Com "Require review from Code Owners" na proteção da main,
+# basta a aprovação de UM dos donos listados.
+
+# Tech Lead + PO (todos os arquivos)
+*       @lianeiv @mariajulia-senaa
