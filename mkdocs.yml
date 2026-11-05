@@ -29,6 +29,8 @@ nav:
   - Gestão e Metodologia:
     - Como rodar localmente: gestao_metodologia/como-rodar.md
     - Cronograma e Sprints: gestao_metodologia/Cronograma.md
+    - Revisões do Backlog: gestao_metodologia/revisoesbacklog.md
+    - Definition of Ready: requirements/produto/Requisitos/definition-of-ready.md
     - Definition of Done: gestao_metodologia/definition-of-done.md
     - Equipe e Comunicação: gestao_metodologia/equipedesenvolvedora.md
   - Decisões Técnicas (ADRs): adrs/decisoes_tecnicas.md
@@ -37,27 +39,28 @@ nav:
     - Visão geral: finops/README.md
     - Evidências: finops/evidencias/README.md
   - Produto:
-    - Jornadas de Utilizador: requirements/produto/jornadas.md
     - Visão do Produto:
       - Visão Geral: requirements/produto/negocio/visao/visao_geral.md
-      - Escopo e Impacto: requirements/produto/negocio/visao/impacto.md
+      - Impacto: requirements/produto/negocio/visao/impacto.md
       - Viabilidade: requirements/produto/negocio/visao/viabilidade.md
       - Personas: requirements/produto/negocio/visao/personas.md
+    - Escopo do MVP: requirements/produto/negocio/visao/escopo.md
+    - Jornadas de Utilizador: requirements/produto/jornadas.md
+    - Requisitos:
+      - Matriz MoSCoW: requirements/produto/requisitos/MoSCoW.md
+      - Histórias de Usuário: requirements/produto/requisitos/historias.md
+      - Requisitos Funcionais: requirements/produto/requisitos/requisitosfuncionais.md
+      - Requisitos Não Funcionais: requirements/produto/requisitos/naofuncionais.md
     - Regras de Negócio:
       - Score de Aderência: requirements/produto/negocio/Regradenegocio/score.md
       - Filtros: requirements/produto/negocio/Regradenegocio/filtros.md
-    - Requisitos:
-      - Matriz MoSCoW: requirements/produto/requisitos/MoSCoW.md
-      - Requisitos Funcionais: requirements/produto/requisitos/requisitosfuncionais.md
-      - Requisitos Não Funcionais: requirements/produto/requisitos/naofuncionais.md
-      - Histórias de Usuário: requirements/produto/requisitos/historias.md
   - Testes:
     - Estratégia de Testes: Testes/estrategia_de_testes.md
     - Critérios Prioritários: Testes/criterios-prioritarios.md
     - EP BVA v1: Testes/ep-bva-v1.md
-    - Relatório dos Testes: Testes/relatorio-testes.md
     - Matriz de Rastreabilidade: Testes/matriz-rastreabilidade.md
-    
+    - Relatório de Testes (CP2): Testes/Relatorios/relatoriocp2.md
+
 markdown_extensions:
   - admonition
   - attr_list

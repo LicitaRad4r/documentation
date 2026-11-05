@@ -54,7 +54,7 @@ O projeto é necessário porque o processo de prospecção atual das PMEs é alt
 | **Perda de oportunidades** | Custo de oportunidade | Devido ao volume massivo de dados e ao esforço manual de leitura, editais altamente lucrativos passam despercebidos ou são descobertos quando já não há tempo hábil para montar uma proposta. |
 | **Inabilitação por falhas de controle** | Risco operacional | A gestão das certidões de habilitação costuma ser feita de memória ou em planilhas isoladas. Descobrir que um documento está vencido na véspera da entrega resulta em desclassificação imediata no certame. |
 
-A oportunidade de mercado explorada pelo LicitaRadar é transformar essa rotina exaustiva em um processo automatizado e focado em inteligência de dados, garantindo que as empresas vejam primeiro as licitações com maior probabilidade de vitória.
+A oportunidade de mercado explorada pelo LicitaRadar é transformar essa rotina exaustiva em um processo automatizado e focado em inteligência de dados, garantindo que as empresas vejam primeiro as licitações com maior aderência ao seu perfil.
 
 A figura a seguir apresenta o diagrama de Ishikawa, com as causas organizadas pelos 6Ms e o problema:
 
@@ -80,6 +80,7 @@ flowchart LR
     C --> C2[Envio de Propostas]
     C --> C3[Leitura de PDFs com OCR]
     C --> C4[Integração com outros portais]
+    C --> C5[Predição de chance de vitória]
 
     style A fill:#2563eb,stroke:#1d4ed8,color:#fff,stroke-width:2px
     style B fill:#16a34a,stroke:#15803d,color:#fff,stroke-width:2px

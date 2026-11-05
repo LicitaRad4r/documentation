@@ -1,44 +1,89 @@
-# Jornadas de Utilizador (Checkpoint 2)
+# Jornadas de Utilizador
 
-Este documento mapeia as 4 jornadas ponta a ponta do LicitaRadar. Cada fluxo descreve a experiência do utilizador desde o gatilho inicial até à retenção, garantindo o alinhamento total entre a modelação do negócio e as Histórias de Utilizador (US) exigidas no Checkpoint 2.
+Este documento mapeia as jornadas ponta a ponta do LicitaRadar. Cada jornada descreve a experiência do utilizador desde o gatilho inicial até à retenção e liga cada etapa às Histórias de Utilizador (US).
+
+As jornadas estão ordenadas por prioridade: primeiro as que entram no MVP, depois a condicional e, no fim, a que fica para depois do MVP.
+
+!!! info "Como ler os diagramas de jornada"
+    - Cada **secção** é uma fase da jornada: Descoberta, Preparação, Ação Principal e Retenção.
+    - Cada linha é uma etapa, com a história correspondente entre parênteses e **quem participa** (Mariana, Bruno ou o Sistema).
+    - A **nota de 1 a 5** é a satisfação do utilizador naquela etapa: 1 é frustração, 5 é muito satisfeito. As notas baixas mostram a dor que o LicitaRadar resolve.
+
+## Visão geral
+
+| Jornada | Persona | Histórias | No MVP? |
+| :--- | :--- | :--- | :--- |
+| 1 — Triagem de oportunidades | Mariana (Analista) | US07, US08, US09, US10, US11, US12 | **Sim.** |
+| 2 — Acompanhamento até o resultado | Mariana (Analista) | US20 | **Condicional.** Entra se a US20 estiver em PR até 15/11/2026. |
+| 3 — Conformidade documental | Bruno (Decisor) | US14, US15, US16 | **Sim.** O alerta de vencimento (US16) é o alerta do MVP. |
+| 4 — Acesso com isolamento de segurança | Bruno e Mariana | US02, US06 | **Sim**, com as contas criadas por script de seed. |
+| 5 — Funil de decisão do Decisor | Bruno (Decisor) | US13, US17, US18, US19 | **Após o MVP.** |
+
+Detalhes e justificativas no [Escopo do MVP](negocio/visao/escopo.md).
+
+??? note "Correspondência com o Escopo do MVP e com os testes"
+    O Escopo do MVP numera as jornadas do Caderno, e a Matriz de Rastreabilidade numera as frentes de teste. As numerações são diferentes desta página:
+
+    | Esta página | Escopo do MVP (Caderno) | Matriz de testes |
+    | :--- | :--- | :--- |
+    | 1 — Triagem | 1 (perfil) e 2 (feed) | Jornada 1 (Feed) e Jornada 2 (Filtros) |
+    | 2 — Acompanhamento | 3 (acompanhar edital) | — |
+    | 3 — Conformidade | 4 (certidões) e 5 (alertas) | Jornada 3 (Certidões) |
+    | 4 — Acesso | Acesso e segurança | Jornada 4 (Segurança) |
+    | 5 — Funil do Decisor | Fora do MVP | — |
 
 ---
 
 ## Jornada 1 — Mariana (Analista) faz a Triagem de Oportunidades
 
 1. **Descoberta:** Mariana tem a tarefa diária e frustrante de procurar novos editais em múltiplos diários oficiais governamentais, perdendo muito tempo com PDFs irrelevantes.
-2. **Onboarding / Preparação:** Ela entra no LicitaRadar e configura o perfil da sua empresa, definindo palavras-chave (ex: "software", "computador"), estados de interesse e faixa de valor aceitável (US08).
-3. **Ação Principal:** O sistema faz o trabalho pesado. Ela abre o seu *Feed* e visualiza uma lista de editais do PNCP já ranqueada pelo Score de Aderência (US09). Aplica filtros para refinar a busca (US10) e analisa os anexos dos editais mais promissores (US12).
-4. **Retenção / Acompanhamento:** Mariana clica na "Estrela" para recomendar os melhores editais (US13). Ela acede à plataforma diariamente porque o motor traz novas licitações de forma automática.
+2. **Onboarding / Preparação:** Ela entra no LicitaRadar e configura o perfil da sua empresa, definindo palavras-chave (ex: "software", "computador"), estados de interesse, modalidades e faixa de valor aceitável (US08).
+3. **Ação Principal:** O sistema faz o trabalho pesado: a ingestão diária traz os editais do PNCP (US07) e calcula o Score de Aderência (US11). Mariana abre o seu *Feed* e visualiza a lista já ranqueada (US09). Aplica filtros para refinar a busca (US10) e abre o detalhe dos editais mais promissores (US12).
+4. **Retenção / Acompanhamento:** Mariana acede à plataforma diariamente porque a ingestão traz novas licitações de forma automática. Se a Jornada 2 entrar no MVP, ela clica em "Acompanhar" nos melhores editais (US20).
 
 ```mermaid
-flowchart LR
-    classDef ana fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#000000;
-    
-    A1["1. Configurar Perfil\n(US08)"]:::ana --> A2["2. Ver Feed Rankeado\n(US09)"]:::ana
-    A2 --> A3["3. Aplicar Filtros\n(US10)"]:::ana
-    A3 --> A4["4. Ler Anexos\n(US12)"]:::ana
-    A4 --> A5["5. Recomendar Edital\n(US13)"]:::ana
+journey
+    title Jornada 1 - Mariana faz a triagem de oportunidades
+    section Descoberta
+      Busca em portais: 1: Mariana
+      Lê PDFs inúteis: 1: Mariana
+    section Preparação
+      Perfil (US08): 3: Mariana
+    section Ação Principal
+      Coleta PNCP (US07): 4: Sistema
+      Calcula score (US11): 4: Sistema
+      Vê o feed (US09): 5: Mariana, Sistema
+      Filtra (US10): 4: Mariana
+      Detalhe (US12): 4: Mariana
+    section Retenção
+      Volta todo dia: 5: Mariana
 ```
 
 ---
 
-## Jornada 2 — Bruno (Decisor) avalia o Funil de Editais
+## Jornada 2 — Mariana (Analista) acompanha os editais até o resultado
 
-1. **Descoberta:** Bruno precisa de decidir em quais processos a empresa vai gastar recursos para concorrer, mas não tem tempo para ler centenas de editais brutos.
-2. **Onboarding / Preparação:** Ele acede ao seu Dashboard de Decisão exclusivo. O sistema filtra o ruído e exibe apenas os editais que a Mariana marcou como "Recomendados" (US17).
-3. **Ação Principal:** Bruno avalia rapidamente o resumo e os valores de cada oportunidade recomendada. Ele decide "Aprovar" o edital para iniciar a montagem da proposta (US18) ou "Descartar", removendo-o da fila (US19).
-4. **Retenção / Acompanhamento:** Os editais aprovados movem-se para a fila "Em Disputa", permitindo que Bruno acompanhe visualmente o pipeline de vendas B2B da sua empresa.
+!!! warning "Condicional"
+    Esta jornada entra no MVP se a US20 estiver em PR até 15/11/2026. Caso contrário, passa para depois do MVP. Ver o [Escopo do MVP](negocio/visao/escopo.md).
+
+1. **Descoberta:** Depois de escolher os editais, a equipa controla o andamento numa planilha. Um prazo passa despercebido e a proposta não é enviada a tempo.
+2. **Onboarding / Preparação:** No feed, Mariana clica em "Acompanhar" nos editais que a empresa vai disputar. Eles entram na lista "Acompanhados" com a etapa "Interessado" (US20).
+3. **Ação Principal:** Conforme o trabalho avança, Mariana muda a etapa para "Preparando" e depois "Enviado". A lista ordena pelo prazo mais próximo e destaca os que vencem em até 3 dias (dias corridos) (US20).
+4. **Retenção / Acompanhamento:** Ao abrir a lista "Acompanhados", Mariana confere o que está perto do prazo. Quando sai o resultado, regista "Venceu" ou "Não venceu" e o edital fecha o ciclo.
 
 ```mermaid
-flowchart LR
-    classDef dec fill:#fef08a,stroke:#ca8a04,stroke-width:2px,color:#000000;
-    classDef action fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#000000;
-    classDef discard fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#000000;
-
-    D1["1. Aceder Dashboard\n(US17)"]:::dec --> D2{"2. Avaliar\nRecomendação"}:::dec
-    D2 -- Aprovar --> D3["3. Move para Disputa\n(US18)"]:::action
-    D2 -- Descartar --> D4["4. Remove do Funil\n(US19)"]:::discard
+journey
+    title Jornada 2 - Mariana acompanha os editais até o resultado
+    section Descoberta
+      Controla em planilha: 1: Mariana
+      Perde um prazo: 1: Mariana
+    section Preparação
+      Acompanha (US20): 4: Mariana
+    section Ação Principal
+      Muda a etapa (US20): 4: Mariana
+      Destaca prazo curto: 5: Sistema
+    section Retenção
+      Regista resultado: 5: Mariana
 ```
 
 ---
@@ -46,37 +91,75 @@ flowchart LR
 ## Jornada 3 — Bruno (Decisor) gere a Conformidade Documental
 
 1. **Descoberta:** Bruno sabe que vencer uma licitação não serve de nada se a empresa for inabilitada por ter uma Certidão Negativa de Débitos vencida no dia da disputa.
-2. **Onboarding / Preparação:** Durante a configuração inicial da conta, Bruno faz o upload de todas as certidões legais da empresa e cadastra as datas de validade exatas de cada uma (US14).
-3. **Ação Principal:** O sistema monitoriza os prazos de forma silenciosa. Certo dia, ao aceder à plataforma, Bruno depara-se com um alerta visual 🔴 indicando que uma certidão expira em 12 dias (US16).
-4. **Retenção / Acompanhamento:** Bruno obtém o novo documento no órgão emissor, faz a renovação e substituição do ficheiro na plataforma (US15). O alerta é neutralizado e a conformidade mantida.
+2. **Onboarding / Preparação:** Bruno faz o upload das certidões legais da empresa e cadastra as datas de validade exatas de cada uma (US14).
+3. **Ação Principal:** O sistema calcula os prazos a cada consulta. Certo dia, ao aceder à plataforma, Bruno depara-se com um alerta "Urgente" indicando que uma certidão expira em 12 dias (US16).
+4. **Retenção / Acompanhamento:** Bruno obtém o novo documento no órgão emissor, faz a renovação e substituição do ficheiro na plataforma (US15). O alerta desaparece e a conformidade é mantida.
 
 ```mermaid
-flowchart LR
-    classDef dec fill:#fef08a,stroke:#ca8a04,stroke-width:2px,color:#000000;
-    classDef sys fill:#f3f4f6,stroke:#4b5563,stroke-width:2px,color:#000000;
-    classDef alert fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#000000;
-
-    C1["1. Upload & Validade\n(US14)"]:::dec --> C2["2. Monitorização Diária\n(Job Sistema)"]:::sys
-    C2 --> C3["3. Alerta Visual Vencimento\n(US16)"]:::alert
-    C3 --> C4["4. Renovar Certidão\n(US15)"]:::dec
+journey
+    title Jornada 3 - Bruno mantém as certidões em dia
+    section Descoberta
+      Medo de inabilitar: 1: Bruno
+    section Preparação
+      Envia (US14): 3: Bruno
+    section Ação Principal
+      Calcula prazos: 4: Sistema
+      Alerta (US16): 2: Bruno, Sistema
+    section Retenção
+      Renova (US15): 4: Bruno
+      Segue habilitada: 5: Bruno
 ```
 
 ---
 
-## Jornada 4 — A Equipa faz Onboarding com Isolamento de Segurança
+## Jornada 4 — A Equipa entra com Acessos Separados
 
-1. **Descoberta:** A organização decidiu adotar o LicitaRadar. Bruno precisa de colocar a sua Analista a trabalhar na plataforma, mas exige que ela não tenha acesso aos dados financeiros e certidões confidenciais da empresa.
-2. **Onboarding / Preparação:** Bruno cria a conta matriz da empresa (US01) e envia um convite seguro diretamente para o e-mail corporativo de Mariana (US04).
-3. **Ação Principal:** Mariana clica no link, cadastra a sua palavra-passe pessoal e entra no sistema. O seu perfil é automaticamente vinculado à empresa do Bruno com o nível hierárquico inferior de "Analista" (US05).
-4. **Retenção / Acompanhamento:** A confiança no sistema é estabelecida pelo isolamento arquitetural: sempre que Mariana navega na aplicação, a aba de "Documentação Legal e Financeira" permanece rigorosamente oculta e bloqueada (US06).
+!!! note "Versão do MVP"
+    No MVP, as empresas e os utilizadores são criados por script de seed. O cadastro self-service (US01) e o convite por e-mail (US04, US05) ficam para depois do MVP.
+
+1. **Descoberta:** A organização decidiu adotar o LicitaRadar. Bruno precisa de colocar a sua Analista a trabalhar na plataforma, mas exige que ela não tenha acesso às certidões da empresa.
+2. **Onboarding / Preparação:** As contas da empresa são criadas por script: Bruno como Decisor e Mariana como Analista, ligados à mesma empresa.
+3. **Ação Principal:** Mariana faz login com e-mail e palavra-passe (US02). O token identifica o seu papel de "Analista" e a empresa a que pertence.
+4. **Retenção / Acompanhamento:** A confiança no sistema vem do isolamento: sempre que Mariana navega na aplicação, a área de "Certidões" permanece oculta e a API recusa o acesso; nenhuma empresa vê os dados de outra (US06).
 
 ```mermaid
-flowchart LR
-    classDef dec fill:#fef08a,stroke:#ca8a04,stroke-width:2px,color:#000000;
-    classDef ana fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#000000;
-    classDef sys fill:#f3f4f6,stroke:#4b5563,stroke-width:2px,color:#000000;
+journey
+    title Jornada 4 - A equipa entra com acessos separados
+    section Descoberta
+      Separar acessos: 2: Bruno
+    section Preparação
+      Contas por script: 4: Sistema
+    section Ação Principal
+      Login (US02): 4: Mariana
+      Vira Analista: 5: Sistema
+    section Retenção
+      Bloqueio (US06): 5: Sistema
+      Confia no sistema: 5: Bruno
+```
 
-    O1["1. Registar Empresa\n(US01)"]:::dec --> O2["2. Enviar Convite\n(US04)"]:::dec
-    O2 --> O3["3. Aceitar e Criar Conta\n(US05)"]:::ana
-    O3 --> O4["4. Ocultar Área Legal\n(US06 / Sistema)"]:::sys
+---
+
+## Jornada 5 — Bruno (Decisor) avalia o Funil de Editais
+
+!!! note "Após o MVP"
+    Esta jornada ficou fora do MVP. No lugar dela entra a Jornada 2, de acompanhamento. Ver o [Escopo do MVP](negocio/visao/escopo.md).
+
+1. **Descoberta:** Bruno precisa de decidir em quais processos a empresa vai gastar recursos para concorrer, mas não tem tempo para ler centenas de editais brutos.
+2. **Onboarding / Preparação:** Ele acede ao seu Dashboard de Decisão exclusivo. O sistema filtra o ruído e exibe apenas os editais que a Mariana marcou como "Recomendados" (US13, US17).
+3. **Ação Principal:** Bruno avalia rapidamente o resumo e os valores de cada oportunidade recomendada. Ele decide "Aprovar" o edital para iniciar a montagem da proposta (US18) ou "Descartar", removendo-o da fila (US19).
+4. **Retenção / Acompanhamento:** Os editais aprovados movem-se para a fila "Em Disputa", permitindo que Bruno acompanhe visualmente o pipeline de vendas B2B da sua empresa.
+
+```mermaid
+journey
+    title Jornada 5 - Bruno avalia o funil de editais
+    section Descoberta
+      Sem tempo: 1: Bruno
+    section Preparação
+      Dashboard (US17): 4: Bruno, Sistema
+    section Ação Principal
+      Avalia resumo: 4: Bruno
+      Aprova (US18): 5: Bruno
+      Descarta (US19): 4: Bruno, Mariana
+    section Retenção
+      Em Disputa: 5: Bruno
 ```
