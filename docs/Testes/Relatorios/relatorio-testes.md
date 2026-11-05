@@ -1,6 +1,6 @@
 # Primeiro relatório de testes (Checkpoint 2)
  
-**Projeto:** LicitaRadar · **Responsável pela qualidade:** Kauan Tarchetti Peixoto · **Data da última atualização:** 28/10/2026
+**Projeto:** LicitaRadar · **Responsável pela qualidade:** Maria Júlia e Kauan **Data da última atualização:** 28/10/2026
  
 ## 1. Resumo
 | Item | Resultado |
