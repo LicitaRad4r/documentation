@@ -19,7 +19,7 @@ Nomes, idades e falas são ilustrativos. O modelo de permissões e as dores part
 | **Cargo** | Sócio e Diretor Comercial |
 | **Empresa** | PME de tecnologia que presta serviços a órgãos públicos, 25 funcionários |
 | **Responsabilidade** | Decide as licitações que a empresa vai disputar e conduz os trâmites legais de inscrição nos portais governamentais externos. |
-| **Acessos no Sistema** | Administrador total (Dono da conta e da organização). |
+| **Acessos no Sistema** | Decisor: acesso total (Dono da conta e da organização). |
 
 ### Papel e Permissões no LicitaRadar
 O Bruno é o topo da hierarquia no sistema. O seu perfil possui os seguintes privilégios e responsabilidades exclusivos:

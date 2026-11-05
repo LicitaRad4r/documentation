@@ -1,4 +1,4 @@
-# Cálculo do Score de Aderência (v0)
+# Cálculo do Score de Aderência
 
 ## Resumo
 O Score de Aderência é o núcleo de inteligência do LicitaRadar (**ADR-0008**). Ele utiliza os filtros do Perfil de Fornecedor para eliminar editais fora do escopo e ranquear as oportunidades elegíveis com uma nota de 0 a 100. O objetivo é poupar o tempo de triagem manual da Analista e destacar as oportunidades mais lucrativas para o Decisor.
@@ -110,3 +110,24 @@ Para manter a viabilidade do Checkpoint 1, ficam conscientemente de fora:
 * Inteligência Artificial para ler "fornecimento nacional/remoto" dentro do PDF.
 * Histórico preditivo de vitórias para pesar modalidades.
 * Exclusão semântica avançada de palavras negativas compostas.
+
+## Casos tabelados (critério de aceite do Caderno)
+
+Perfil: termo "notebook", UF DF, modalidades [pregão eletrônico, concorrência],
+faixa de valor R$ 10.000,00 a R$ 100.000,00. Edital base: termo no objeto, DF,
+pregão eletrônico, R$ 50.000,00, 10 dias úteis de prazo.
+
+| # | Variação do edital base | Resultado esperado |
+| :- | :--- | :--- |
+| 1 | Nenhuma (edital ideal) | 100 · Alta |
+| 2 | Valor = R$ 100.000,00 (limite da faixa) | 100 · Alta |
+| 3 | Valor = R$ 100.000,01 (limite + R$ 0,01) | 90 · Alta |
+| 4 | Valor = R$ 110.000,00 (limite + 10%, tolerância) | 90 · Alta |
+| 5 | Valor = R$ 110.000,01 (tolerância + R$ 0,01) | Descartado (valor) |
+| 6 | Valor = R$ 9.999,99 (mínimo − R$ 0,01) | 90 · Alta |
+| 7 | Sem valor estimado | 85 · Alta |
+| 8 | Termo só na descrição | 80 · Alta (fronteira da faixa) |
+| 9 | UF = SP | 75 · Média |
+| 10 | Sem nenhum termo do perfil | Descartado (termo) |
+
+Teste: `server/tests/unit/score.test.ts`, bloco "Casos tabelados do Caderno".
