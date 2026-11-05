@@ -236,19 +236,36 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 ### US20 - Acompanhar Edital
 > **Como** Analista ou Decisor, **eu quero** marcar um edital do feed como de interesse e atualizar a sua etapa, **para que** a equipa saiba o que está em andamento e não perca prazos.
 
+!!! warning "Entra no MVP se estiver em PR até 15/11/2026"
+    Prioridade *Should have*. A ingestão do PNCP, a tela de perfil e a ligação do front à API vêm antes. Se não houver PR aberto até 15/11, a história sai do MVP. Ver o [Escopo do MVP](../negocio/visao/escopo.md).
+
 **Rastreabilidade:** [Escopo do MVP](../negocio/visao/escopo.md)
-**Critérios de Aceitação:**
+**Critérios de Aceitação (prazo em dias de calendário, fuso de Brasília, como na US16):**
 
 - [ ] **Dado que** clico em "Acompanhar" num edital do feed, **quando** a ação é gravada, **então** o edital aparece na lista "Acompanhados" com a etapa "Interessado".
-- [ ] **Dado que** um edital está acompanhado, **quando** mudo a etapa, **então** só posso escolher Interessado, Preparando, Enviado ou Resultado, e a lista mostra a nova etapa.
-- [ ] **Dado que** a lista "Acompanhados" carrega, **quando** há editais, **então** eles vêm ordenados pelo prazo mais próximo, e os que vencem em até 3 dias úteis aparecem destacados.
+- [ ] **Dado que** o edital já está acompanhado, **quando** clico em "Acompanhar" de novo, **então** a API responde `200` com o registo existente e a lista continua com 1 único item para esse edital.
+- [ ] **Dado que** sou Analista ou Decisor da empresa, **quando** mudo a etapa, **então** só posso avançar uma etapa por vez (Interessado → Preparando → Enviado → Resultado) ou voltar de Preparando para Interessado, e a lista mostra a nova etapa.
+- [ ] **Dado que** o edital está em Enviado ou Resultado, **quando** tento voltar para uma etapa anterior ou saltar etapas, **então** a API responde `422` e a etapa não muda.
+- [ ] **Dado que** levo o edital para Resultado, **quando** gravo, **então** tenho de escolher "Venceu" ou "Não venceu", e a etapa não pode mais ser alterada.
+- [ ] **Dado que** o edital está em Interessado ou Preparando, **quando** clico em "Deixar de acompanhar", **então** ele sai da lista e pode ser acompanhado de novo; em Enviado ou Resultado a opção não aparece.
+- [ ] **Dado que** a lista "Acompanhados" carrega, **quando** há editais, **então** eles vêm ordenados pelo prazo mais próximo e:
+    - faltam de 0 a 3 dias: aparece o destaque "Prazo próximo";
+    - faltam 4 dias ou mais: sem destaque;
+    - o prazo já passou e o edital está em Interessado ou Preparando: aparece "Prazo encerrado" e o edital vai para o fim da lista.
 - [ ] **Dado que** sou de outra empresa, **quando** tento ler ou mudar um edital acompanhado, **então** a API responde `403`.
+- [ ] **Dado que** o edital ou o acompanhamento não existe, **quando** faço qualquer ação sobre ele, **então** a API responde `404`.
+- [ ] **Dado que** chamo qualquer rota de acompanhamento sem token ou com token inválido/expirado, **quando** a requisição chega, **então** a resposta é `401`.
 
 ### US21 - Contador de Editais Novos
-> **Como** Analista, **eu quero** ver quantos editais novos entraram no meu feed desde a última visita, **para que** saiba se vale a pena revisar o feed hoje.
+> **Como** Analista ou Decisor, **eu quero** ver quantos editais novos entraram no meu feed desde a última vez que o abri, **para que** saiba se vale a pena revisar o feed hoje.
+
+!!! note "Após o MVP"
+    No MVP, o alerta dentro da plataforma é o selo de vencimento das certidões (US16). O contador depende da ingestão do PNCP e de guardar a última visita de cada utilizador, e fica como *Could have*. Ver o [Escopo do MVP](../negocio/visao/escopo.md).
 
 **Rastreabilidade:** RF10, [Escopo do MVP](../negocio/visao/escopo.md)
-**Critérios de Aceitação:**
+**Critérios de Aceitação (o contador é por utilizador; "última visita" = última vez que abri o Feed):**
 
-- [ ] **Dado que** a ingestão gravou editais novos aderentes ao meu perfil, **quando** abro a plataforma, **então** vejo "N editais novos" no menu do Feed.
+- [ ] **Dado que** a ingestão gravou editais aderentes ao meu perfil depois da última vez que abri o Feed, **quando** abro a plataforma, **então** vejo "N editais novos" no menu do Feed; abrir só a plataforma não zera o contador.
 - [ ] **Dado que** abri o feed, **quando** volto ao menu, **então** o contador volta a zero.
+- [ ] **Dado que** é o meu primeiro acesso, **quando** abro a plataforma, **então** N é igual ao total de editais aderentes ao perfil da empresa.
+- [ ] **Dado que** a Analista e o Decisor são da mesma empresa, **quando** a Analista abre o Feed, **então** o contador do Decisor não muda.

@@ -42,6 +42,7 @@ nav:
       - Escopo e Impacto: requirements/produto/negocio/visao/impacto.md
       - Viabilidade: requirements/produto/negocio/visao/viabilidade.md
       - Personas: requirements/produto/negocio/visao/personas.md
+      - Escopo do MVP: requirements/produto/negocio/visao/escopo.md
     - Regras de Negócio:
       - Score de Aderência: requirements/produto/negocio/Regradenegocio/score.md
       - Filtros: requirements/produto/negocio/Regradenegocio/filtros.md
