@@ -45,10 +45,22 @@ Este projeto está a ser desenvolvido como parte do **AI Lab (Makers Ciclo 1)** 
 
 </div>
 
+## Como rodar o projeto
+
+Ambiente local = **Docker Compose** (API + frontend + emuladores Firebase).  
+Guia: **[Como rodar localmente](gestao_metodologia/como-rodar.md)**.
+
+```bash
+git clone https://github.com/LicitaRad4r/LicitaRadar.git
+cd LicitaRadar
+docker compose up --build
+```
+
 ## Como navegar nesta documentação
 
 Utilize o menu lateral esquerdo para explorar as diferentes secções do nosso projeto:
 
+- **[Como rodar](gestao_metodologia/como-rodar.md):** Subir o ambiente com Docker Compose.
 - **[Produto](requirements/produto/negocio/visao/visao_geral.md):** Descubra a visão geral, as nossas Personas (o Decisor e a Analista) e as funcionalidades principais.
 - **[Requisitos](requirements/produto/requisitos/requisitosfuncionais.md):** Consulte os Requisitos Funcionais, Não Funcionais e as Histórias de Utilizador do MVP.
 - **[Arquitetura](architecture/Arquitetura.md):** Compreenda como o sistema está desenhado tecnicamente, incluindo diagramas do fluxo de dados e da base de dados.

@@ -27,6 +27,7 @@ extra_css:
 nav:
   - Início: index.md
   - Gestão e Metodologia:
+    - Como rodar localmente: gestao_metodologia/como-rodar.md
     - Cronograma e Sprints: gestao_metodologia/Cronograma.md
     - Definition of Done: gestao_metodologia/definition-of-done.md
     - Equipe e Comunicação: gestao_metodologia/equipedesenvolvedora.md
