@@ -13,7 +13,7 @@
 | CT-FEED-009 | Paginação | Página limitada ao pageSize, sem repetição | page >= 1; pageSize de 1 a 100 | page <= 0; pageSize <= 0 ou > 100; não inteiros | pageSize = 0, 1, 2, 99, 100, 101; page = 0, 1 |
 
 ## Jornada 2: Busca Direcionada e Filtros Dinâmicos (`CT-FILT-001` a `009`)
-**Rastreabilidade:** US05, RF05, ADR-0003 e página Filtros
+**Rastreabilidade:** US10, RF05, ADR-0003 e página Filtros
 
 | CT | Campo / Domínio | Regra (Fonte) | Classes Válidas (EP) | Classes Inválidas (EP) | Valores-Limite (BVA) |
 | :---: | :--- | :--- | :--- | :--- | :--- |
