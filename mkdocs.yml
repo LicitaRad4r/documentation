@@ -1,4 +1,4 @@
-site_name: LicitaRadar — Documentação
+site_name: LicitaRadar — Documentation
 site_url: https://licitarad4r.github.io/documentation/
 repo_url: https://github.com/LicitaRad4r/documentation
 docs_dir: docs
@@ -22,7 +22,7 @@ theme:
     - content.code.copy
 
 extra_css:
-  - assets/stylesheets/extra.class
+  - assets/stylesheets/extra.css
 
 nav:
   - Início: index.md
@@ -35,6 +35,8 @@ nav:
     - Equipe e Comunicação: gestao_metodologia/equipedesenvolvedora.md
   - Decisões Técnicas (ADRs): adrs/decisoes_tecnicas.md
   - Arquitetura: architecture/Arquitetura.md
+  - Segurança:
+    - Logs de Segurança: security/logs-seguranca.md
   - FinOps (custo zero):
     - Visão geral: finops/README.md
     - Evidências: finops/evidencias/README.md
