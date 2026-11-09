@@ -26,20 +26,7 @@ extra_css:
 
 nav:
   - Início: index.md
-  - Gestão e Metodologia:
-    - Como rodar localmente: gestao_metodologia/como-rodar.md
-    - Cronograma e Sprints: gestao_metodologia/Cronograma.md
-    - Revisões do Backlog: gestao_metodologia/revisoesbacklog.md
-    - Definition of Ready: requirements/produto/Requisitos/definition-of-ready.md
-    - Definition of Done: gestao_metodologia/definition-of-done.md
-    - Equipe e Comunicação: gestao_metodologia/equipedesenvolvedora.md
-  - Decisões Técnicas (ADRs): adrs/decisoes_tecnicas.md
-  - Arquitetura: architecture/Arquitetura.md
-  - Segurança:
-    - Logs de Segurança: security/logs-seguranca.md
-  - FinOps (custo zero):
-    - Visão geral: finops/README.md
-    - Evidências: finops/evidencias/README.md
+
   - Produto:
     - Visão do Produto:
       - Visão Geral: requirements/produto/negocio/visao/visao_geral.md
@@ -49,19 +36,50 @@ nav:
     - Escopo do MVP: requirements/produto/negocio/visao/escopo.md
     - Jornadas de Utilizador: requirements/produto/jornadas.md
     - Requisitos:
-      - Matriz MoSCoW: requirements/produto/requisitos/MoSCoW.md
-      - Histórias de Usuário: requirements/produto/requisitos/historias.md
       - Requisitos Funcionais: requirements/produto/requisitos/requisitosfuncionais.md
       - Requisitos Não Funcionais: requirements/produto/requisitos/naofuncionais.md
     - Regras de Negócio:
       - Score de Aderência: requirements/produto/negocio/Regradenegocio/score.md
       - Filtros: requirements/produto/negocio/Regradenegocio/filtros.md
-  - Testes:
+
+  - Arquitetura:
+    - Arquitetura Geral: architecture/Arquitetura.md
+    - Decisões Técnicas (ADRs): architecture/decisoes_tecnicas.md
+    - Back-End: architecture/backend.md
+    - Front-End: architecture/frontend.md
+    - Banco de Dados: architecture/banco-de-dados.md
+    - Infraestrutura e Segurança:
+      - Infraestrutura: architecture/InfraestruturaeSegurança/infraestrutura.md
+      - Logs de Segurança: architecture/InfraestruturaeSegurança/logs-seguranca.md
+  - Backlog:
+      - Histórias de Usuário: backlog/historias.md
+      - Matriz MoSCoW: backlog/MoSCoW.md
+      - Backlog do CP2: backlog/backlogcp2.md
+  - Qualidade e Testes:
     - Estratégia de Testes: Testes/estrategia_de_testes.md
     - Critérios Prioritários: Testes/criterios-prioritarios.md
-    - EP BVA v1: Testes/ep-bva-v1.md
+    - EP/BVA v1: Testes/ep-bva-v1.md
     - Matriz de Rastreabilidade: Testes/matriz-rastreabilidade.md
-    - Relatório de Testes (CP2): Testes/Relatorios/relatoriocp2.md
+    - Relatório de Testes (CP2): Testes/relatoriocp2.md
+    - Roteiro E2E (API real): Testes/roteiro-e2e-api-real.md
+
+  - FinOps (custo zero):
+    - Visão geral: architecture/finops/README.md
+    - Evidências: architecture/finops/evidencias/README.md
+
+  - Gestão e Metodologia:
+    - Como rodar localmente: gestao_metodologia/como-rodar.md
+    - Cronograma e Sprints: gestao_metodologia/Cronograma.md
+    - Histórico de Sprints:
+      - Semana 1: gestao_metodologia/historicosprints/semana1.md
+      - Semana 2: gestao_metodologia/historicosprints/semana2.md
+      - Semana 3: gestao_metodologia/historicosprints/semana3.md
+      - Semana 4: gestao_metodologia/historicosprints/semana4.md
+      - Semana 5: gestao_metodologia/historicosprints/semana5.md
+    - Revisões do Backlog: gestao_metodologia/revisoesbacklog.md
+    - Definition of Ready: gestao_metodologia/Metodologia_Tempo/definition-of-ready.md
+    - Definition of Done: gestao_metodologia/Metodologia_Tempo/definition-of-done.md
+    - Equipe e Comunicação: gestao_metodologia/equipedesenvolvedora.md
 
 markdown_extensions:
   - admonition

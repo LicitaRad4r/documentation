@@ -1,6 +1,7 @@
 # Primeiro relatório de testes (Checkpoint 2)
 
-**Projeto:** LicitaRadar · **Responsável pela qualidade:** Maria Júlia SEna · **Última atualização:** 04/11/2026
+**Projeto:** LicitaRadar · **Responsável pela qualidade:** Maria Júlia Sena e 
+Kauan Tarchetti · **Última atualização:** 04/11/2026
 
 > Execução feita na branch `feat/api-base` (código das jornadas 1 a 4), que ainda não foi integrada à `main`. Depois do merge, rodar de novo na `main` e atualizar a data.
 ## 1. Resumo

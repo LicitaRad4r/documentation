@@ -1,81 +1,82 @@
-# LicitaRadar — Backlog das Sprints 3 e 4 (Gate 2) e Roteiro da Demo
+# Revisões do Backlog
 
-05/11/2026
+O backlog é refinado toda semana, na sprint "Backlog refinado". Cada revisão registra **a data, o que mudou de prioridade e por quê**. Este documento é o registro oficial; o estado atual das prioridades está na [Matriz MoSCoW](MoSCoW.md) e as pendências do Gate 2 estão no [Backlog do CP2](backlogcp2.md).
 
-## Calendário e premissas
+### Como ler as fontes
 
-As Sprints 3 e 4 (18/10 a 01/11) formam o Gate 2, "Núcleo funcional". O gate passa quando a jornada principal roda localmente, sem configuração manual oculta nem dependência instável. Hoje (05/11) estamos no quinto dia da Sprint 5, então este backlog é o que ficou em atraso do Gate 2 e precisa fechar agora, antes de qualquer item de deploy.
+- **Git**: a mudança aparece em um commit verificável (o hash está na tabela).
+- **Documento**: o motivo está escrito em uma página do repositório.
 
-Neste documento J1 a J4 seguem a Matriz de Rastreabilidade: J1 feed, J2 filtros, J3 certidões e J4 segurança (login, 401 e 403). A página de Jornadas da documentação usa outra numeração, e nela o acompanhamento do edital (US20) é a Jornada 2.
+## Critério de pronto
 
-## Onde estamos
+| Critério | Situação |
+|----------|----------|
+| Pelo menos 2 revisões registradas | Atendido: 3 registradas (S3, S4 e S5) |
+| Uma revisão na S3 | Atendido: R1, de 22/10, com evidência no Git |
+| Uma revisão na S4 | **Parcial:** R2 (30 e 31/10) registra mudanças de escopo e de custo, mas a Matriz MoSCoW não mudou na S4. A PO confirma se houve reunião e a data |
 
-Já está cumprido:
+## Resumo
 
-- **API (OpenAPI v0.3):** perfil, feed com score determinístico, filtros, busca e paginação, certidões com renovação, 11 casos de segurança (CT-SEG-001 a 011), CORS e regras do Firestore deny-all (21 testes passando).
-- **Servidor:** 183 testes sem falha e 98,3% de cobertura de linhas.
-- **Front J1 a J3 com API simulada:** testados hoje, com busca vazia, filtros combinados, paginação no F5, renovação de certidão e as validações de data, arquivo ausente, tipo inválido, mais de 5 MB e cancelar.
-- **Seed de demo:** duas empresas com perfis diferentes (TI no DF e GO, e só notebook no RS) e três usuários com papéis.
-- **Documentação:** EP/BVA v1, primeiro relatório de testes e gasto zero documentado com o print do plano Spark.
+| Revisão | Sprint | Data | Registrada em | Principais mudanças |
+|---------|--------|------|---------------|---------------------|
+| R1 | S3 | 22/10/2026 | 08/11/2026 | MoSCoW refeita sobre RF e histórias; filtros de Must para Should; e-mail, push e CSV de Should para Could |
+| R2 | S4 | 30 e 31/10/2026 | 08/11/2026 | Alertas de orçamento trocados pelo plano de custo zero; histórias renumeradas na matriz de testes |
+| R3 | S5 | 03 a 05/11/2026 | 08/11/2026 | Cadastro, recuperação de senha e convites de Must para Could; acompanhar edital (US20) entra com prazo |
 
-O que está travado: o PR #24 (front da J4) tem o CI vermelho por um caminho de arquivo no teste de contrato e três pendências da revisão.
+---
 
-## Backlog do Gate 2: o que ficou em atraso
+## R1 — Sprint 3 — 22/10/2026
 
-As pendências vêm do relatório de testes de 04/11 (BUG-001 a BUG-005 e os testes pendentes) e do Cronograma. Os quatro primeiros itens bloqueiam a demo local que o gate pede.
+**Responsável:** PO · **Commit:** [`0eeb12e`](https://github.com/LicitaRad4r/documentation/commit/0eeb12e) · **Participantes:** [confirmar]
 
-| ID | Pendência | Origem | Prio | Dono | Critério de aceite | Prazo |
-| --- | --- | --- | --- | --- | --- | --- |
-| G2-01 | Destravar o PR #24 (login, 401 e 403 no front) e corrigir o caminho do schema no teste de contrato | BUG-001 e CI | Must | Front-End e QA | CI verde, merge feito e login real com o emulador abrindo o feed | 06/11 |
-| G2-02 | Subir o Compose com a API real por padrão, sem dados falsos | BUG-002 | Must | DevOps e Front-End | `docker compose up --build` abre o front ligado à API, sem o selo "API simulada". O mock continua disponível como opção | 07/11 |
-| G2-03 | Rodar o seed no `docker compose up`, ou documentar o passo no README | BUG-003 | Must | Back-End e DevOps | Do zero, o Compose chega ao feed com dados e logins de demo, testado por quem não escreveu o README | 07/11 |
-| G2-04 | Rodar no CI os testes do front e o deny-all com emulador | BUG-004 | Must | DevOps e QA | O CI executa o vitest do front e o `test:int`, e uma falha bloqueia o PR | 09/11 |
-| G2-05 | Tela para configurar o perfil: termos, UFs, modalidades e faixa de valor (a US08 é Must na MoSCoW) | BUG-005 | Must | Front-End | O formulário salva em `PUT /v1/perfil`, o feed muda conforme o perfil e valores inválidos mostram o erro do campo | 09/11 |
-| G2-06 | Fechar os 5 testes pendentes: CT-FEED-007, CT-FILT-008, CT-FILT-009 (p95), CT-CERT-008 e CT-CERT-009 | Relatório de 04/11 | Must | QA e Front-End | Os 5 casos passam e entram na matriz. O p95 de leitura é medido com o seed | 09/11 |
-| G2-07 | Um roteiro E2E contra a API real com o emulador (hoje os testes de tela rodam contra o mock) | Relatório de 04/11 | Must | QA | Login, feed e renovação de certidão rodando contra a API real, sem mock | 10/11 |
-| G2-08 | Atualizar a matriz de rastreabilidade e o relatório de testes | Cronograma do CP2 | Must | QA | A matriz tem teste e resultado nos 39 CTs (hoje só o CT-SEG-010 está preenchido). O relatório é refeito na `main`, já que o PR #13 integrou a `feat/api-base` | 08/11 |
-| G2-09 | Alinhar ADRs e código: os ADRs 0005 e 0006 descrevem PostgreSQL no Neon com Drizzle e o 0007 descreve a ingestão por script no Actions, mas o código só usa Firestore e o workflow chama uma rota da API que não existe | ADRs v0.2 | Must | Tech Lead | Nova versão dos ADRs que reflita o que será entregue, ou plano para implementar o que falta, e `Arquitetura.md` atualizado | 07/11 |
-| G2-10 | Preencher `backlog/backlogcp2.md` e `gestao_metodologia/revisoesbacklog.md`, hoje vazios | Documentação | Must | PO | Pelo menos duas revisões do backlog registradas, uma da Sprint 3 e outra da Sprint 4, com o que mudou de prioridade e por quê. Registre as que de fato aconteceram; se não houve registro, anote a data de hoje | 08/11 |
-| G2-11 | Ingestão incremental dos editais do PNCP rodando localmente, com o score calculado por empresa | Guia do PO | Must | Back-End | Com o Compose no ar, uma execução traz editais novos do PNCP (ou de fixtures gravadas), rodar duas vezes não duplica e o feed das duas empresas muda | 12/11 |
-| G2-12 | Roteiro da demo do Gate 2 e o ensaio de 15 minutos do guia (veja a seção abaixo) | Guia do PO | Must | PO e QA | Ensaio feito por quem não escreveu o README, com o resultado e os bugs registrados como BUG-xxx | 12/11 |
-| G2-13 | Conferir a acessibilidade básica das telas: uso só pelo teclado, rótulo em todo campo e status nunca só por cor | Guia do PO | Should | Front-End e QA | Checklist de teclado, rótulos e status passando no feed e nas certidões | 10/11 |
+A MoSCoW de 17/10 era uma lista de funcionalidades. Nesta revisão ela passou a ser montada a partir dos Requisitos Funcionais e das histórias de usuário (US), para sustentar a rastreabilidade exigida no Gate 2.
 
-O G2-09 é o que mais pesa no resto, porque define se a ingestão (G2-11) grava em PostgreSQL ou só em Firestore, e quem decide é a Tech Lead.
+| Item | Antes | Depois | Por quê | Fonte |
+|------|-------|--------|---------|-------|
+| Filtros do feed (US10, RF05) | Must | **Should** | Os filtros só restringem o feed já ranqueado (US09 e US11), que é o núcleo | Documento |
+| Acessos, autenticação, convites e isolamento (US01 a US06) | Sem item | **Must** | O Gate 2 exige testes de papel e de tenant incorreto | Documento (Cronograma) |
+| Detalhes e anexos do edital (US12) | Sem item | **Must** | [confirmar] | Git |
+| Fluxo de decisão (US13, US17 a US19) | Sem item | **Should** | Importante para o fluxo de valor completo | Documento |
+| Alerta de vencimento de certidões (US14 a US16) | Must | Must | Sem mudança de prioridade; passou a citar as histórias | Git |
+| Notificações por e-mail e push | Should | **Could** | O alerta visual dentro da plataforma basta para validar o produto | Documento |
+| Exportação para CSV ou Excel | Should | **Could** | Desejável, mas não bloqueia a validação do produto | Documento |
+| Palavras negativas, integração com calendário, dashboard de ROI | Should ou Could | **Fora da matriz** | [confirmar] | Git |
+| Deploy na nuvem | Won't ("Semana 2") | **Removido do Won't** | O Cronograma prevê deploy no Gate 3 (S5 e S6) | Documento (Cronograma) |
+| Robôs de lances, envio direto de propostas, leitura de PDF com IA ou OCR, outros portais além do PNCP | Sem item (só "submissão automática") | **Won't** | Alinhado ao "não entra neste MVP" do Guia de Projetos | Documento (Guia) |
 
-O US20 (acompanhar edital) só entra no MVP se estiver em PR até 15/11, conforme a MoSCoW, senão passa para Could. Alertas por e-mail ou push já são Could.
+**Também na S3 (24/10):** o QA definiu a ordem de execução dos testes por risco (segurança, certidões, feed, filtros, contrato e E2E), em [`criterios-prioritarios.md`](../Testes/criterios-prioritarios.md), commit [`17d99a0`](https://github.com/LicitaRad4r/documentation/commit/17d99a0). O motivo é a ordem dos riscos R1 a R10 da estratégia de testes.
 
-## Riscos
+---
 
-| Risco | Impacto | Mitigação |
-| --- | --- | --- |
-| ADRs e código divergem (G2-09) | Ninguém sabe onde a ingestão deve gravar | Tech Lead fecha até 07/11 |
-| Ingestão do PNCP (API externa, normalização, duplicação) é a história mais incerta | O feed continua preso ao Golden Set | Limitar a poucos editais por execução e usar fixtures gravadas como reserva |
-| O PR #24 segue vermelho | A J4 não é testada e todo PR novo herda o CI quebrado | G2-01 até 06/11 |
-| Um commit novo no PR #24 pode derrubar as aprovações, se a `main` tiver essa regra | Nova rodada de revisão | Conferir a regra em Settings antes de pedir o commit |
-| Jornadas numeradas de forma diferente no Guia e no repositório | Relatórios e evidências citando jornadas diferentes | Alinhar a numeração na planning |
+## R2 — Sprint 4 — 30 e 31/10/2026
 
-## Roteiro da demo do Gate 2
+**Responsável:** PO e Tech Lead · **Commits:** [`9030217`](https://github.com/LicitaRad4r/documentation/commit/9030217), [`e8567d7`](https://github.com/LicitaRad4r/documentation/commit/e8567d7) · **Participantes:** [confirmar]
 
-A demo é local, no computador, e dura cerca de 10 minutos. Só mostra o que o Gate 2 exige. A preparação é um clone limpo do repositório, `docker compose up --build` e o seed rodado, tudo feito por quem não escreveu o README.
 
-| # | Tempo | Cena | Quem fala | O que mostrar | O que prova |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 0:00 a 1:00 | Problema e objetivo | PO | A PME perde editais e prazos acompanhando à mão. O LicitaRadar ranqueia o feed do PNCP pelo perfil da empresa | Contexto do Gate 1 |
-| 2 | 1:00 a 2:00 | Subir do zero | DevOps | Clone limpo, `docker compose up --build`, seed e o app abrindo ligado à API real | G2-02 e G2-03 |
-| 3 | 2:00 a 3:30 | Login por papel | Front-End | Entrar como decisor da empresa A, depois como analista. Analista não vê Certidões e, ao abrir o endereço, recebe "Acesso negado". Sessão expirada volta ao login | J4, G2-01 |
-| 4 | 3:30 a 5:00 | Perfil e feed ranqueado | Front-End | Mudar termos, UFs e faixa de valor no perfil e ver o feed mudar. Empresa B (só notebook no RS) tem outro feed | G2-05, score determinístico, seed de duas empresas |
-| 5 | 5:00 a 6:15 | Buscar e filtrar | QA | Busca por "notebook", filtros de estado e modalidade com etiquetas removíveis, recarregar mantendo os filtros, busca sem resultado com o botão de limpar | J1, J2 |
-| 6 | 6:15 a 7:30 | Certidões e erro tratado | PO | Renovar a CNDT com arquivo e nova data. Mostrar a recusa de um arquivo de 6 MB e a certidão saindo de "Precisam de atenção" | J3 |
-| 7 | 7:30 a 8:30 | Isolamento entre empresas | Tech Lead | Empresa A tentando abrir registro da B e recebendo negação. Acesso direto ao Firestore negado | CT-SEG, regras deny-all |
-| 8 | 8:30 a 9:15 | Ingestão | Back-End | Rodar a ingestão, ver editais novos entrarem, rodar de novo sem duplicar e o feed das duas empresas mudar | G2-11 |
-| 9 | 9:15 a 10:00 | Qualidade | QA | Último PR verde com testes do front e do deny-all no CI, matriz de rastreabilidade e relatório de testes em `docs` | G2-04, G2-08 |
+| Item | Antes | Depois | Por quê | Fonte |
+|------|-------|--------|---------|-------|
+| Alertas de orçamento de 50, 80 e 100% (exigência do Gate 1 e do Caderno) | Exigidos | **Substituídos** pelos prints dos planos gratuitos | O voucher de US$ 50 acabou e o teto de custo passou a ser US$ 0 | Documento (ADRs v0.2, FinOps) |
+| Plataforma: Google Cloud, Cloud Run e PostgreSQL | Prevista nos ADRs v0.1 | **Firebase Spark, Neon e Render** | Mesmo motivo: teto de US$ 0. O ADR-0001 segue como Proposto até a aprovação do tutor | Documento (ADRs) |
+| Histórias citadas nos casos de teste | Numeração antiga (por exemplo US04 e US05) | **Numeração de 22/10** (US09, US10 e US11) | Alinhar a matriz de rastreabilidade à renumeração da R1 | Git |
 
-Checkup da véspera:
+---
 
-- [ ] Clone limpo e Compose testados por quem não escreveu o README
-- [ ] Contas de decisor A, analista A e decisor B testadas no navegador que será usado
-- [ ] Um PDF válido e um arquivo de 6 MB prontos para a cena 6
-- [ ] PR mais recente verde e abas abertas com matriz e relatório
-- [ ] Cada pessoa ensaiou a sua cena com o cronômetro
+## R3 — Sprint 5 — 03 a 05/11/2026
 
-Plano de contingência: se o Compose falhar, usar o app com a API simulada (`VITE_API_MOCK=true`), que é o que usamos para testar J1 a J3, e avisar a banca na hora.
+**Responsável:** PO · **Commits:** [`e3da7c1`](https://github.com/LicitaRad4r/documentation/commit/e3da7c1) (03/11), [`be4dab2`](https://github.com/LicitaRad4r/documentation/commit/be4dab2) (04/11), [`df88c6d`](https://github.com/LicitaRad4r/documentation/commit/df88c6d) (05/11, backlog do CP2) · **Participantes:** [confirmar]
+
+É a maior revisão do ciclo: o MVP foi reduzido ao núcleo (feed ranqueado, certidões e acompanhamento do edital).
+
+| Item | Antes | Depois | Por quê | Fonte |
+|------|-------|--------|---------|-------|
+| Cadastro self-service da empresa (US01) | Must | **Could** | No MVP, empresas e usuários são criados por script | Documento |
+| Recuperação de senha (US03) | Must | **Could** | O MVP usa a recuperação padrão do Firebase Auth | Documento |
+| Convites da Analista (US04 e US05) | Must | **Could** | [confirmar] | Git |
+| Fluxo de decisão (US13, US17 a US19) | Should | **Could** | Foi substituído no MVP por "Acompanhar edital" (US20) | Documento |
+| Acompanhar edital (US20) | Sem item | **Should, condicional** (entrou como Must em 03/11 e passou a Should em 04/11) | Entra no MVP se estiver em PR até 15/11; senão vira Could. A ingestão do PNCP, a tela de perfil e a ligação do front à API vêm antes | Documento |
+| Contador de editais novos (US21) | Should | **Could** | Depende da ingestão do PNCP e de guardar a última visita de cada usuário | Documento |
+| Detalhe do edital com link para o PNCP (US12) | Must | **Should** | [confirmar] | Git |
+| Predição de chance de vitória | Sem item | **Won't** | [confirmar] | Git |
+| Pendências do Gate 2 (G2-01 a G2-13) | Dispersas em relatórios | **Backlog único**, com dono, critério de aceite e prazo; 12 itens Must e 1 Should | Fechar o Gate 2 antes de qualquer item de deploy | Documento (Backlog do CP2) |
+
+---
