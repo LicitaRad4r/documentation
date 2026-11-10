@@ -51,10 +51,13 @@ nav:
     - Infraestrutura e Segurança:
       - Infraestrutura: architecture/InfraestruturaeSegurança/infraestrutura.md
       - Logs de Segurança: architecture/InfraestruturaeSegurança/logs-seguranca.md
+
   - Backlog:
-      - Histórias de Usuário: backlog/historias.md
-      - Matriz MoSCoW: backlog/MoSCoW.md
-      - Backlog do CP2: backlog/backlogcp2.md
+    - Histórias de Usuário: backlog/historias.md
+    - Matriz MoSCoW: backlog/MoSCoW.md
+    - Backlog do CP2: backlog/backlogcp2.md
+    - Revisões do Backlog: backlog/revisoes-backlog.md
+
   - Qualidade e Testes:
     - Estratégia de Testes: Testes/estrategia_de_testes.md
     - Critérios Prioritários: Testes/criterios-prioritarios.md
@@ -76,11 +79,10 @@ nav:
       - Semana 3: gestao_metodologia/historicosprints/semana3.md
       - Semana 4: gestao_metodologia/historicosprints/semana4.md
       - Semana 5: gestao_metodologia/historicosprints/semana5.md
-    - Revisões do Backlog: gestao_metodologia/revisoesbacklog.md
     - Definition of Ready: gestao_metodologia/Metodologia_Tempo/definition-of-ready.md
     - Definition of Done: gestao_metodologia/Metodologia_Tempo/definition-of-done.md
     - Equipe e Comunicação: gestao_metodologia/equipedesenvolvedora.md
-
+    
 markdown_extensions:
   - admonition
   - attr_list
