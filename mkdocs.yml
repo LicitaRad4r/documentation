@@ -79,10 +79,11 @@ nav:
       - Semana 3: gestao_metodologia/historicosprints/semana3.md
       - Semana 4: gestao_metodologia/historicosprints/semana4.md
       - Semana 5: gestao_metodologia/historicosprints/semana5.md
+      - Semana 6: gestao_metodologia/historicosprints/semana6.md
     - Definition of Ready: gestao_metodologia/Metodologia_Tempo/definition-of-ready.md
     - Definition of Done: gestao_metodologia/Metodologia_Tempo/definition-of-done.md
     - Equipe e Comunicação: gestao_metodologia/equipedesenvolvedora.md
-    
+
 markdown_extensions:
   - admonition
   - attr_list
