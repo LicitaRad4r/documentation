@@ -2,7 +2,7 @@
 
 ## Ambiente Local (Docker Compose)
 
-O único caminho suportado para desenvolver é `docker compose up --build`, na raiz do repositório de código ([como rodar](../gestao_metodologia/como-rodar.md)). Ele sobe três serviços:
+O único caminho suportado para desenvolver é `docker compose up --build`, na raiz do repositório de código ([como rodar](../../gestao_metodologia/como-rodar.md)). Ele sobe três serviços:
 
 ```mermaid
 flowchart LR
@@ -37,11 +37,11 @@ Workflow `.github/workflows/ci.yml`, em todo pull request e em *push* na `main`:
 | `server` | `npm ci`, `lint`, `build` e `test:unit` (Node 24) |
 | `compose` | `docker compose config --quiet` com o `.env.example` |
 
-O repositório também define `CODEOWNERS` por área (frontend, backend, testes, infra) e um template de pull request. O que falta no CI está em [Testes](testes.md#pontos-de-atencao).
+O repositório também define `CODEOWNERS` por área (frontend, backend, testes, infra) e um template de pull request. O que falta no CI está em [Testes](../../Testes/estrategia_de_testes.md#pontos-de-atencao).
 
 ## Ingestão Agendada
 
-`.github/workflows/ingestao-pncp.yml` roda todo dia às 06:00 UTC (03:00 em Brasília) e pode ser disparado à mão (`workflow_dispatch`). Ele chama `POST {API_BASE_URL}/jobs/ingestao-pncp` com o `INGEST_JOB_TOKEN`. O job só executa se a variável do repositório `ENABLE_PNCP_INGEST` for `true` e exige os *secrets* `API_BASE_URL` e `INGEST_JOB_TOKEN`. O fluxo da ingestão está em [Backend](backend.md#ingestao-do-pncp).
+`.github/workflows/ingestao-pncp.yml` roda todo dia às 06:00 UTC (03:00 em Brasília) e pode ser disparado à mão (`workflow_dispatch`). Ele chama `POST {API_BASE_URL}/jobs/ingestao-pncp` com o `INGEST_JOB_TOKEN`. O job só executa se a variável do repositório `ENABLE_PNCP_INGEST` for `true` e exige os *secrets* `API_BASE_URL` e `INGEST_JOB_TOKEN`. O fluxo da ingestão está em [Backend](../backend.md#ingestao-do-pncp).
 
 ## Documentação
 
@@ -64,6 +64,7 @@ flowchart LR
 
 - A API no Render Free **dorme após 15 minutos** sem requisições e leva cerca de 1 minuto para voltar. O ADR-0003 manda o frontend tratar isso com estado de carregamento e nova tentativa na primeira chamada; o job de ingestão, que chama a API, sofre o mesmo atraso.
 - O ADR-0004 prevê um segundo serviço Render e um segundo projeto Firebase para *staging*.
+- O monitoramento previsto no plano Custo Zero é o UptimeRobot consultando `/readyz` a cada 5 minutos, com alerta por e-mail. Falta registrar essa escolha em ADR e conferir com o ADR-0004, que proíbe pings para manter a API acordada.
 - Segredos ficam em GitHub Actions Secrets (CI e deploy) e variáveis do Render (execução).
 
 ## Variáveis de Ambiente da API
@@ -82,8 +83,8 @@ flowchart LR
 | `PNCP_BASE_URL`, `PNCP_DIAS_A_FRENTE`, `PNCP_MAX_PAGINAS`, `PNCP_INTERVALO_MS` | ajustes do cliente do PNCP | API oficial, 30 dias, 3 páginas, 5000 ms |
 | `ARQUIVOS_DIR` | pasta dos arquivos de certidão | `./.arquivos` |
 
-As variáveis do frontend estão em [Frontend](frontend.md#variaveis-de-ambiente).
+As variáveis do frontend estão em [Frontend](../frontend.md#variaveis-de-ambiente).
 
 ## Custo e Cotas
 
-O projeto tem teto de custo de **US$ 0**: nenhum cartão cadastrado e nenhum upgrade para o plano Blaze. Sem alertas de orçamento, o acompanhamento é por prints dos painéis de cada serviço, em `docs/finops/` (ver [FinOps](../finops/README.md)). As cotas do Firestore estão em [Banco de Dados](banco-de-dados.md#cotas-do-firestore-plano-spark).
+O projeto tem teto de custo de **US$ 0**: nenhum cartão cadastrado e nenhum upgrade para o plano Blaze. Sem alertas de orçamento, o acompanhamento é por prints dos painéis de cada serviço, em `docs/finops/` (ver [FinOps](../finops/README.md)). As cotas do Firestore estão em [Banco de Dados](../banco-de-dados.md#cotas-do-firestore-plano-spark).

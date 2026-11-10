@@ -111,11 +111,15 @@ Exemplo: o usuário abre o feed de editais (`GET /v1/feed`).
 
 **Entidades** são interfaces TypeScript do domínio (`Edital`, `RegistroScore`, `CertidaoRegistro`), usadas pelas regras de negócio e pelos repositórios, sem depender do Firebase. **DTOs do frontend** são os tipos gerados de `server/openapi.yaml` (`npm run gen:api`), que garantem que as telas falem o mesmo formato da API.
 
+## Planejado para o Checkpoint 3
+
+Ainda **não está no código**: o acompanhamento de editais por etapas (US20, Jornada 2: Interessado, Preparando, Enviado e Resultado). Ele traz uma tela nova no frontend (`features/acompanhamento`) e quatro rotas novas no backend (ver [Backend: Rotas](backend.md#rotas)). Segue o mesmo caminho das demais funcionalidades: tela, hook, `services/`, rota Fastify com Zod, serviço e repositório no Firestore. Os critérios de aceite estão em [Histórias de Usuário](../backlog/historias.md).
+
 ## Documentação por Camada
 
 - [Frontend](frontend.md): estrutura do SPA, acesso à API, sessão e estados de tela
 - [Backend](backend.md): rotas, validação com Zod, segurança, score e ingestão
 - [Banco de Dados](banco-de-dados.md): coleções do Firestore, claims, arquivos e cotas
-- [Infraestrutura](infraestrutura.md): Compose, CI, variáveis de ambiente e produção planejada
+- [Infraestrutura](InfraestruturaeSegurança/infraestrutura.md): Compose, CI, variáveis de ambiente e produção planejada
 
-As decisões por trás de cada escolha estão nos [ADRs](../adrs/decisoes_tecnicas.md).
+As decisões por trás de cada escolha estão nos [ADRs](decisoes_tecnicas.md).

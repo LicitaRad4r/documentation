@@ -4,10 +4,10 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 
 !!! info "Como ler os critérios"
     - Cada critério tem um número ou um resultado exato, para que o QA consiga escrever o teste a partir da frase.
-    - A caixa só é marcada `[x]` quando existe teste ligado ao critério na [Matriz de Rastreabilidade](../../../Testes/matriz-rastreabilidade.md) **e** o teste passa na `main`. Caixa vazia significa "ainda não comprovado", não "não feito".
+    - A caixa só é marcada `[x]` quando existe teste ligado ao critério na [Matriz de Rastreabilidade](../Testes/matriz-rastreabilidade.md) **e** o teste passa na `main`. Caixa vazia significa "ainda não comprovado", não "não feito".
     - Os papéis do sistema são **Decisor** e **Analista** (os mesmos `role` do token: `decisor` e `analista`).
     - Os valores abaixo foram alinhados ao código em 03/11/2026 (status de certidão, faixas do score, limite de upload e paginação).
-    - Histórias marcadas com **Após o MVP** estão fora do [Escopo do MVP](../negocio/visao/escopo.md) e ficam como *Could have*.
+    - Histórias marcadas com **Após o MVP** estão fora do [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md) e ficam como *Could have*.
 
 ---
 
@@ -132,7 +132,7 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 ### US11 - Cálculo Determinístico do Score
 > **Como** Sistema, **eu quero** calcular o Score de Aderência (0 a 100), **para que** o edital possa ser classificado como Alta, Média ou Baixa compatibilidade.
 
-**Rastreabilidade:** RF06, ADR-0008, [Regra do Score](../negocio/Regradenegocio/score.md)
+**Rastreabilidade:** RF06, ADR-0008, [Regra do Score](../requirements/produto/negocio/Regradenegocio/score.md)
 **Critérios de Aceitação:**
 
 - [ ] **Dado que** um edital é avaliado, **quando** o Score é calculado, **então** a nota é um número inteiro entre 0 e 100.
@@ -156,7 +156,7 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 > **Como** Analista, **eu quero** marcar um edital promissor como "Recomendado", **para que** ele seja enviado para a análise do Decisor.
 
 !!! note "Após o MVP"
-    Faz parte do fluxo de decisão, substituído no MVP por "Acompanhar edital" (US20). Ver o [Escopo do MVP](../negocio/visao/escopo.md).
+    Faz parte do fluxo de decisão, substituído no MVP por "Acompanhar edital" (US20). Ver o [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md).
 
 **Rastreabilidade:** RF07
 **Critérios de Aceitação:**
@@ -203,7 +203,7 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 ## Épico 4: Fluxo de Decisão (após o MVP)
 
 !!! note "Após o MVP"
-    Este épico ficou fora do MVP. No lugar dele entra "Acompanhar edital" (US20), no Épico 5. Ver o [Escopo do MVP](../negocio/visao/escopo.md).
+    Este épico ficou fora do MVP. No lugar dele entra "Acompanhar edital" (US20), no Épico 5. Ver o [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md).
 
 ### US17 - Dashboard de Decisão
 > **Como** Decisor, **eu quero** aceder a um painel consolidado apenas com os editais recomendados, **para que** não perca tempo a analisar ruído.
@@ -236,15 +236,15 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 ### US20 - Acompanhar Edital
 > **Como** Analista ou Decisor, **eu quero** marcar um edital do feed como de interesse e atualizar a sua etapa, **para que** a equipa saiba o que está em andamento e não perca prazos.
 
-!!! warning "Entra no MVP se estiver em PR até 15/11/2026"
-    Prioridade *Should have*. A ingestão do PNCP, a tela de perfil e a ligação do front à API vêm antes. Se não houver PR aberto até 15/11, a história sai do MVP. Ver o [Escopo do MVP](../negocio/visao/escopo.md).
+!!! info "Must have no MVP"
+    É a jornada nova do Checkpoint 3 (15/11/2026) e passou de *Should have* para *Must have* em 09/11/2026. Corresponde à Jornada 2 do documento de [Jornadas](../requirements/produto/jornadas.md). Ver o [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md).
 
-**Rastreabilidade:** [Escopo do MVP](../negocio/visao/escopo.md)
+**Rastreabilidade:** Jornada 2, [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md)
 **Critérios de Aceitação (prazo em dias de calendário, fuso de Brasília, como na US16):**
 
-- [ ] **Dado que** clico em "Acompanhar" num edital do feed, **quando** a ação é gravada, **então** o edital aparece na lista "Acompanhados" com a etapa "Interessado".
+- [ ] **Dado que** clico em "Acompanhar" num edital do feed, **quando** a ação é gravada, **então** o edital aparece no quadro "Acompanhados", na coluna "Interessado" com a etapa "Interessado".
 - [ ] **Dado que** o edital já está acompanhado, **quando** clico em "Acompanhar" de novo, **então** a API responde `200` com o registo existente e a lista continua com 1 único item para esse edital.
-- [ ] **Dado que** sou Analista ou Decisor da empresa, **quando** mudo a etapa, **então** só posso avançar uma etapa por vez (Interessado → Preparando → Enviado → Resultado) ou voltar de Preparando para Interessado, e a lista mostra a nova etapa.
+- [ ] **Dado que** sou Analista ou Decisor da empresa, **quando** mudo a etapa, **então** só posso avançar uma etapa por vez (Interessado → Preparando → Enviado → Resultado) ou voltar de Preparando para Interessado, e o edital aparece na coluna da nova etapa.
 - [ ] **Dado que** o edital está em Enviado ou Resultado, **quando** tento voltar para uma etapa anterior ou saltar etapas, **então** a API responde `422` e a etapa não muda.
 - [ ] **Dado que** levo o edital para Resultado, **quando** gravo, **então** tenho de escolher "Venceu" ou "Não venceu", e a etapa não pode mais ser alterada.
 - [ ] **Dado que** o edital está em Interessado ou Preparando, **quando** clico em "Deixar de acompanhar", **então** ele sai da lista e pode ser acompanhado de novo; em Enviado ou Resultado a opção não aparece.
@@ -254,15 +254,16 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
     - o prazo já passou e o edital está em Interessado ou Preparando: aparece "Prazo encerrado" e o edital vai para o fim da lista.
 - [ ] **Dado que** sou de outra empresa, **quando** tento ler ou mudar um edital acompanhado, **então** a API responde `403`.
 - [ ] **Dado que** o edital ou o acompanhamento não existe, **quando** faço qualquer ação sobre ele, **então** a API responde `404`.
+- [ ] **Dado que** a base local tem o golden set carregado, **quando** a lista "Acompanhados" é pedida, **então** o p95 do tempo de resposta é de no máximo 800 ms na leitura e 1,5 s na escrita.
 - [ ] **Dado que** chamo qualquer rota de acompanhamento sem token ou com token inválido/expirado, **quando** a requisição chega, **então** a resposta é `401`.
 
 ### US21 - Contador de Editais Novos
 > **Como** Analista ou Decisor, **eu quero** ver quantos editais novos entraram no meu feed desde a última vez que o abri, **para que** saiba se vale a pena revisar o feed hoje.
 
 !!! note "Após o MVP"
-    No MVP, o alerta dentro da plataforma é o selo de vencimento das certidões (US16). O contador depende da ingestão do PNCP e de guardar a última visita de cada utilizador, e fica como *Could have*. Ver o [Escopo do MVP](../negocio/visao/escopo.md).
+    No MVP, o alerta dentro da plataforma é o selo de vencimento das certidões (US16). O contador depende da ingestão do PNCP e de guardar a última visita de cada utilizador, e fica como *Could have*. Ver o [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md).
 
-**Rastreabilidade:** RF10, [Escopo do MVP](../negocio/visao/escopo.md)
+**Rastreabilidade:** RF10, [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md)
 **Critérios de Aceitação (o contador é por utilizador; "última visita" = última vez que abri o Feed):**
 
 - [ ] **Dado que** a ingestão gravou editais aderentes ao meu perfil depois da última vez que abri o Feed, **quando** abro a plataforma, **então** vejo "N editais novos" no menu do Feed; abrir só a plataforma não zera o contador.

@@ -33,6 +33,17 @@ server/src/
 
 As rotas de negócio respondem com e sem o prefixo `/v1`. O OpenAPI também declara `POST /v1/certidoes` e `GET /v1/editais/{id}`, que **ainda não existem no código**.
 
+**Planejado (Checkpoint 3, US20):** as rotas de acompanhamento de editais ainda não existem e não estão no OpenAPI atual.
+
+| Método | Caminho | Função |
+| :--- | :--- | :--- |
+| POST | `/v1/acompanhamentos` | começa a acompanhar um edital (etapa inicial: Interessado); repetir a chamada responde `200`, sem duplicar |
+| GET | `/v1/acompanhamentos` | lista da empresa, ordenada pelo prazo mais próximo |
+| PATCH | `/v1/acompanhamentos/{id}` | muda de etapa, uma por vez; transição inválida responde `422`; o Resultado exige "Venceu" ou "Não venceu" e não muda mais |
+| DELETE | `/v1/acompanhamentos/{id}` | deixa de acompanhar, só nas etapas Interessado e Preparando |
+
+Valem as mesmas regras de segurança das demais rotas: `401` sem token, `403` para recurso de outra empresa e `404` para id inexistente. Como o CORS hoje só libera `GET`, `PUT`, `POST` e `OPTIONS`, é preciso incluir `PATCH` e `DELETE` em `app.ts`.
+
 ## Validação com Zod
 
 [Zod](https://zod.dev) é uma biblioteca de **schemas para TypeScript**. O mesmo schema faz duas coisas:
@@ -101,7 +112,7 @@ Com `valorMinimo` maior que `valorMaximo`, o cliente recebe `400` e o frontend m
 - **Erros:** sempre no formato `{ codigo, mensagem, detalhes?, requestId }`, com códigos estáveis (`VALIDACAO`, `NAO_AUTENTICADO`, `EMPRESA_NAO_CONFIGURADA`, `NAO_ENCONTRADO`, `ACESSO_NEGADO`, `ERRO_INTERNO`). O `500` não traz detalhes.
 - **Logs:** JSON com `requestId` (gerado no servidor), `route` e `status`; sem IP, e-mail, token nem a mensagem do erro, porque erros do Firestore trazem caminhos de documento.
 
-Os testes que sustentam cada controle estão em [Testes](testes.md).
+Os testes que sustentam cada controle estão em [Testes](../Testes/estrategia_de_testes.md).
 
 ## Score de Aderência
 
