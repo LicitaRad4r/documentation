@@ -30,7 +30,7 @@ Colunas **Teste(s)** e **Resultado** vazias = caso ainda não implementado no re
 | **CT-FILT-006** | Palavra-chave | US10,RF05, RF06, ADR-0008 | "NOTEBOOK" e "Notébook" encontram o mesmo edital | Termos com acento vs sem acento gerando idênticos resultados (`"NOTEBOOK"` e `"Notébook"`) | Unitário |  |  |
 | **CT-FILT-007** | Parâmetro inválido | US10,RF05, RNF05 | 400 com mensagem; ecrã mantém a lista anterior | Envio de parâmetro inválido → HTTP `400` e preservação da lista anterior no ecrã | Integração |  |  |
 | **CT-FILT-008** | Erro durante a pesquisa | US10, RF05 | Erro na pesquisa: mensagem com "Tentar novamente"; filtros mantidos | Estado dos inputs de filtro preservados intactos após a falha HTTP | E2E |  |  |
-| **CT-FILT-009** | Desempenho | US10, RF05, RNF03 | p95 de leitura <= 800 ms com o seed | Limiar estrito: `799 ms` vs `801 ms` (calculado sobre 200 amostras) | Integração |  |  |
+| **CT-FILT-009** | Desempenho | US10, RF05, RNF03 | p95 de leitura <= 800 ms com o seed | Limiar estrito: `799 ms` vs `801 ms` (calculado sobre 200 amostras) | Integração | `k6/carga.js`;  | `server/tests/unit/desempenho.test.ts` (em memória) | **Passou** (p95 de leitura 18,4 ms e de escrita 12,2 ms, 11/11/2026) |
 
 ## Jornada 3: Monitorização de Risco Documental e Revalidação (CT-CERT-001 a 010)
 **Rastreabilidade:** US14, US15, US16, US03, RF08 a RF10 e RNF05
