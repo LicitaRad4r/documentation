@@ -7,11 +7,11 @@
 
 | Item                                                                      | Resultado                                                                                                                 |
 | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Servidor: unitários, de API, de contrato e de ramos (`npm run test:unit`) | **147 de 147** passaram (12 arquivos)                                                                                     |
-| Cliente: componentes e lógica (`npx vitest run`)                          | **60 passaram + 1 `todo`** (13 arquivos)                                                                                  |
-| Integração com emulador (deny-all do Firestore, `npm run test:int`)       | **21 de 21** (execução local de 28/10/2026; não reexecutada nesta base)                                                   |
-| E2E contra a API real (`api-real.spec.ts`, 12 cenários)                   | **10 de 12 passaram** (06/11/2026, Docker + emulador + seed, chromium). E2E-11 e E2E-12 dependem do PR falham até o merge |
-| Cobertura do código do produto (`src/**`, servidor)                       | **80,6%** de instruções · 85,0% de ramos · 77,5% de funções · 79,7% de linhas                                             |
+| Servidor: unitários, de API, de contrato e de ramos (`npm run test:unit`) | **174 de 174** passaram (13 arquivos)  (execução 11/11/2026)                                                                                   |
+| Cliente: componentes e lógica (`npx vitest run`)                          | **72 passaram + 1 `todo`** (15 arquivos) (execução 11/11/2026)|
+| Integração com emulador (deny-all do Firestore, `npm run test:int`)       | **22 de 22** (2 arquivos)  (execução 11/11/2026)|
+| E2E contra a API real (`api-real.spec.ts`, 12 cenários)                   | **12 de 12 passaram**  (execução 11/11/2026)|
+| Cobertura do código do produto (Todos Arquivos)                       | **79,21%** de instruções · 81,13% de ramos · 70,55% de funções · 79,25% de linhas                                             |
 | Casos do plano (CT-…) com teste que leva o ID                             | **36 de 39** (eram 29)                                                                                                    |
 | Contrato OpenAPI                                                          | v0.3.0; divergências do plano fechadas                                                                                    |
 
@@ -31,13 +31,15 @@
 | Segurança (token, papel, isolamento)     | `unit/seguranca.test.ts`                                                                                                               | 14            | CT-SEG-001 a 009, 011                                                                  |
 | CORS                                     | `unit/cors.test.ts`                                                                                                                    | 5             | preflight sem token; 401 com cabeçalho de CORS                                         |
 | Erros e log                              | `unit/erros-log.test.ts`                                                                                                               | 3             | formato `Erro`, 500 genérico                                                           |
-| Regras do Firestore (deny-all)           | `integration/firestore-deny.all.test.ts`                                                                                               | 21 (emulador) | CT-SEG-010                                                                             |
-| Telas (cliente)                          | `client/src/**/*.test.ts(x)`                                                                                                           | 60 + 1 `todo` | feed, filtros, certidões, perfil, login e acesso, estados da consulta                  |
+| **Ingestão do PNCP, saúde e job**        | `unit/ingestao.test.ts`                                                                                                                | 27            | `/healthz`, `/readyz`, rota do job com `INGEST_JOB_TOKEN` (casos novos a mapear na matriz) |
+| Regras do Firestore (deny-all)           | `integration/firestore-deny.all.test.ts`                                                                                               | 21 (emulador) | CT-SEG-010                                                                         |
+| Telas (cliente)                          | `client/src/**/*.test.ts(x)`                                                                                                           | 72 + 1 `todo` | feed, filtros, certidões, perfil, login e acesso, estados da consulta                  |
 | **Novos no cliente**                     | `PaginaFeed.erro-filtros`, `PaginaFeed.complementos`, `PaginaCertidoes.falha-envio`, `PaginaCertidoes.fronteiras`, `lib/cache.test.ts` | 12            | CT-FILT-002, 003, 008; CT-CERT-002, 009; CT-FEED-008                                   |
+| E2E contra a API real                    | `client/tests-e2e/api-real.spec.ts`                                                                                                    | 12            | CT-SEG-001 a 009, CT-FEED-003, jornadas 1 a 4 (ver seção 4)                            |
 
 **Segurança.** Cobertos: sem token (401), token inválido ou expirado (401), papel incorreto (403), recurso de outra empresa (403 `ACESSO_NEGADO`; 404 para id inexistente) e `empresaId` de outra empresa na query ou no corpo (403). A tela trata 401 (volta ao login e depois à página de origem) e 403 `ACESSO_NEGADO` (página "Acesso negado"); 403 `EMPRESA_NAO_CONFIGURADA` fica na tela.
 
-**Classificação por técnica.** Cerca de 50 dos testes unitários chamam funções internas (caixa branca: `score`, `consulta`, `normalizar`, política de retentativa). O restante passa pela API, pela interface ou pelo contrato (caixa preta ou intermediária). O plano não prevê técnica de caixa branca explícita; a cobertura de ramos (85,0%) é efeito dos testes de ramos.
+**Classificação por técnica.** Cerca de 50 dos testes unitários chamam funções internas (caixa branca: `score`, `consulta`, `normalizar`, política de retentativa). O restante passa pela API, pela interface ou pelo contrato (caixa preta ou intermediária). O plano não prevê técnica de caixa branca explícita; a cobertura de ramos (81,1%) é efeito dos testes de ramos.
 
 ## 3. Casos do plano: situação
 
@@ -59,16 +61,11 @@ No plano esses casos são E2E; os testes atuais são de componente com mock (MSW
 
 | ID | Descrição | Severidade | Dono |
 | --- | --- | --- | --- |
-| BUG-001 | O front não tem tela de login: com `VITE_API_MOCK=false` toda chamada vai sem token e a API responde 401. A demo ponta a ponta não roda sem isso. | Crítica para o CP2 | Front-End |
-| BUG-002 | `docker-compose.yml` e `client/.env.example` sobem o front com `VITE_API_MOCK=true` por padrão: a tela mostra dados falsos, contrariando "telas ligadas à API, sem dados falsos". | Alta | DevOps / Front-End |
-| BUG-003 | O seed (`npm run seed`) não roda no `docker compose up`; precisa de passo manual não documentado no README. | Média | Back-End / DevOps |
-| BUG-004 | O CI não roda os testes do cliente (só lint e build) nem o teste de integração do deny-all. | Média | DevOps |
-| BUG-005 | Não existe tela para configurar o perfil da empresa (termos, UFs, modalidades, faixa de valor); só a chamada de API em `client/src/features/perfil/api.ts`. | Alta (é parte da Jornada 1 da ficha) | Front-End |
+| BUG-001 | O CI não roda os testes do cliente (só lint e build), o Playwright nem o teste de integração do deny-all. | Média | DevOps | **Aberto** |
+| BUG-002 | Não existe tela para configurar o perfil da empresa (termos, UFs, modalidades, faixa de valor); só a chamada de API em `client/src/features/perfil/api.ts`. | Alta (é parte da Jornada 1 da ficha) | Front-End | **Aberto** |
+| BUG-003 | `docker-compose.yml` e `.env.example` sobem o front com `VITE_API_MOCK=true` por padrão: a tela mostra dados falsos, contrariando "telas ligadas à API, sem dados falsos". | Alta | DevOps / Front-End | **Aberto** (o README explica como trocar, mas o padrão continua `true`; é preciso recriar o container `web` depois de mudar o `.env`) |
 
-> IDs sugeridos pela PO a partir da revisão de 04/11. O QA confirma, abre as issues e ajusta a severidade.
-
-
-### Resultado do E2E contra a API real (06/11/2026, `main`)
+### Resultado do E2E contra a API real (11/11/2026, `main`)
 
 | Cenário | Resultado |
 | --- | --- |
@@ -80,25 +77,28 @@ No plano esses casos são E2E; os testes atuais são de componente com mock (MSW
 | E2E-08 analista sem Certidões e com "Acesso negado" pela URL | Passou |
 | E2E-09 renovar certidão urgente passa para "Em dia" | Passou (após corrigir a asserção do teste) |
 | E2E-10 sair volta ao login | Passou |
-| E2E-11 `/healthz` e `/readyz` | **Falha esperada**: rotas só existem no PR #25 (na `main` responde 401) |
-| E2E-12 job de ingestão recusa sem token | **Falha esperada**: rota só existe no PR #25 (na `main` responde 404) |
+| E2E-11 `/healthz` e `/readyz` públicos, 200 e sem dados | Passou  |
+| E2E-12 job de ingestão recusa sem token e com token de usuário do Firebase | Passou  |
 
 As duas correções foram de teste, não de produto. A jornada de login, feed, filtros, certidões, isolamento e logout funcionou contra a API e o emulador reais. Isso comprova o fechamento do BUG-011 (login), que fica como corrigido.
 
+Em 06/11 os E2E-11 e 12 falhavam de propósito, porque as rotas só existiam no PR #25; depois do merge passaram. Os E2E-07 e 09 precisaram de correção no teste (não no produto): o 07 navegava antes de o login terminar e o 09 procurava um texto que a tela não mostra. A jornada de login, feed, filtros, certidões, isolamento e logout funcionou contra a API e o emulador reais
 
 ## 5. Como reproduzir
+Requisitos: Node 22.10 ou superior (o CI usa 24; `nvm use 24`), Docker aberto e o `.env` criado com `cp .env.example .env`.
 
 ```bash
 # servidor (na branch feat/api-base, até o merge)
 cd server && npm ci
-npm run test:cov          # 147 teste
-npm run test:int          # 21 testes do deny-all (precisa do emulador: docker compose up -d firebase)
-
+npm run test:cov       
+npm run test:int          
 # cliente
-cd client && npm ci && npx vitest run   # 60 testes
+cd client && npm ci && npx vitest run   
 
 # E2E contra a API real
-VITE_API_MOCK=false docker compose up --build               # terminal 1
-docker compose exec api npm run seed                        # terminal 2
-cd client && npx playwright test -c playwright.api-real.config.ts   # E2E-11 e 12 só com o PR #25
+# no .env: VITE_API_MOCK=false
+docker compose up --build -d
+docker compose up -d --force-recreate web      # o front só lê o .env ao ser criado
+docker compose exec api npm run seed           # repita antes de cada rodada (o E2E-09 altera uma certidão)
+cd client && npx playwright test -c playwright.api-real.config.ts --reporter=list
 ```
