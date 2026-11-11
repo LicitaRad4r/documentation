@@ -7,9 +7,9 @@
 
 | Item                                                                      | Resultado                                                                                                                 |
 | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Servidor: unitários, de API, de contrato e de ramos (`npm run test:unit`) | **174 de 174** passaram (13 arquivos)  (execução 11/11/2026)                                                                                   |
+| Servidor: unitários, de API, de contrato e de ramos (`npm run test:unit`) | **195 de 195** passaram (14 arquivos) (174 unit/contrato e 21 de integração) (execução 11/11/2026)                                                                                   |
 | Cliente: componentes e lógica (`npx vitest run`)                          | **72 passaram + 1 `todo`** (15 arquivos) (execução 11/11/2026)|
-| Integração com emulador (deny-all do Firestore, `npm run test:int`)       | **22 de 22** (2 arquivos)  (execução 11/11/2026)|
+| Integração com emulador (deny-all do Firestore, `npm run test:int`)       | **21 de 21** (2 arquivos)  (execução 11/11/2026)|
 | E2E contra a API real (`api-real.spec.ts`, 12 cenários)                   | **12 de 12 passaram**  (execução 11/11/2026)|
 | Cobertura do código do produto (Todos Arquivos)                       | **79,21%** de instruções · 81,13% de ramos · 70,55% de funções · 79,25% de linhas                                             |
 | Casos do plano (CT-…) com teste que leva o ID                             | **36 de 39** (eram 29)                                                                                                    |
