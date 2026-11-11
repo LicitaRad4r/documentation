@@ -5,8 +5,7 @@ Enquanto os Requisitos Funcionais descrevem *o que* o sistema faz, os Requisitos
 ### Desempenho e Escalabilidade
 *   **RNF01 - Escalabilidade Automática:** A arquitetura do *backend* deve suportar o aumento dinâmico de tráfego, utilizando o ambiente *serverless* do Google Cloud Run para garantir a elasticidade dos serviços.
 *   **RNF02 - Entrega de Conteúdo:** O *frontend* deve garantir um carregamento de página rápido e de alta disponibilidade, sendo distribuído através do Firebase Hosting.
-*   **RNF03 - Eficiência de Processamento:** O *backend* deve apresentar baixo *overhead* no processamento de requisições, utilizando o *framework* Fastify.
-
+*   **RNF03:** com o seed, o p95 de leitura deve ser ≤ 800 ms e o de escrita ≤ 1,5 s, medidos localmente com k6 (`docs/Testes/teste-de-carga-k6.md`). **Exceção:** a partida a frio do Render Free (a API dorme após inatividade e leva cerca de um minuto para acordar) fica fora da meta. O smoke test pós-deploy tolera até 90 s de espera por essa razão.
 ### Segurança e Conformidade
 *   **RNF04 - Proteção de Credenciais:** Todas as chaves de API, variáveis de ambiente e credenciais de acesso aos bancos de dados devem ser geridas e protegidas de forma centralizada pelo Google Secret Manager.
 *   **RNF05 - Validação de Dados:** O sistema deve garantir a integridade e validação rigorosa dos esquemas de dados recebidos (ex: *payloads* do PNCP) utilizando a biblioteca Zod.
