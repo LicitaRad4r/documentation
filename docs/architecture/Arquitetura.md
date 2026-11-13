@@ -1,92 +1,125 @@
-# Visão Geral da Arquitetura
+# Arquitetura do Projeto
 
-O MVP do LicitaRadar foi desenhado com base numa arquitetura moderna, escalável e desacoplada (separação clara entre *Frontend* e *Backend* através de uma API REST). Esta abordagem garante que o sistema seja rápido de desenvolver na fase do AI Lab, mas robusto o suficiente para crescer.
+Descreve o que está **implementado** no repositório de código [`LicitaRad4r/LicitaRadar`](https://github.com/LicitaRad4r/LicitaRadar). O que ainda é **planejado** nos ADRs aparece identificado como tal.
 
-A arquitetura está dividida em quatro camadas principais:
+## Visão Geral
 
-## 1. Camada de Apresentação (Frontend)
-Responsável pela interface do utilizador, focada na velocidade de carregamento e na experiência de uso em diferentes dispositivos.
-*   **Tecnologia Principal:** React com Vite (empacotador), garantindo alta performance no ambiente de desenvolvimento e na geração do código final.
-*   **Estilização:** Tailwind CSS, permitindo a construção ágil de interfaces limpas e responsivas.
-*   **Linguagem:** TypeScript, para garantir tipagem estática e evitar erros de integração com a API.
-*   **Hospedagem:** Firebase Hosting, que entrega os ficheiros estáticos globais com alta disponibilidade.
+O LicitaRadar é um monorepo com o frontend (SPA em React) e o backend (API REST em Fastify) lado a lado. O backend é a única porta de acesso aos dados, que ficam no Firestore; a identidade vem do Firebase Auth. Uma rotina diária busca no PNCP os editais com proposta aberta e calcula o score de aderência de cada empresa.
 
-## 2. Camada de Negócio e Serviços (Backend)
-Responsável por processar as regras de negócio (como o cálculo do Score de Aderência), validar acessos e comunicar com integrações externas (como o PNCP).
-*   **Tecnologia Principal:** Node.js utilizando o *framework* Fastify, escolhido pelo seu baixo *overhead* e alto desempenho no processamento de requisições HTTP.
-*   **Validação de Dados:** Biblioteca Zod, que assegura que qualquer informação que entra na API (ex: formulários de login ou *payloads* externos) tem o formato estritamente correto.
-*   **Hospedagem (Computação):** Google Cloud Run (ambiente *serverless*), que escala a aplicação automaticamente conforme o número de requisições aumenta, reduzindo custos quando o sistema está ocioso.
+```text
+LicitaRadar/
+├── client/                  # Frontend: React + Vite + TypeScript
+│   ├── src/                 # features, services, components, lib, mocks, routes
+│   ├── tests/               # Playwright: telas contra a API simulada
+│   └── tests-e2e/           # Playwright: roteiro contra a API real
+├── server/                  # Backend: Node.js + Fastify + Zod
+│   ├── src/                 # módulos por funcionalidade + infra/ (adaptadores)
+│   ├── tests/               # unit, contract, integration e fixtures do PNCP
+│   └── openapi.yaml         # contrato da API (fonte da verdade front × back)
+├── infra/firebase/          # Dockerfile dos emuladores do Firebase
+├── .github/                 # CI, ingestão agendada, CODEOWNERS, template de PR
+├── docker-compose.yml       # sobe emuladores, API e frontend
+├── firebase.json            # configuração dos emuladores
+├── firestore.rules          # regras deny-all
+├── .env.example             # variáveis do ambiente local
+└── README.md
+```
 
-## 3. Camada de Persistência (Base de Dados)
-Onde residem todas as informações sensíveis, de forma estruturada e segura.
-*   **Sistema de Gestão (SGBD):** PostgreSQL, um banco de dados relacional robusto, ideal para garantir a consistência das relações entre Organizações, Utilizadores, Editais e Certidões.
-*   **Ambiente Local:** Durante o desenvolvimento, a equipa utiliza instâncias de PostgreSQL em contentores Docker (através de `docker-compose`), garantindo que todos os programadores têm exatamente o mesmo ambiente sem precisarem de instalar o banco de dados na própria máquina.
-
-## 4. Infraestrutura, Qualidade e DevOps
-As ferramentas que garantem que o código escrito pela equipa chega a produção de forma segura e testada.
-*   **Testes:** Vitest para cobertura de testes unitários na lógica de negócio e Playwright para testes de ponta a ponta (E2E) simulando o comportamento do utilizador no ecrã.
-*   **CI/CD:** GitHub Actions orquestra a Integração e Entrega Contínuas, automatizando o envio do código para o Firebase e Cloud Run sempre que uma nova versão é aprovada.
-*   **Segurança:** Google Secret Manager, utilizado para centralizar e proteger todas as chaves de API, senhas do banco de dados e variáveis de ambiente confidenciais.
-
-O Diagrama abaixo demonstra de forma ilustrativa a arquitetura do LicitaRadar. 
+## Separação de Responsabilidades
 
 ```mermaid
 flowchart TD
-    %% Definição de Cores com texto escuro
-    classDef front fill:#e6f0ff,stroke:#0055cc,stroke-width:2px,color:#333333;
-    classDef back fill:#e6ffe6,stroke:#008000,stroke-width:2px,color:#333333;
-    classDef cloud fill:#f2e6ff,stroke:#6600cc,stroke-width:2px,color:#333333;
-    classDef dev fill:#ffffe6,stroke:#cccc00,stroke-width:2px,color:#333333;
-    classDef decision fill:#fff3e6,stroke:#cc6600,stroke-width:2px,color:#333333;
-    classDef data fill:#f2f2f2,stroke:#666666,stroke-width:1px,stroke-dasharray: 5 5,color:#333333;
+    classDef front fill:#e6f0ff,stroke:#0055cc,stroke-width:2px,color:#1a1a1a;
+    classDef back fill:#e6ffe6,stroke:#008000,stroke-width:2px,color:#1a1a1a;
+    classDef cloud fill:#f2e6ff,stroke:#6600cc,stroke-width:2px,color:#1a1a1a;
+    classDef dev fill:#ffffe6,stroke:#b8a900,stroke-width:2px,color:#1a1a1a;
+    classDef data fill:#f2f2f2,stroke:#666666,stroke-width:1px,stroke-dasharray: 5 5,color:#1a1a1a;
 
-    %% Camada Frontend
-    F_MAIN["Frontend: React + Vite"]:::front
-    F_APP["Páginas / Componentes\n(Tailwind CSS)"]:::front
-    F_HTTP["services/ HTTP\n(Fetch / Axios)"]:::front
-    F_TYPE[/"Tipagem TypeScript"/]:::data
+    F_TELA["Telas<br/>features/"]:::front
+    F_HOOK["Hooks<br/>TanStack Query"]:::front
+    F_SVC["services/<br/>openapi-fetch"]:::front
+    F_DTO[/"DTOs gerados<br/>do OpenAPI"/]:::data
 
-    F_MAIN --- F_APP
-    F_APP -- "Chama Serviço" --> F_HTTP
-    F_HTTP -. "Utiliza DTO" .-> F_TYPE
+    F_TELA -- "usa" --> F_HOOK
+    F_HOOK -- "chama" --> F_SVC
+    F_SVC -. "tipado por" .-> F_DTO
 
-    %% Camada Backend
-    B_MAIN["Backend: Node.js + Fastify"]:::back
-    B_CTRL["controllers/ Rotas"]:::back
-    B_SERV["services/\n(Regras de Negócio)"]:::back
-    B_REPO["Repository\n(Banco de Dados)"]:::back
-    B_ZOD[/"Schemas Zod\n(Validação)"/]:::data
+    B_ROTA["Rotas Fastify<br/>rotas.ts"]:::back
+    B_AUTH["Hook de segurança<br/>auth.ts"]:::back
+    B_ZOD[/"Schemas Zod<br/>validação de entrada"/]:::data
+    B_SERV["Serviços e regras<br/>feed, score, ingestão"]:::back
+    B_REPO["Interfaces *Repo"]:::back
+    B_INFRA["Adaptadores<br/>infra/"]:::back
 
-    F_HTTP -- "Envia Requisição\n(APIs REST)" --> B_CTRL
-    B_MAIN --- B_CTRL
-    
-    B_CTRL -. "Valida Payload" .-> B_ZOD
-    B_CTRL -- "Envia Requisição" --> B_SERV
-    B_SERV -- "Utiliza" --> B_REPO
+    F_SVC -- "REST + Bearer token" --> B_AUTH
+    B_AUTH --> B_ROTA
+    B_ROTA -. "valida" .-> B_ZOD
+    B_ROTA -- "chama" --> B_SERV
+    B_SERV -- "usa" --> B_REPO
+    B_REPO -- "implementado por" --> B_INFRA
 
-    %% Deploy e Nuvem
-    D_FRONT["Firebase Hosting"]:::cloud
-    D_BACK["Google Cloud Run"]:::cloud
-    
-    F_MAIN -. "Deploy (GitHub Actions)" .-> D_FRONT
-    B_MAIN -. "Deploy (GitHub Actions)" .-> D_BACK
+    C_AUTH["Firebase Auth"]:::cloud
+    C_FS[("Firestore")]:::cloud
+    C_PNCP["API do PNCP"]:::cloud
+    C_GHA["GitHub Actions<br/>agenda diária"]:::cloud
 
-    %% Decisão de Ambiente (Banco de Dados)
-    DEC{"Ambiente de\nDesenvolvimento?"}:::decision
-    DB_PROD["PostgreSQL\n(Cloud SQL / Nuvem)"]:::cloud
-    DB_DEV["Docker Compose\n(PostgreSQL Local)"]:::dev
-    DB_GUI["DBeaver / PgAdmin\n(Visualização Local)"]:::dev
+    B_AUTH -- "verifica o token" --> C_AUTH
+    B_INFRA --> C_FS
+    B_SERV -- "ingestão" --> C_PNCP
+    C_GHA -. "POST /jobs/ingestao-pncp" .-> B_ROTA
 
-    B_REPO -- "CADASTRA / CONSULTA" --> DEC
-    DEC -- "NÃO" --> DB_PROD
-    DEC -- "SIM" --> DB_DEV
-    DB_DEV -- "Visualização Local" --> DB_GUI
-```   
+    D_EMU["Emuladores do Firebase<br/>(Docker Compose)"]:::dev
+    D_SEED["seed e fixtures"]:::dev
+
+    D_EMU -. "substitui Auth e Firestore" .-> C_FS
+    D_SEED -- "popula" --> D_EMU
+```
+
 ### Como ler o diagrama
 
 | Cor | Camada | Responsabilidade |
 | :--- | :--- | :--- |
-| 🔵 **Azul** | Frontend | Interface de utilizador (React), chamadas HTTP, tipagem |
-| 🟢 **Verde** | Backend | Controladores (Fastify), regras de negócio, validação (Zod) |
-| 🟣 **Roxo** | Produção | Hospedagem em Nuvem (Google Cloud Run e Firebase Hosting) |
-| 🟡 **Amarelo** | Dev local | Ambiente de desenvolvimento (Docker Compose e Base de Dados local) |
+| 🔵 **Azul** | Frontend | Telas, hooks de dados, chamadas HTTP tipadas pelo contrato |
+| 🟢 **Verde** | Backend | Autenticação, rotas, validação, regras de negócio e acesso a dados |
+| 🟣 **Roxo** | Serviços em nuvem | Firebase Auth, Firestore, API do PNCP e o agendador do GitHub Actions |
+| 🟡 **Amarelo** | Dev local | Emuladores do Firebase, *seed* e fixtures, tudo no Docker Compose |
+
+## Fluxo de uma Requisição
+
+Exemplo: o usuário abre o feed de editais (`GET /v1/feed`).
+
+```text
+1. A tela PaginaFeed usa o hook useFeed(filtros), que guarda o resultado em cache (30 s).
+2. O hook chama services/feed.ts, que usa o cliente openapi-fetch tipado pelo contrato.
+3. services/http.ts acrescenta o cabeçalho Authorization: Bearer <ID token do Firebase>.
+4. No Fastify, o hook onRequest valida o token no Firebase Auth (inválido: 401).
+5. O hook preHandler confere que qualquer empresaId na query é o do token (diferente: 403).
+6. A rota valida a query com o schema Zod ConsultaFeed (inválida: 400 VALIDACAO).
+7. montarFeed lê editais e scores da empresa no Firestore, filtra, ordena e pagina.
+8. A resposta JSON volta ao navegador e o EstadoDaConsulta mostra a lista (ou erro, ou vazio).
+```
+
+### Ambiente de Desenvolvimento
+
+- **Tudo em Docker Compose:** `docker compose up --build` sobe os emuladores do Firebase, a API (porta 3333) e o frontend (porta 5173).
+- **Dados locais:** `npm run seed` cria empresas, usuários com *claims* e editais de exemplo; `npm run ingest -- --fonte=fixtures` carrega editais pelo caminho real da ingestão, sem internet.
+- **Sem Docker (opcional):** só para lint, build e testes, com Node.js 22 ou mais novo. O caminho suportado pelo time é o Compose.
+
+## Zod e DTOs
+
+**Schemas Zod** são a porta de entrada do backend: descrevem e validam, em tempo de execução, tudo o que chega de fora (corpo do perfil, *query string* do feed, payload do PNCP) e ao mesmo tempo geram o tipo TypeScript correspondente. Explicação completa em [Backend: Validação com Zod](backend.md#validacao-com-zod).
+
+**Entidades** são interfaces TypeScript do domínio (`Edital`, `RegistroScore`, `CertidaoRegistro`), usadas pelas regras de negócio e pelos repositórios, sem depender do Firebase. **DTOs do frontend** são os tipos gerados de `server/openapi.yaml` (`npm run gen:api`), que garantem que as telas falem o mesmo formato da API.
+
+## Planejado para o Checkpoint 3
+
+Ainda **não está no código**: o acompanhamento de editais por etapas (US20, Jornada 2: Interessado, Preparando, Enviado e Resultado). Ele traz uma tela nova no frontend (`features/acompanhamento`) e quatro rotas novas no backend (ver [Backend: Rotas](backend.md#rotas)). Segue o mesmo caminho das demais funcionalidades: tela, hook, `services/`, rota Fastify com Zod, serviço e repositório no Firestore. Os critérios de aceite estão em [Histórias de Usuário](../backlog/historias.md).
+
+## Documentação por Camada
+
+- [Frontend](frontend.md): estrutura do SPA, acesso à API, sessão e estados de tela
+- [Backend](backend.md): rotas, validação com Zod, segurança, score e ingestão
+- [Banco de Dados](banco-de-dados.md): coleções do Firestore, claims, arquivos e cotas
+- [Infraestrutura](InfraestruturaeSegurança/infraestrutura.md): Compose, CI, variáveis de ambiente e produção planejada
+
+As decisões por trás de cada escolha estão nos [ADRs](decisoes_tecnicas.md).
