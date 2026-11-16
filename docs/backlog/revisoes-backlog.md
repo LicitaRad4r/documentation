@@ -61,8 +61,6 @@ O backlog é revisto toda semana. Esta página registra o que mudou de prioridad
 **Decisões.**
 - US20 sobe para ***Must*** e passa a ser a Jornada 2 ("Acompanhamento até o resultado").
 - Critérios da US20 ganham números: "Prazo próximo" de 0 a 3 dias corridos (Brasília); "Prazo encerrado" no fim da lista; p95 ≤ 800 ms na leitura e ≤ 1,5 s na escrita; uma etapa por vez, `422` em transição inválida; Resultado com "Venceu"/"Não venceu" e imutável; `401`, `403` e `404` definidos.
-- Escopo do CP3 fechado (tabela abaixo).
+- Escopo do CP3 fechado: Jornadas 1 a 3 publicadas na nuvem, US20 como jornada nova e pendências do Gate 2 no [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md).
 
 **Evidência.** `MoSCoW.md`, `historias.md` (US20), `jornadas.md` (Jornada 2), `escopo.md`.
-
----

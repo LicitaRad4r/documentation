@@ -1,3 +1,7 @@
+# Roteiro de Demonstração
+
+Sequência de cada demo, na ordem em que é apresentada. Os usuários de teste estão no [Roteiro E2E](../Testes/roteiro-e2e-api-real.md). No site publicado os e-mails são os mesmos, mas a senha é a do seed de produção, que fica com o time e não vai para o repositório.
+
 ## Checkpoint 2 (05/11)
 
 1. Subir do zero: clone limpo, `docker compose up --build` e seed, com o app abrindo ligado à API real.
@@ -13,9 +17,9 @@
 
 1. Pipeline de Deploy e Preview: abertura de um PR de teste para validar o canal de preview no Firebase Hosting, seguido de merge na `main` publicando o front no Hosting e a API no Render (auto-deploy), com smoke test automático.
 2. Validação de Health Checks: verificação dos endpoints `/healthz` e `/readyz` na URL pública da API.
-3. Jornada 1 (Triagem): login como Analista na URL de produção, feed ranqueado e filtros, com observação do cold start do Render (tela de carregamento na primeira chamada).
+3. Jornada 1 (Triagem): login como Analista na URL de produção, feed ranqueado e filtros. A API não "dorme": o UptimeRobot a consulta a cada 5 minutos (ADR-0013), e o indicador "API no ar" no topo da tela confirma.
 4. Jornada 2 (Acompanhamento — jornada nova, US20): "Acompanhar" um edital no feed, mover pelo quadro Interessado → Preparando → Enviado → Resultado com escolha de Venceu/Não venceu; selos "Prazo próximo" e "Prazo encerrado".
 5. Jornada 3 (Certidões): login como Decisor, alerta de vencimento e renovação com upload.
 6. Isolamento: login como Decisor da Empresa B com quadro e certidões próprios; Analista sem acesso a Certidões.
-7. Alertas: issue aberta automaticamente na falha do job de ingestão (PR #39) e monitor do UptimeRobot em `/readyz`.
-8. Auditoria de Custos: evidências em `finops/evidencias/` (Firebase Spark, Render Free, GitHub Actions) com gasto acumulado de US$ 0, conforme a ADR-0001.
+7. Alertas: issue aberta automaticamente na falha do job de ingestão (PR #39) e monitor do UptimeRobot em `/readyz` com e-mail de incidente (PR #45, prints em `docs/operacao/` do repositório de código).
+8. Auditoria de Custos: prints em [FinOps › evidências](../architecture/finops/evidencias/README.md) (Firebase Spark, Render Free, GitHub Actions, UptimeRobot) com gasto acumulado de US$ 0, conforme a ADR-0001.

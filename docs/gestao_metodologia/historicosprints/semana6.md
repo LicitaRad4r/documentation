@@ -1,95 +1,80 @@
 # Semana 6 — Checkpoint 3: Nuvem, Integração e Jornada Nova
 
-**Período:** 09/11/2026 – 15/11/2026 (Checkpoint 3 em 15/11/2026)
-
-!!! info "Registro em andamento"
-    Esta página foi aberta em 09/11/2026 e é atualizada até a entrega. As caixas marcadas `[x]` têm evidência (PR mesclado ou arquivo na `main`). Contribuições por pessoa e números de testes serão preenchidos no fechamento da sprint, a partir dos commits e PRs.
-
----
+**Período:** 09/11/2026 – 16/11/2026 (Checkpoint 3 em 15/11; publicação do front e alertas fechados em 16/11)
 
 ## Objetivo da Sprint
 
-Entregar o **Checkpoint 3**: ambiente publicado no custo zero (Firebase Hosting e API no Render Free), deploy automático, `/healthz` e `/readyz` com alerta, teste de fumaça e de autorização contra a URL pública, e **uma jornada nova como *Must* com critério de aceite numérico** (acompanhamento de editais, US20).
+Entregar o **Checkpoint 3**: ambiente publicado no custo zero (Firebase Hosting e API no Render Free), deploy automático, `/healthz` e `/readyz` com alerta, teste de fumaça e de autorização contra a URL pública, e **uma jornada nova como *Must* com critério numérico** (acompanhamento de editais, US20).
 
 ---
 
 ## Entregas
 
-### Produto e Documentação
+Caixas marcadas têm PR mesclado na `main`.
 
-- [x] **US20 passou a *Must have*** (09/11). Registrado em [Revisões do Backlog](../../backlog/revisoes-backlog.md), na [Matriz MoSCoW](../../backlog/MoSCoW.md), nas [Histórias de Usuário](../../backlog/historias.md) e no [Escopo do MVP](../../requirements/produto/negocio/visao/escopo.md)
-- [x] Jornadas atualizadas: Acompanhamento até o resultado é a **Jornada 2** e entra no MVP
-- [x] Documentação reorganizada e links corrigidos; `mkdocs build --strict` passa sem avisos
-- [x] Documentos de arquitetura (`Arquitetura.md`, `backend.md`, `infraestrutura.md`) alinhados ao código, com o acompanhamento marcado como planejado
-- [ ] Revisão do backlog da S5/S6 publicada em `/docs/backlog` (feita nesta página e em `revisoes-backlog.md`, falta o PR ser mesclado)
-- [ ] ADRs revisados pela Tech Lead (Neon → Firestore, status "Aceito", UptimeRobot e arquivos de certidão)
-- [ ] Prints do FinOps (Render, UptimeRobot, GitHub) em `docs/architecture/finops/`
-- [ ] Runbook de rollback
-- [ ] Roteiro da demo de 15/11
+**Produto e documentação**
 
-### Backend
+- [x] US20 como *Must have*, Jornada 2 no MVP; revisões R3 e R4 em [Revisões do Backlog](../../backlog/revisoes-backlog.md)
+- [x] 47 de 68 critérios de aceite comprovados nas [Histórias de Usuário](../../backlog/historias.md), incluindo os 11 da US20
+- [x] [Roteiro de Demonstração](../../backlog/roteirodemonstracao.md) do CP2 e do CP3
+- [x] ADRs do Custo Zero fechados, incluindo o ADR-0013 de monitoramento ([#74](https://github.com/LicitaRad4r/documentation/pull/74))
+- [x] Matriz e relatório de testes com a rodada contra a URL pública ([#75](https://github.com/LicitaRad4r/documentation/pull/75))
+- [ ] Prints FinOps do Render, do GitHub Actions e do UptimeRobot; runbook de rollback
 
-- [ ] Rotas `POST`, `GET`, `PATCH` e `DELETE` de `/v1/acompanhamentos` com as regras da US20
-- [ ] CORS liberando `PATCH` e `DELETE`
-- [ ] Contrato OpenAPI com as rotas de acompanhamento e `npm run gen:api`
-- [ ] Dockerfile de produção da API (hoje as imagens são de desenvolvimento)
-- [ ] Ingestão agendada ligada: `ENABLE_PNCP_INGEST=true` e os secrets `API_BASE_URL` e `INGEST_JOB_TOKEN`
+**Backend**
 
-### Frontend
+- [x] API de acompanhamentos (`POST`, `GET`, `PATCH`, `DELETE`), contrato OpenAPI e CORS — [#38](https://github.com/LicitaRad4r/LicitaRadar/pull/38)
+- [x] Testes do `/readyz` e documentação de saúde — [#37](https://github.com/LicitaRad4r/LicitaRadar/pull/37)
+- [x] Alerta de falha do job de ingestão por issue e e-mail — [#39](https://github.com/LicitaRad4r/LicitaRadar/pull/39)
+- [x] Latência (`latenciaMs`) em todo log de requisição — [#45](https://github.com/LicitaRad4r/LicitaRadar/pull/45)
+- [ ] `GET /v1/editais/{editalId}`; ingestão agendada ligada (secrets)
 
-- [ ] Quadro "Acompanhados" com as colunas Interessado, Preparando, Enviado e Resultado, ordenado pelo prazo mais próximo e com destaque de 0 a 3 dias
-- [ ] Tela de perfil da empresa (US08, ainda sem tela)
-- [ ] Estado de "carregando" para a primeira chamada à API acordada (cold start de cerca de 1 minuto)
-- [ ] Tela de detalhe do edital (US12)
+**Frontend**
 
-### Qualidade e Testes
+- [x] Quadro Kanban da US20 com arrastar, Resultado e selos de prazo — [#40](https://github.com/LicitaRad4r/LicitaRadar/pull/40)
+- [x] Tela de perfil (US08) — [#35](https://github.com/LicitaRad4r/LicitaRadar/pull/35) e [#41](https://github.com/LicitaRad4r/LicitaRadar/pull/41); tela de detalhe (US12) — [#34](https://github.com/LicitaRad4r/LicitaRadar/pull/34)
 
-- [ ] Testes de autorização da US20 (`401`, `403`, `404`, `422`)
-- [ ] Teste de fumaça após o deploy
-- [ ] Testes de autorização contra a URL publicada, com relatório
-- [ ] CI rodando os testes do cliente e os de integração com emulador
-- [ ] Atualizar a matriz de rastreabilidade e o relatório de testes do CP3
+**Qualidade e DevOps**
 
-### DevOps e Ambiente
-
-- [ ] Deploy automático do frontend no Firebase Hosting (canal de preview em PR e produção na `main`)
-- [ ] Deploy automático da API no Render
-- [ ] Configuração como código: `firebase.json` com Hosting, `firestore.indexes.json`, `render.yaml` e `.env.example` completo
-- [ ] UptimeRobot consultando `/readyz` a cada 5 minutos, com alerta por e-mail
+- [x] CI com Vitest do cliente, Playwright e regras do Firestore — [#32](https://github.com/LicitaRad4r/LicitaRadar/pull/32)
+- [x] `Dockerfile.render`, smoke test e k6 — [#31](https://github.com/LicitaRad4r/LicitaRadar/pull/31)
+- [x] API no Render com auto-deploy na `main` (`licitaradar-y2gp.onrender.com`) — [#36](https://github.com/LicitaRad4r/LicitaRadar/pull/36)
+- [x] **Front publicado em `licitaradar-13047.web.app`** depois do CI verde, com preview por PR e link no comentário — [#42](https://github.com/LicitaRad4r/LicitaRadar/pull/42)
+- [x] Regras e índices do Firestore publicados pelo deploy; `render.yaml` e `docs/nuvem.md` — [#43](https://github.com/LicitaRad4r/LicitaRadar/pull/43) e [#44](https://github.com/LicitaRad4r/LicitaRadar/pull/44)
+- [x] UptimeRobot no `/readyz` a cada 5 min, com e-mail; p95 medido no k6 — [#45](https://github.com/LicitaRad4r/LicitaRadar/pull/45)
+- [x] 8 testes de autorização do kanban; 13 de 13 passaram contra o Render — [#46](https://github.com/LicitaRad4r/LicitaRadar/pull/46)
 
 ---
 
-## Checkpoint 3 (acompanhamento)
+## Checkpoint 3 — situação em 16/11
 
-| Critério do Gate 3 | Situação em 09/11 |
+| Critério do Gate 3 | Situação |
 |---|---|
-| `/healthz` e `/readyz` | Feito (código) |
-| Deploy automático e preview em PR | Não iniciado |
-| Alertas (indisponibilidade e falha de job) | Não iniciado |
-| Segredos protegidos | Plano definido (GitHub Secrets e variáveis do Render), exceção ao Workload Identity a registrar em ADR |
-| Teste de fumaça e testes de autorização na URL pública | Não iniciado |
-| Jornada nova como *Must* com critério numérico | Definida (US20); implementação pendente |
-| Revisão do backlog em `/docs/backlog` | Escrita nesta sprint |
-| FinOps (teto de US$ 12; Custo Zero = US$ 0) | US$ 0 gastos; prints pendentes |
+| `/healthz` e `/readyz` | Feito e publicado |
+| Deploy automático e preview em PR | Feito: API no Render, front no Hosting, preview por PR (#42) |
+| Alertas | Feito: falha de job (#39), indisponibilidade pelo UptimeRobot (#45), p95 no k6 |
+| Segredos protegidos | Feito: Secrets do GitHub e do Render, contas separadas por função, gitleaks |
+| Teste de fumaça na URL pública | Roda depois de cada deploy (#44) |
+| Autorização na URL pública | 13 de 13 contra o Render, nenhuma rota devolveu dados de outra empresa |
+| Jornada nova como *Must* com critério numérico | Feita de ponta a ponta (#38, #40) |
+| Revisão do backlog em `/docs/backlog` | Publicada |
+| FinOps (teto US$ 12) | US$ 0 |
+
+**Números:** 16 PRs mesclados no código (6 deles em 16/11); 202 testes unitários no servidor, 97 no cliente, 26 E2E; k6 com p95 máximo de 46 ms na leitura (meta 800 ms) e 37 ms na escrita (meta 1500 ms).
+
+**Contribuições:** Luís (#37, #38) · João (#34, #35, #39, #40, #41) · Kauan (#31, #46, deploy no Render, seed de produção, testes na URL pública) · Giovanni (#33, #36, #42–#45, projeto Firebase) · Júlia Neiva (#32, ADRs do Custo Zero) · Maria Júlia (revisão e aprovação dos PRs, backlog, histórias, roteiro).
 
 ---
 
-## Aprendizados e Decisões
+## Débitos para a Semana 7
 
-!!! info "Decisão: US20 é a jornada nova do Checkpoint 3"
-    Em 09/11/2026 o acompanhamento de editais passou de *Should have* condicional para *Must have*. Motivo e impacto em [Revisões do Backlog](../../backlog/revisoes-backlog.md), Revisão 1.
-
-!!! warning "Risco: tempo para entregar o quadro e o deploy na mesma semana"
-    O quadro de acompanhamento depende de rotas novas no back e de uma tela nova no front, e o deploy depende de arquivos de configuração que ainda não existem. A ordem sugerida é: rotas e contrato primeiro, tela depois, deploy em paralelo.
-
-!!! warning "Risco: arquivos de certidão em disco local"
-    Em produção no Render Free o disco é perdido a cada deploy. Falta decidir onde guardar os arquivos (só metadados, Supabase Storage com exceção em ADR, ou outra opção).
-
-!!! warning "Risco: aprovação do Custo Zero ainda registrada como *Proposto*"
-    Os ADRs 0001, 0004 e 0010 seguem como *Propostos*. O registro da aprovação do tutor precisa entrar antes de 15/11.
-
----
-
-## Débitos Técnicos para a Próxima Sprint
-
-Pendências da Semana 5 que seguem abertas: tela de perfil (G2-05), Compose com a API real por padrão (G2-02), seed no Compose (G2-03), CI com testes do cliente e do deny-all (G2-04) e os 5 casos de teste pendentes (G2-06).
+| Item | Dono | Impacto |
+|---|---|---|
+| Prints FinOps (Render, Actions, UptimeRobot); registrar a aprovação da ADR-0001 | PO | Alto |
+| `GET /v1/editais/{editalId}` | Back-End | Alto |
+| Ingestão agendada ligada (`ENABLE_PNCP_INGEST`) | DevOps | Médio |
+| Domínios dos previews autorizados no Firebase Auth | DevOps | Médio |
+| Feed paginado no banco (hoje lê a coleção inteira) | Back-End | Médio |
+| Certidões fora do disco local do Render (ADR-0014) | Back-End | Médio |
+| Limpeza do teste do kanban (`criadoAqui`) | QA | Baixo |
+| Runbook de rollback | Tech Lead | Baixo |
