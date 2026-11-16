@@ -1,7 +1,7 @@
 # Primeiro relatório de testes (Checkpoint 2)
 
 **Projeto:** LicitaRadar · **Responsável pela qualidade:** Maria Júlia Sena e 
-Kauan Tarchetti · **Última atualização:** 04/11/2026
+Kauan Tarchetti · **Última atualização:** 16/11/2026
 
 > Execução feita na branch `feat/api-base` (código das jornadas 1 a 4), que ainda não foi integrada à `main`. Depois do merge, rodar de novo na `main` e atualizar a data.
 ## 1. Resumo
@@ -103,3 +103,11 @@ VITE_API_MOCK=false docker compose up --build               # terminal 1
 docker compose exec api npm run seed                        # terminal 2
 cd client && npx playwright test -c playwright.api-real.config.ts   # E2E-11 e 12 só com o PR #25
 ```
+
+## Autorização contra a URL publicada (CP3) e jornada do kanban
+
+- Ambiente: API no Render, Firebase real, dados de teste do seed de produção (2 empresas, 3 usuários). Sem carga.
+- Resultado em 16/11/2026: 13 de 13 testes passaram (25,9 s): 5 da suíte de segurança base e 8 do kanban.
+- Casos cobertos: sem token, token inválido e token expirado (401); papel incorreto nas certidões (403); empresa errada no feed, nas certidões e no kanban (403); `empresaId` forjado (403); rotas do kanban (`POST`, `GET`, `PATCH` e `DELETE /acompanhamentos`); job de ingestão com `INGEST_JOB_TOKEN` inválido (401).
+- Nenhuma rota devolveu dados de outra empresa.
+- Limitação: o token expirado é simulado (JWT com `exp` vencido e assinatura falsa).
