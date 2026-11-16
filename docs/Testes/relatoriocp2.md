@@ -111,3 +111,10 @@ cd client && npx playwright test -c playwright.api-real.config.ts   # E2E-11 e 1
 - Casos cobertos: sem token, token inválido e token expirado (401); papel incorreto nas certidões (403); empresa errada no feed, nas certidões e no kanban (403); `empresaId` forjado (403); rotas do kanban (`POST`, `GET`, `PATCH` e `DELETE /acompanhamentos`); job de ingestão com `INGEST_JOB_TOKEN` inválido (401).
 - Nenhuma rota devolveu dados de outra empresa.
 - Limitação: o token expirado é simulado (JWT com `exp` vencido e assinatura falsa).
+
+## Como reproduzir
+cd client
+export API_URL=https://licitaradar-y2gp.onrender.com
+export E2E_SENHA=<senha do seed>
+export FIREBASE_API_KEY=<apiKey web do Firebase>
+npx playwright test -c playwright.api-real.config.ts --grep @seguranca --timeout=120000 | tee ../autorizacao-render.txt
