@@ -70,3 +70,20 @@ Colunas **Teste(s)** e **Resultado** vazias = caso ainda não implementado no re
 - Ambiente: emulador do Firestore em Docker; `npm run test:int` em `server/`.
 - Data: 28/10/2026. Resultado: 21 passaram, 0 falharam. Regra testada: `firestore.rules` em deny-all (`allow read, write: if false;`).
 - Verifica, para sem login, logado sem claim `empresaId`, decisor da A e analista da A: não lê o próprio documento nem o de outra empresa, não lista a coleção, não cria/atualiza/apaga, não acessa `editais`, `scores` e `usuarios`; e os dados seguem intactos depois das tentativas (4 × 5 + 1 = 21).
+
+- Ambiente: API no Render (`https://licitaradar-y2gp.onrender.com`), Firebase real (projeto `licitaradar-13047`).
+- Data: 16/11/2026. Resultado: 13 passaram, 0 falharam (25,9 s): `api-real.spec.ts` (E2E-01, 02, 03, 11 e 12) e `api-real-kanban.spec.ts` (KAN-SEG-01 a 08), todos com a tag `@seguranca`.
+- Dados: só as 2 empresas e os 3 usuários de teste do seed de produção. Sem carga; a carga (k6) roda só no emulador.
+
+| CT | Teste(s) no Render | Resultado |
+| --- | --- | --- |
+| CT-SEG-001 | E2E-01; KAN-SEG-01 (rotas do kanban) | Passou na API |
+| CT-SEG-002 | E2E-01; KAN-SEG-01 | Passou na API |
+| CT-SEG-003 | KAN-SEG-01 (JWT com `exp` vencido e assinatura falsa) | Passou na API (token vencido simulado) |
+| CT-SEG-005 | E2E-02 | Passou na API |
+| CT-SEG-007 | E2E-03; KAN-SEG-04 | Parcial: listas isoladas entre A e B; `GET /certidoes/{id da B}` direto não coberto |
+| CT-SEG-008 | KAN-SEG-05 | Parcial: vale para o kanban (PATCH e DELETE → 403); `PUT /renovacao` não coberto |
+| CT-SEG-009 | E2E-03; KAN-SEG-06 | Parcial: `empresaId` forjado → 403 no feed e no kanban; `GET /perfil` não coberto |
+
+- Cobertura nova, sem CT na matriz: job de ingestão com token inválido → 401 (E2E-12, KAN-SEG-08) e rotas do kanban `POST`, `GET`, `PATCH` e `DELETE /acompanhamentos` (KAN-SEG-01 a 07: login, empresa dona do registro, `empresaId` forjado, 404 e 400).
+- Limitação: o "token expirado" é um JWT bem formado com `exp` no passado e assinatura falsa; a API o recusa com 401, mas não é um token real do Firebase vencido.
