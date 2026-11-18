@@ -1,37 +1,66 @@
 # Revisões do Backlog
 
-Registro das mudanças de prioridade e de critérios do backlog. Cada revisão diz o que mudou, por quê e onde a mudança está refletida. Os documentos de referência são as [Histórias de Usuário](historias.md), a [Matriz MoSCoW](MoSCoW.md) e o [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md).
+O backlog é revisto toda semana. Esta página registra o que mudou de prioridade ou de critério, por quê, e onde a mudança está refletida. O estado atual está na [Matriz MoSCoW](MoSCoW.md) e nas [Histórias de Usuário](historias.md); o recorte do MVP, no [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md).
+
+## Linha do tempo
+
+| Revisão | Sprint | Data | Em uma frase |
+| :--- | :--- | :--- | :--- |
+| R1 | Semana 3 | 22/10 | MoSCoW refeita sobre RF e histórias; fronteira do MVP definida |
+| R2 | Semana 4 | 30–31/10 | Plano Custo Zero substitui o GCP pago |
+| R3 | Semana 5 | 03–05/11 | MVP reduzido ao núcleo; US20 entra condicional; pendências do Gate 2 viram backlog |
+| R4 | Semana 6 | 09/11 | US20 vira *Must* com critérios numéricos; escopo do CP3 fechado |
 
 ---
 
-## Revisão 1 — US20 (Acompanhar edital) passa a *Must have*
+### R1 — Semana 3 · 22/10/2026
 
-**Data:** 09/11/2026 · **Sprint:** Semana 6 · **Responsável:** PO
+**Contexto.** A MoSCoW de 17/10 era uma lista de funcionalidades sem ligação com os requisitos. O Gate 2 pedia rastreabilidade RF → história → teste.
 
-| | |
-| :--- | :--- |
-| **Antes** | *Should have*, condicional: entrava no MVP só se estivesse em PR até 15/11/2026. |
-| **Depois** | ***Must have***. É a jornada nova do Checkpoint 3 (Jornada 2, "Acompanhamento até o resultado"). |
-| **Motivo** | O Checkpoint 3 exige uma jornada nova da S5–S6 como *Must*, com critério de aceite numérico. O time ainda não tinha uma jornada nova com esse status, e o acompanhamento de editais é a que fecha o ciclo de uso do produto: o usuário acha o edital no feed e segue o andamento até o resultado. |
-| **Impacto** | Entram no escopo da Semana 6 a tela do quadro "Acompanhados" (Front-End) e as rotas `POST`, `GET`, `PATCH` e `DELETE` de `/v1/acompanhamentos` (Back-End), com testes de autorização. O CORS do servidor precisa liberar `PATCH` e `DELETE`. |
-| **Risco aceito** | Se o quadro não estiver pronto para a demo de 15/11, a Jornada 1 (triagem) e a Jornada 3 (certidões) continuam sendo mostradas, mas o time não cumpre o critério de jornada nova do Gate 3. |
-| **Refletido em** | `MoSCoW.md`, `historias.md` (US20), `jornadas.md` (Jornada 2) e `escopo.md`. |
+**Decisões.**
+- Entram como *Must*: acessos, autenticação e isolamento (US01–US06) e detalhe do edital (US12).
+- Descem: filtros do feed (US10) para *Should*; notificações por e-mail/push e exportação CSV para *Could*.
+- Fora do MVP (*Won't*): robôs de lances, envio de propostas, leitura de PDF com IA, outros portais além do PNCP.
+- Deploy na nuvem deixa de ser *Won't* — o Cronograma o prevê no Gate 3.
 
----
-
-## Revisão 2 — Critérios de aceite da US20 com números
-
-**Data:** 09/11/2026 · **Sprint:** Semana 6 · **Responsável:** PO
-
-| | |
-| :--- | :--- |
-| **Antes** | Critérios descritivos, sem limite de tempo de resposta e sem regra clara de destaque de prazo. |
-| **Depois** | Destaque "Prazo próximo" para editais com 0 a 3 dias corridos até o prazo (fuso de Brasília); "Prazo encerrado" no fim da lista para editais em Interessado ou Preparando; p95 de no máximo 800 ms na leitura e 1,5 s na escrita com o *golden set* carregado; transição de uma etapa por vez, com `422` para transição inválida; Resultado exige "Venceu" ou "Não venceu" e não muda mais; `401`, `403` e `404` definidos. |
-| **Motivo** | O Checkpoint 3 pede critério de aceite numérico para a jornada nova, e o QA precisa escrever o teste a partir da frase. |
-| **Refletido em** | `historias.md` (US20). |
+**Evidência.** Commit [`0eeb12e`](https://github.com/LicitaRad4r/documentation/commit/0eeb12e); ordem de testes por risco em [`criterios-prioritarios.md`](../Testes/criterios-prioritarios.md).
 
 ---
 
-## Como registrar uma nova revisão
+### R2 — Semana 4 · 30 e 31/10/2026
 
-Copie o bloco de uma revisão acima e preencha: data, sprint, responsável, antes, depois, motivo, impacto e onde a mudança aparece. Se a prioridade mudar, atualize também a tabela da [Matriz MoSCoW](MoSCoW.md) e o seu histórico de alterações.
+**Contexto.** O voucher de US$ 50 do GCP acabou. O teto de custo do projeto passou a ser US$ 0.
+
+**Decisões.**
+- Plataforma: de Google Cloud / Cloud Run / PostgreSQL para Firebase Spark + Render Free (ADR-0001, em *Proposto* até a aprovação do tutor).
+- Alertas de orçamento de 50/80/100% substituídos por prints dos planos gratuitos como evidência FinOps.
+- Casos de teste renumerados para as histórias da R1.
+
+**Evidência.** Commits [`9030217`](https://github.com/LicitaRad4r/documentation/commit/9030217) e [`e8567d7`](https://github.com/LicitaRad4r/documentation/commit/e8567d7).
+
+---
+
+### R3 — Semana 5 · 03 a 05/11/2026
+
+**Contexto.** Quinto dia da Sprint 5 com itens do Gate 2 em atraso. O time precisava fechar o núcleo antes de qualquer deploy.
+
+**Decisões.**
+- Para *Could*: cadastro self-service (US01), recuperação de senha (US03), convites (US04, US05), fluxo de decisão (US13, US17–US19), contador de editais novos (US21).
+- Para *Should*: detalhe do edital (US12).
+- Entra "Acompanhar edital" (US20) como *Should* condicional — vira *Must* se estiver em PR até 15/11.
+- As 13 pendências do Gate 2 (G2-01 a G2-13) passam a um backlog único, com dono, critério de aceite e prazo.
+
+**Evidência.** Commits [`e3da7c1`](https://github.com/LicitaRad4r/documentation/commit/e3da7c1), [`be4dab2`](https://github.com/LicitaRad4r/documentation/commit/be4dab2) e [`df88c6d`](https://github.com/LicitaRad4r/documentation/commit/df88c6d).
+
+---
+
+### R4 — Semana 6 · 09/11/2026
+
+**Contexto.** O Guia do Checkpoint 3 exige uma jornada nova da S5–S6 como *Must*, com critério de aceite numérico.
+
+**Decisões.**
+- US20 sobe para ***Must*** e passa a ser a Jornada 2 ("Acompanhamento até o resultado").
+- Critérios da US20 ganham números: "Prazo próximo" de 0 a 3 dias corridos (Brasília); "Prazo encerrado" no fim da lista; p95 ≤ 800 ms na leitura e ≤ 1,5 s na escrita; uma etapa por vez, `422` em transição inválida; Resultado com "Venceu"/"Não venceu" e imutável; `401`, `403` e `404` definidos.
+- Escopo do CP3 fechado: Jornadas 1 a 3 publicadas na nuvem, US20 como jornada nova e pendências do Gate 2 no [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md).
+
+**Evidência.** `MoSCoW.md`, `historias.md` (US20), `jornadas.md` (Jornada 2), `escopo.md`.

@@ -93,40 +93,6 @@ Integrar na `main` o núcleo escrito até o Gate 2, destravar o front da Jornada
 
 ---
 
-## Contribuições da Equipe
-
-### PO (Maria Júlia Sena)
-
-- **Foco:** backlog do CP2 e roteiro da demo, atualização de histórias, jornadas e visão, revisão de todos os PRs.
-- **Commits:** `e3da7c1`, `be4dab2`, `f2e031c`, `5bc3380`, `df88c6d`.
-
-### Tech Lead (Júlia Neiva)
-
-- **Foco:** ADRs v0.3, logs de segurança, revisão e merge dos PRs.
-- **Commits:** `812ffc0`, `432458e`.
-
-### Back-End (Luís Felipe Albuquerque)
-
-- **Foco:** CORS, correções do QA, ingestão do PNCP, `/healthz` e `/readyz`.
-- **Commits:** `df60607`, `8ce626a`, `4a0320c`, `287db28`.
-
-### Front-End (João Nunes)
-
-- **Foco:** Jornada 4 (login, 401 e 403), camada de serviços e config do Firebase.
-- **Commits:** `21b2202`, `3ca1796`, `53c9667`, `0de6db6`.
-
-### QA (Kauan Tarchetti)
-
-- **Foco:** testes faltantes do CP2, E2E contra a API real, casos tabelados do score e relatório.
-- **Commits:** `3bf232f`, `70ffac0`, `837ef21`, `47c5362`.
-
-### DevOps (Giovanni Ferreira)
-
-- **Foco:** guia de como rodar, `.env` obrigatório e CODEOWNERS.
-- **Commits:** `8e3f6d1`, `ab569df`, `f71064e`, `7d19bf5`.
-
----
-
 ## Aprendizados e Decisões
 
 !!! info "Decisão: ingestão do PNCP agendada pelo GitHub Actions"

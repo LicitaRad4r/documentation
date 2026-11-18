@@ -31,9 +31,9 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** RF01
 **Critérios de Aceitação:**
 
-- [ ] **Dado que** insiro credenciais incorretas, **quando** clico em Entrar, **então** o sistema exibe "E-mail ou palavra-passe incorretos", sem indicar qual dos dois está errado.
+- [x] **Dado que** insiro credenciais incorretas, **quando** clico em Entrar, **então** o sistema exibe "E-mail ou palavra-passe incorretos", sem indicar qual dos dois está errado.
 - [ ] **Dado que** fiz login com sucesso, **quando** fico 4 horas sem atividade, **então** sou redirecionado para o ecrã de login.
-- [ ] **Dado que** chamo a API sem token ou com token expirado, **quando** a requisição chega, **então** a resposta é `401`.
+- [x] **Dado que** chamo a API sem token ou com token expirado, **quando** a requisição chega, **então** a resposta é `401`.
 
 ### US03 - Recuperação de Palavra-passe
 > **Como** Utilizador, **eu quero** solicitar a recuperação da minha palavra-passe, **para que** possa voltar a aceder à conta caso a esqueça.
@@ -76,10 +76,10 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** RF03, RNF06, ADR-0005
 **Critérios de Aceitação:**
 
-- [ ] **Dado que** uma Analista faz login, **quando** o menu é carregado, **então** a opção "Certidões" não aparece.
-- [ ] **Dado que** uma Analista chama `GET /v1/certidoes`, **quando** a API responde, **então** o status é `403` com o código `ACESSO_NEGADO`.
-- [ ] **Dado que** um utilizador envia `empresaId` de outra empresa na query ou no corpo, **quando** a API responde, **então** o status é `403` e nenhum dado da outra empresa é devolvido.
-- [ ] **Dado que** qualquer pessoa tenta ler ou escrever direto no Firestore pelo cliente, **quando** a regra é avaliada, **então** o acesso é negado (Security Rules deny-all).
+- [x] **Dado que** uma Analista faz login, **quando** o menu é carregado, **então** a opção "Certidões" não aparece.
+- [x] **Dado que** uma Analista chama `GET /v1/certidoes`, **quando** a API responde, **então** o status é `403` com o código `ACESSO_NEGADO`.
+- [x] **Dado que** um utilizador envia `empresaId` de outra empresa na query ou no corpo, **quando** a API responde, **então** o status é `403` e nenhum dado da outra empresa é devolvido.
+- [x] **Dado que** qualquer pessoa tenta ler ou escrever direto no Firestore pelo cliente, **quando** a regra é avaliada, **então** o acesso é negado (Security Rules deny-all).
 
 ---
 
@@ -91,8 +91,8 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** RF04 (Backend), ADR-0007
 **Critérios de Aceitação:**
 
-- [ ] **Dado que** o workflow agendado roda 1 vez por dia, **quando** termina com sucesso, **então** os editais novos com recebimento de propostas aberto estão gravados, cada um identificado pelo número de controle do PNCP.
-- [ ] **Dado que** a ingestão roda 2 vezes seguidas sobre o mesmo intervalo, **quando** a segunda termina, **então** o número de editais na base é o mesmo da primeira (0 duplicados).
+- [x] **Dado que** o workflow agendado roda 1 vez por dia, **quando** termina com sucesso, **então** os editais novos com recebimento de propostas aberto estão gravados, cada um identificado pelo número de controle do PNCP.
+- [x] **Dado que** a ingestão roda 2 vezes seguidas sobre o mesmo intervalo, **quando** a segunda termina, **então** o número de editais na base é o mesmo da primeira (0 duplicados).
 - [ ] **Dado que** o PNCP responde `500`, dá timeout ou devolve JSON malformado, **quando** a coleta falha, **então** nenhum edital existente é apagado, a falha fica registada e a próxima execução retoma do ponto onde a coleta anterior parou.
 - [ ] **Dado que** a coleta atinge o teto de documentos por execução, **quando** o teto é alcançado, **então** a execução para e guarda o ponto onde parou, para continuar na próxima.
 
@@ -102,9 +102,9 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** RF06 (Pré-requisito para o Score)
 **Critérios de Aceitação:**
 
-- [ ] **Dado que** estou no meu perfil, **quando** adiciono termos (ex.: "computador", "notebook") e guardo, **então** `GET /v1/perfil` devolve exatamente os termos guardados e o próximo carregamento do feed já usa esse perfil.
-- [ ] **Dado que** informo um termo com menos de 2 caracteres, mais de 50 termos, UF repetida ou UF fora do padrão de 2 letras, **quando** guardo, **então** a API responde `400` indicando o campo inválido.
-- [ ] **Dado que** informo valor mínimo maior que o máximo, **quando** guardo, **então** vejo "O valor máximo deve ser maior ou igual ao mínimo" e nada é gravado.
+- [x] **Dado que** estou no meu perfil, **quando** adiciono termos (ex.: "computador", "notebook") e guardo, **então** `GET /v1/perfil` devolve exatamente os termos guardados e o próximo carregamento do feed já usa esse perfil.
+- [x] **Dado que** informo um termo com menos de 2 caracteres, mais de 50 termos, UF repetida ou UF fora do padrão de 2 letras, **quando** guardo, **então** a API responde `400` indicando o campo inválido.
+- [x] **Dado que** informo valor mínimo maior que o máximo, **quando** guardo, **então** vejo "O valor máximo deve ser maior ou igual ao mínimo" e nada é gravado.
 
 ### US09 - Visualizar Feed Ranqueado
 > **Como** Analista, **eu quero** visualizar uma lista de editais ordenada pela aderência, **para que** os mais compatíveis apareçam no topo.
@@ -112,11 +112,11 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** RF04, RF06
 **Critérios de Aceitação:**
 
-- [ ] **Dado que** abro o Feed, **quando** a lista carrega, **então** vejo no máximo 20 editais por página, ordenados do maior Score para o menor.
-- [ ] **Dado que** dois editais têm o mesmo Score, **quando** a lista é ordenada, **então** o desempate é: prazo mais próximo, depois publicação mais recente, depois id.
-- [ ] **Dado que** existem mais de 20 editais, **quando** avanço a página, **então** recebo os próximos 20 sem repetir nenhum da página anterior.
-- [ ] **Dado que** a base local tem o golden set carregado, **quando** a primeira página é pedida, **então** o p95 do tempo de resposta da API é de no máximo 800 ms.
-- [ ] **Dado que** nenhum edital passa no perfil, **quando** o Feed carrega, **então** vejo o estado vazio com orientação para ajustar o perfil.
+- [x] **Dado que** abro o Feed, **quando** a lista carrega, **então** vejo no máximo 20 editais por página, ordenados do maior Score para o menor.
+- [x] **Dado que** dois editais têm o mesmo Score, **quando** a lista é ordenada, **então** o desempate é: prazo mais próximo, depois publicação mais recente, depois id.
+- [x] **Dado que** existem mais de 20 editais, **quando** avanço a página, **então** recebo os próximos 20 sem repetir nenhum da página anterior.
+- [x] **Dado que** a base local tem o golden set carregado, **quando** a primeira página é pedida, **então** o p95 do tempo de resposta da API é de no máximo 800 ms.
+- [x] **Dado que** nenhum edital passa no perfil, **quando** o Feed carrega, **então** vejo o estado vazio com orientação para ajustar o perfil.
 
 ### US10 - Aplicar Filtros Dinâmicos
 > **Como** Analista, **eu quero** filtrar os resultados por UF, modalidade, data e valor, **para que** encontre editais específicos sem perder a ordenação de Score.
@@ -124,10 +124,10 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** RF05
 **Critérios de Aceitação:**
 
-- [ ] **Dado que** seleciono a UF "SP", **quando** aplico o filtro, **então** 100% dos editais exibidos são de SP e a ordem por Score se mantém.
-- [ ] **Dado que** combino UF e faixa de valor, **quando** aplico os dois, **então** só aparecem editais que cumprem ambos.
-- [ ] **Dado que** informo valor mínimo maior que o máximo no filtro, **quando** aplico, **então** vejo "O máximo deve ser maior ou igual ao mínimo" e o feed não é recarregado.
-- [ ] **Dado que** apliquei filtros, **quando** recarrego a página ou uso "voltar" do navegador, **então** os mesmos filtros continuam aplicados (estado guardado na URL).
+- [x] **Dado que** seleciono a UF "SP", **quando** aplico o filtro, **então** 100% dos editais exibidos são de SP e a ordem por Score se mantém.
+- [x] **Dado que** combino UF e faixa de valor, **quando** aplico os dois, **então** só aparecem editais que cumprem ambos.
+- [x] **Dado que** informo valor mínimo maior que o máximo no filtro, **quando** aplico, **então** vejo "O máximo deve ser maior ou igual ao mínimo" e o feed não é recarregado.
+- [x] **Dado que** apliquei filtros, **quando** recarrego a página ou uso "voltar" do navegador, **então** os mesmos filtros continuam aplicados (estado guardado na URL).
 
 ### US11 - Cálculo Determinístico do Score
 > **Como** Sistema, **eu quero** calcular o Score de Aderência (0 a 100), **para que** o edital possa ser classificado como Alta, Média ou Baixa compatibilidade.
@@ -136,11 +136,11 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Critérios de Aceitação:**
 
 - [ ] **Dado que** um edital é avaliado, **quando** o Score é calculado, **então** a nota é um número inteiro entre 0 e 100.
-- [ ] **Dado que** a nota foi calculada, **quando** é classificada, **então** fica em Alta se for de 80 a 100, Média se for de 50 a 79 e Baixa se for de 0 a 49.
-- [ ] **Dado que** um edital não tem nenhuma palavra-chave do perfil, **quando** é avaliado, **então** é descartado e não aparece no Feed.
-- [ ] **Dado que** o valor do edital está mais de 10% fora da faixa do perfil, **quando** é avaliado, **então** é descartado.
+- [x] **Dado que** a nota foi calculada, **quando** é classificada, **então** fica em Alta se for de 80 a 100, Média se for de 50 a 79 e Baixa se for de 0 a 49.
+- [x] **Dado que** um edital não tem nenhuma palavra-chave do perfil, **quando** é avaliado, **então** é descartado e não aparece no Feed.
+- [x] **Dado que** o valor do edital está mais de 10% fora da faixa do perfil, **quando** é avaliado, **então** é descartado.
 - [ ] **Dado que** o mesmo edital e o mesmo perfil são avaliados 2 vezes, **quando** comparo as notas, **então** são idênticas.
-- [ ] **Dado que** existe a tabela de 10 casos de teste do Score, incluindo valor igual ao limite da faixa e limite + R$ 0,01, **quando** a suíte roda, **então** os 10 casos passam.
+- [x] **Dado que** existe a tabela de 10 casos de teste do Score, incluindo valor igual ao limite da faixa e limite + R$ 0,01, **quando** a suíte roda, **então** os 10 casos passam.
 
 ### US12 - Acesso a Detalhes e Anexos
 > **Como** Analista, **eu quero** abrir o detalhe do edital, **para que** possa ler a descrição completa e chegar ao documento original.
@@ -148,9 +148,9 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** RF04
 **Critérios de Aceitação:**
 
-- [ ] **Dado que** clico num edital do feed, **quando** o detalhe abre, **então** vejo objeto, órgão, UF, modalidade, valor estimado, data de encerramento e o Score com a sua faixa.
-- [ ] **Dado que** o detalhe está aberto, **quando** clico em "Ver no PNCP", **então** a página original do edital no portal abre numa nova aba.
-- [ ] **Dado que** o edital não tem valor estimado, **quando** o detalhe abre, **então** o campo mostra "Não informado" em vez de R$ 0,00.
+- [x] **Dado que** clico num edital do feed, **quando** o detalhe abre, **então** vejo objeto, órgão, UF, modalidade, valor estimado, data de encerramento e o Score com a sua faixa.
+- [x] **Dado que** o detalhe está aberto, **quando** clico em "Ver no PNCP", **então** a página original do edital no portal abre numa nova aba.
+- [x] **Dado que** o edital não tem valor estimado, **quando** o detalhe abre, **então** o campo mostra "Não informado" em vez de R$ 0,00.
 
 ### US13 - Recomendar Edital
 > **Como** Analista, **eu quero** marcar um edital promissor como "Recomendado", **para que** ele seja enviado para a análise do Decisor.
@@ -174,9 +174,9 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Critérios de Aceitação:**
 
 - [ ] **Dado que** anexo um PDF, JPG ou PNG de até 5 MB e informo uma data de validade, **quando** submeto, **então** o documento aparece na lista de certidões.
-- [ ] **Dado que** anexo um arquivo de 5 MB + 1 byte, **quando** submeto, **então** o upload é recusado com a mensagem de limite de 5 MB.
-- [ ] **Dado que** anexo um arquivo cujo conteúdo não é PDF, JPG nem PNG (mesmo com a extensão trocada), **quando** submeto, **então** o upload é recusado.
-- [ ] **Dado que** tento gravar sem a "Data de validade", **quando** clico em Guardar, **então** a ação é bloqueada com erro no campo.
+- [x] **Dado que** anexo um arquivo de 5 MB + 1 byte, **quando** submeto, **então** o upload é recusado com a mensagem de limite de 5 MB.
+- [x] **Dado que** anexo um arquivo cujo conteúdo não é PDF, JPG nem PNG (mesmo com a extensão trocada), **quando** submeto, **então** o upload é recusado.
+- [x] **Dado que** tento gravar sem a "Data de validade", **quando** clico em Guardar, **então** a ação é bloqueada com erro no campo.
 
 ### US15 - Atualização de Certidão (Renovação)
 > **Como** Decisor, **eu quero** substituir uma certidão prestes a vencer por uma nova, **para que** o alerta desapareça.
@@ -184,7 +184,7 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** RF08, RF10
 **Critérios de Aceitação:**
 
-- [ ] **Dado que** submeto uma certidão renovada, **quando** o *upload* conclui, **então** o arquivo anterior fica inativo, a nova data de validade passa a valer e o status é recalculado na mesma resposta.
+- [x] **Dado que** submeto uma certidão renovada, **quando** o *upload* conclui, **então** o arquivo anterior fica inativo, a nova data de validade passa a valer e o status é recalculado na mesma resposta.
 
 ### US16 - Alertas Visuais de Vencimento
 > **Como** Decisor, **eu quero** receber um alerta destacado para certidões próximas do vencimento, **para que** evite inabilitações em processos.
@@ -192,11 +192,11 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** RF10
 **Critérios de Aceitação (dias de calendário, fuso de Brasília):**
 
-- [ ] **Dado que** faltam de 0 a 15 dias para o vencimento, **quando** entro no painel, **então** a certidão aparece como "Urgente".
-- [ ] **Dado que** faltam de 16 a 30 dias, **quando** entro no painel, **então** a certidão aparece como "Atenção".
-- [ ] **Dado que** faltam 31 dias ou mais, **quando** entro no painel, **então** a certidão aparece como "Em dia", sem alerta.
-- [ ] **Dado que** a validade era ontem, **quando** entro no painel, **então** a certidão aparece como "Vencida".
-- [ ] **Dado que** são 23:59:59 e depois 00:00:00 (horário de Brasília), **quando** consulto a mesma certidão, **então** os dias restantes diminuem em 1 exatamente na virada do dia.
+- [x] **Dado que** faltam de 0 a 15 dias para o vencimento, **quando** entro no painel, **então** a certidão aparece como "Urgente".
+- [x] **Dado que** faltam de 16 a 30 dias, **quando** entro no painel, **então** a certidão aparece como "Atenção".
+- [x] **Dado que** faltam 31 dias ou mais, **quando** entro no painel, **então** a certidão aparece como "Em dia", sem alerta.
+- [x] **Dado que** a validade era ontem, **quando** entro no painel, **então** a certidão aparece como "Vencida".
+- [x] **Dado que** são 23:59:59 e depois 00:00:00 (horário de Brasília), **quando** consulto a mesma certidão, **então** os dias restantes diminuem em 1 exatamente na virada do dia.
 
 ---
 
@@ -242,20 +242,20 @@ Este documento traduz os Requisitos Funcionais do LicitaRadar em Histórias de U
 **Rastreabilidade:** Jornada 2, [Escopo do MVP](../requirements/produto/negocio/visao/escopo.md)
 **Critérios de Aceitação (prazo em dias de calendário, fuso de Brasília, como na US16):**
 
-- [ ] **Dado que** clico em "Acompanhar" num edital do feed, **quando** a ação é gravada, **então** o edital aparece no quadro "Acompanhados", na coluna "Interessado" com a etapa "Interessado".
-- [ ] **Dado que** o edital já está acompanhado, **quando** clico em "Acompanhar" de novo, **então** a API responde `200` com o registo existente e a lista continua com 1 único item para esse edital.
-- [ ] **Dado que** sou Analista ou Decisor da empresa, **quando** mudo a etapa, **então** só posso avançar uma etapa por vez (Interessado → Preparando → Enviado → Resultado) ou voltar de Preparando para Interessado, e o edital aparece na coluna da nova etapa.
-- [ ] **Dado que** o edital está em Enviado ou Resultado, **quando** tento voltar para uma etapa anterior ou saltar etapas, **então** a API responde `422` e a etapa não muda.
-- [ ] **Dado que** levo o edital para Resultado, **quando** gravo, **então** tenho de escolher "Venceu" ou "Não venceu", e a etapa não pode mais ser alterada.
-- [ ] **Dado que** o edital está em Interessado ou Preparando, **quando** clico em "Deixar de acompanhar", **então** ele sai da lista e pode ser acompanhado de novo; em Enviado ou Resultado a opção não aparece.
-- [ ] **Dado que** a lista "Acompanhados" carrega, **quando** há editais, **então** eles vêm ordenados pelo prazo mais próximo e:
+- [x] **Dado que** clico em "Acompanhar" num edital do feed, **quando** a ação é gravada, **então** o edital aparece no quadro "Acompanhados", na coluna "Interessado" com a etapa "Interessado".
+- [x] **Dado que** o edital já está acompanhado, **quando** clico em "Acompanhar" de novo, **então** a API responde `200` com o registo existente e a lista continua com 1 único item para esse edital.
+- [x] **Dado que** sou Analista ou Decisor da empresa, **quando** mudo a etapa, **então** só posso avançar uma etapa por vez (Interessado → Preparando → Enviado → Resultado) ou voltar de Preparando para Interessado, e o edital aparece na coluna da nova etapa.
+- [x] **Dado que** o edital está em Enviado ou Resultado, **quando** tento voltar para uma etapa anterior ou saltar etapas, **então** a API responde `422` e a etapa não muda.
+- [x] **Dado que** levo o edital para Resultado, **quando** gravo, **então** tenho de escolher "Venceu" ou "Não venceu", e a etapa não pode mais ser alterada.
+- [x] **Dado que** o edital está em Interessado ou Preparando, **quando** clico em "Deixar de acompanhar", **então** ele sai da lista e pode ser acompanhado de novo; em Enviado ou Resultado a opção não aparece.
+- [x] **Dado que** a lista "Acompanhados" carrega, **quando** há editais, **então** eles vêm ordenados pelo prazo mais próximo e:
     - faltam de 0 a 3 dias: aparece o destaque "Prazo próximo";
     - faltam 4 dias ou mais: sem destaque;
     - o prazo já passou e o edital está em Interessado ou Preparando: aparece "Prazo encerrado" e o edital vai para o fim da lista.
-- [ ] **Dado que** sou de outra empresa, **quando** tento ler ou mudar um edital acompanhado, **então** a API responde `403`.
-- [ ] **Dado que** o edital ou o acompanhamento não existe, **quando** faço qualquer ação sobre ele, **então** a API responde `404`.
-- [ ] **Dado que** a base local tem o golden set carregado, **quando** a lista "Acompanhados" é pedida, **então** o p95 do tempo de resposta é de no máximo 800 ms na leitura e 1,5 s na escrita.
-- [ ] **Dado que** chamo qualquer rota de acompanhamento sem token ou com token inválido/expirado, **quando** a requisição chega, **então** a resposta é `401`.
+- [x] **Dado que** sou de outra empresa, **quando** tento ler ou mudar um edital acompanhado, **então** a API responde `403`.
+- [x] **Dado que** o edital ou o acompanhamento não existe, **quando** faço qualquer ação sobre ele, **então** a API responde `404`.
+- [x] **Dado que** a base local tem o golden set carregado, **quando** a lista "Acompanhados" é pedida, **então** o p95 do tempo de resposta é de no máximo 800 ms na leitura e 1,5 s na escrita.
+- [x] **Dado que** chamo qualquer rota de acompanhamento sem token ou com token inválido/expirado, **quando** a requisição chega, **então** a resposta é `401`.
 
 ### US21 - Contador de Editais Novos
 > **Como** Analista ou Decisor, **eu quero** ver quantos editais novos entraram no meu feed desde a última vez que o abri, **para que** saiba se vale a pena revisar o feed hoje.

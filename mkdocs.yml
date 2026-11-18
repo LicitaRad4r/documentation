@@ -55,8 +55,8 @@ nav:
   - Backlog:
     - Histórias de Usuário: backlog/historias.md
     - Matriz MoSCoW: backlog/MoSCoW.md
-    - Backlog do CP2: backlog/backlogcp2.md
     - Revisões do Backlog: backlog/revisoes-backlog.md
+    - Roteiro de Demonstração (DEMO): backlog/roteirodemonstracao.md
 
   - Qualidade e Testes:
     - Estratégia de Testes: Testes/estrategia_de_testes.md
