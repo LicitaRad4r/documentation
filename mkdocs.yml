@@ -65,6 +65,7 @@ nav:
     - Matriz de Rastreabilidade: Testes/matriz-rastreabilidade.md
     - Relatório de Testes (CP2): Testes/relatoriocp2.md
     - Roteiro E2E (API real): Testes/roteiro-e2e-api-real.md
+    - Validação manual da API (Postman): Testes/testes-manuais.md
 
   - FinOps (custo zero):
     - Visão geral: architecture/finops/README.md
