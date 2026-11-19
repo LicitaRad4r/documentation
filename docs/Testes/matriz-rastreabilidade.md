@@ -162,5 +162,5 @@ Verifica, para sem login, logado sem claim `empresaId`, decisor da A e analista 
 | --- | --- | --- |
 | Servidor: unitários e de contrato | `npm run test:unit` (em `server/`) | ✅ 220 de 220 (15 arquivos) |
 | Cliente | `npm run test:unit` (em `client/`) | ✅ 97 passaram + 1 `todo` (18 arquivos) |
-| Servidor: integração com emulador | `npm run test:int` | Não reexecutado nesta data (precisa do emulador do Firestore). São 27 testes: 21 do deny-all e 6 do kanban sobre o Firestore. O CI roda no job `firestore rules` |
+| Servidor: integração com emulador | `npm run test:int` | Não reexecutado nesta data. São 27 testes: 21 do deny-all e 6 do kanban sobre o Firestore. O CI roda no job `firestore rules` |
 | Carga (k6, emulador) | `CURTO=1 k6 run k6/carga.js` | ✅ 16/11/2026: 792 requisições, 0% de falha; maior p95 de leitura 46,1 ms (meta 800 ms) e de escrita 36,8 ms (meta 1500 ms). Detalhe em `docs/operacao/k6-p95.md` do repositório de código |
