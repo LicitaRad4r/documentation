@@ -25,4 +25,4 @@ Documentos de operação que complementam estes testes (em [`LicitaRad4r/LicitaR
 - `docs/operacao/alertas.md`: UptimeRobot em `/readyz`, logs no Render e p95 no k6.
 - `docs/operacao/k6-p95.md`: tabela do teste de carga (16/11/2026).
 - `.github/workflows/`: CI, Deploy, Smoke test, Hosting preview e Ingestão PNCP.
-*Última revisão: 19/11/2026, conferida contra a `main` do repositório de código (`15eeff4`) e a da documentação (`d8a0b39`).*
+*Última revisão: 19/11/2026
