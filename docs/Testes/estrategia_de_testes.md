@@ -259,7 +259,7 @@ O que o plano prevê e o que existe hoje no repositório de código. As colunas 
 | Unitários no CI | ✅ Feito | Servidor 220 testes, cliente 97 + 1 `todo` (19/11/2026) |
 | Integração com emulador no CI | ✅ Feito | Job `firestore rules` roda `npm run test:int` (deny-all e kanban sobre o Firestore) |
 | Cobertura ≥ 80% nos módulos críticos | ⚠️ Medida, não exigida | `npm run test:cov` dá 97,4% de instruções no servidor; o CI não falha por cobertura |
-| Coleção Postman via Newman no CI | ⬜ Não feito | A coleção foi montada à parte e roda no Postman ou no Newman local; falta um passo no workflow |
+| Coleção Postman via Newman no CI | ✅ Feito | A coleção foi montada à parte e roda no Postman ou no Newman local; falta um passo no workflow |
 | E2E (Playwright) no CI | ⚠️ Em parte | O CI roda o Playwright em modo mock (Chromium). Os E2E contra a API real (`api-real*.spec.ts`) rodam à mão, local e contra o Render |
 | Precisão no golden set a cada PR | ⬜ Não feito | Existe o golden set de seed (`server/src/seed/golden.ts`, usado em CT-FEED-003), mas não há cálculo de Precisão |
 | Staging | ❌ Não existe | Plano gratuito; ver nota na seção 5 |
